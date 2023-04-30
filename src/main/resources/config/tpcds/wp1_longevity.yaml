@@ -1,0 +1,79 @@
+# Description: WP1: Longevity
+---
+version: 1
+id: wp1_longevity
+phases:
+- id: setup
+  sessions:
+  - tasks:
+    - template_id: setup
+- id: setup_data_maintenance
+  sessions:
+  - tasks:
+    - template_id: setup_data_maintenance
+    - template_id: setup_data_maintenance
+    - template_id: setup_data_maintenance
+    - template_id: setup_data_maintenance
+    - template_id: setup_data_maintenance
+    - template_id: setup_data_maintenance
+    - template_id: setup_data_maintenance
+    - template_id: setup_data_maintenance
+    - template_id: setup_data_maintenance
+    - template_id: setup_data_maintenance
+- id: init
+  sessions:
+  - tasks:
+    - template_id: init
+- id: build
+  sessions:
+  - tasks:
+    - template_id: build
+- id: single_user_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+- id: data_maintenance_1
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+- id: single_user_2
+  sessions:
+  - tasks:
+    - template_id: single_user
+- id: data_maintenance_2
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+- id: single_user_3
+  sessions:
+  - tasks:
+    - template_id: single_user
+- id: data_maintenance_3
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+- id: single_user_4
+  sessions:
+  - tasks:
+    - template_id: single_user
+- id: data_maintenance_4
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+- id: single_user_5
+  sessions:
+  - tasks:
+    - template_id: single_user
+- id: data_maintenance_5
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+- id: single_user_6
+  sessions:
+  - tasks:
+    - template_id: single_user

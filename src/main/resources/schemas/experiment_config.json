@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/lst-bench/experiment_config.json",
+  "type": "object",
+  "title": "Schema for experiment configuration input file",
+  "required": [ "version", "id", "repetitions" ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "title": "File format version"
+    },
+    "id": {
+      "type": "string",
+      "title": "Identifier for the experiment"
+    },
+    "repetitions": {
+      "type": "integer",
+      "title": "Number of times to repeat the experiment"
+    },
+    "metadata": {
+      "type": "object",
+      "title": "Experiment metadata",
+      "description": "Map of metadata key-value pairs containing information related to the experiment setup"
+    },
+    "parameter_values": {
+      "type": "object",
+      "title": "Experiment parameter values",
+      "description": "Map of parameter name-value pairs. When a parameter name is referenced in a SQL script used in the experiment, it will be replaced by its corresponding value"
+    }
+  }
+}

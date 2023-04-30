@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/lst-bench/workload.json",
+  "type": "object",
+  "title": "Schema for workload definition file",
+  "required": [ "version", "id", "phases" ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "title": "File format version"
+    },
+    "id": {
+      "type": "string",
+      "title": "Identifier for the workload"
+    },
+    "phases": {
+      "type": "array",
+      "title": "List of phases",
+      "items": {
+        "type": "object",
+        "title": "Phase",
+        "required": [ "id", "sessions" ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Identifier for the phase"
+          },
+          "sessions": {
+            "type": "array",
+            "title": "List of sessions",
+            "items": {
+              "type": "object",
+              "title": "Session",
+              "required": [ "tasks" ],
+              "properties": {
+                "tasks": {
+                  "type": "array",
+                  "title": "List of tasks",
+                  "items": {
+                    "type": "object",
+                    "title": "Task",
+                    "required": [ "template_id" ],
+                    "properties": {
+                      "template_id": {
+                        "type": "string",
+                        "title": "Template identifier",
+                        "description": "Identifier of the template that this task is based on"
+                      },
+                      "permute_order": {
+                        "type": "boolean",
+                        "title": "Enable scripts order permutation",
+                        "description": "If task template specified a permutation orders path, this property can be used to specify whether the permutation should be applied or not"
+                      },
+                      "time_travel_phase_id": {
+                        "type": "string",
+                        "title": "Time travel phase identifier",
+                        "description": "If the task template supports time travel, this property can be used to specify the version of the data that will be queried by this task"
+                      },
+                      "replace_regex": {
+                        "type": "array",
+                        "title": "List of regex to match and replace",
+                        "description": "List of regex to match and corresponding replacement in the SQL scripts associated with this task",
+                        "items": {
+                          "type": "object",
+                          "title": "Regex to replace",
+                          "required": [ "pattern", "replacement" ],
+                          "properties": {
+                            "pattern": {
+                              "type": "string",
+                              "title": "Regex pattern to match"
+                            },
+                            "replacement": {
+                              "type": "string",
+                              "title": "Replacement for each match"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

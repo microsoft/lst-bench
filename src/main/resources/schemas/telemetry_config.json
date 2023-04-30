@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/lst-bench/telemetry_config.json",
+  "type": "object",
+  "title": "Schema for telemetry configuration input file",
+  "required": [ "version", "connection", "execute_ddl", "ddl_file", "insert_file" ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "title": "File format version"
+    },
+    "connection": {
+      "type": "object",
+      "title": "Connection configuration",
+      "required": [ "id", "driver", "url" ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Identifier for the connection"
+        },
+        "driver": {
+          "type": "string",
+          "title": "JDBC driver class name"
+        },
+        "url": {
+          "type": "string",
+          "title": "JDBC connection URL"
+        },
+        "username": {
+          "type": "string",
+          "title": "Username for authentication"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password for authentication"
+        }
+      }
+    },
+    "execute_ddl": {
+      "type": "boolean",
+      "title": "Execute DDL script",
+      "description": "Whether this run should execute the DDL script referenced by the telemetry config file when the experiment is triggered"
+    },
+    "ddl_file": {
+      "type": "string",
+      "title": "DDL SQL script file path"
+    },
+    "insert_file": {
+      "type": "string",
+      "title": "INSERT SQL script file path"
+    },
+    "parameter_values": {
+      "type": "object",
+      "title": "Telemetry parameter values",
+      "description": "Map of parameter name-value pairs. When a parameter name is referenced in a SQL script used to log telemetry, it will be replaced by its corresponding value"
+    }
+  }
+}

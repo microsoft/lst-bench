@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/lst-bench/connections_config.json",
+  "type": "object",
+  "title": "Schema for connections configuration input file",
+  "required": [ "version", "connections" ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "title": "File format version"
+    },
+    "connections": {
+      "type": "array",
+      "title": "List of JDBC connection configurations",
+      "items": {
+        "type": "object",
+        "title": "Connection configuration",
+        "required": [ "id", "driver", "url" ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Identifier for the connection"
+          },
+          "driver": {
+            "type": "string",
+            "title": "JDBC driver class name"
+          },
+          "url": {
+            "type": "string",
+            "title": "JDBC connection URL"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username for authentication"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password for authentication"
+          }
+        }
+      }
+    }
+  }
+}
