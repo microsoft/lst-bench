@@ -24,9 +24,19 @@ LST-Bench is a framework that allows users to run benchmarks specifically design
 
 ## Documentation
 
-For more details on the technical details related to LST-Bench, see the following paper:
+For more details about LST-Bench, please refer to the accompanying [technical report](https://arxiv.org/pdf/2305.01120):
 
-* TBA.
+```bibtex
+@article{2023lstbench,
+    title={LST-Bench: Benchmarking Log-Structured Tables in the Cloud},
+    author={Jesús Camacho-Rodríguez and Ashvin Agrawal and Anja Gruenheid and
+            Ashit Gosalia and Cristian Petculescu and Josep Aguilar-Saborit and
+            Avrilia Floratou and Carlo Curino and Raghu Ramakrishnan},
+    year={2023},
+    journal={arXiv preprint arXiv:2305.01120},
+    url={https://arxiv.org/abs/2305.01120},
+}
+```
 
 ## Contributing
 
