@@ -22,3 +22,49 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# intellij files
+.idea
+.idea_modules/
+*.ipr
+*.iws
+*.iml
+out
+
+settings.xml
+.classpath.txt
+.fullclasspath.txt
+
+# eclipse
+.project
+.buildpath
+.classpath
+.factorypath
+.settings
+.checkstyle
+
+# netbeans
+nb-configuration.xml
+*/nb-configuration.xml
+
+# vscode/eclipse files
+.vscode
+.classpath
+.project
+.settings
+bin/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Others
+*~
+.DS_Store
+/target
+/*/target
+/example/*/target
+/build
+/*/build
+/example/*/build
+/buildSrc/build
+/buildSrc/subprojects/*/build
