@@ -271,7 +271,7 @@ public class ParserTest {
             List<Task.ReplaceRegex> replaceRegex = task.getReplaceRegex();
             Assertions.assertEquals(1, replaceRegex.size());
             Assertions.assertEquals(
-                "varchar\\(.*\\)|char\\(.*\\)", replaceRegex.get(0).getPattern());
+                "(?i)varchar\\(.*\\)|char\\(.*\\)", replaceRegex.get(0).getPattern());
             Assertions.assertEquals("string", replaceRegex.get(0).getReplacement());
           }
           break;

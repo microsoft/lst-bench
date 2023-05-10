@@ -23,7 +23,7 @@ phases:
   - tasks:
     - template_id: build
       replace_regex:
-      - pattern: 'varchar\(.*\)|char\(.*\)'
+      - pattern: '(?i)varchar\(.*\)|char\(.*\)'
         replacement: 'string'
 - id: single_user
   sessions:

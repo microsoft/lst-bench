@@ -18,12 +18,96 @@ limitations under the License.
 
 # LST-Bench
 
-[![CI Status](https://github.com/microsoft/lst-bench/workflows/Java%20CI%20with%20Maven/badge.svg?branch=main)](https://github.com/microsoft/lst-bench/actions?query=branch%3Amain)
+[![CI Status](https://github.com/microsoft/lst-bench/workflows/Java%20CI/badge.svg?branch=main)](https://github.com/microsoft/lst-bench/actions?query=branch%3Amain)
 
 LST-Bench is a framework that allows users to run benchmarks specifically designed for evaluating the performance, efficiency, and stability of Log-Structured Tables (LSTs), also commonly referred to as table formats, such as [Delta Lake](https://delta.io/), [Apache Hudi](http://hudi.apache.org), and [Apache Iceberg](http://iceberg.apache.org).
 
-## Documentation
+## Usage Guide
 
+### Installation
+To build LST-Bench, run the following command:
+
+```bash
+mvn package
+```
+
+To build LST-Bench for a specific database, you can use the profile name (`-P`) option. 
+This will include the corresponding JDBC driver in the `./target` directory. 
+Currently, the following profiles are supported: `spark-oss`, `spark-databricks`, and `trino-oss`.
+For example, to build LST-Bench for open-source Spark, you can run the following command:
+
+```bash
+mvn package -Pspark-oss
+```
+
+### How to Run
+After building LST-Bench, run `launcher.sh` to display the usage options.
+
+```bash
+usage: ./launcher.sh -c <arg> -e <arg> -l <arg> -t <arg> -w <arg>
+ -c,--connections-config <arg>   [required] Path to input file containing
+                                 connections config details
+ -e,--experiment-config <arg>    [required] Path to input file containing
+                                 the experiment config details
+ -l,--task-library <arg>         [required] Path to input file containing
+                                 the library with task templates
+ -t,--input-log-config <arg>     [required] Path to input file containing
+                                 the telemetry gathering config details
+ -w,--workload <arg>             [required] Path to input file containing
+                                 the workload definition
+```
+
+## Configuration Files
+The configuration files used in LST-Bench are YAML files. 
+
+You can find their schema, which provides a description of the expected structure and properties, [here](src/main/resources/schemas).
+
+Additionally, you can find sample configurations that can serve as guidelines for creating your own configurations [here](src/main/resources/config).
+
+## Architecture
+
+The LST-Bench code is organized into two modules:
+
+1. **Java Application.** This module is written entirely in Java and is responsible for executing SQL workloads against a system under test using JDBC.
+   It reads input configuration files to determine the tasks, sessions, and phases to be executed.
+   The Java application handles the execution of SQL statements and manages the interaction with the system under test.
+
+2. **Python Processing Module.** The processing module is written in Python and serves as the post-execution analysis component.
+   It consolidates experimental results obtained from the Java application and computes metrics to provide insights into LSTs and cloud data warehouses.
+   The Python module performs data processing, analysis, and visualization to facilitate a deeper understanding of the experimental results.
+
+### LST-Bench Concepts
+In LST-Bench, the following concepts are used to define and organize SQL workloads:
+
+- **Task**: A task is a collection of SQL statements grouped together in a sequence of files. Each file represents a step or subtask within the overall task.
+
+- **Session**: A session refers to a series of tasks executed together. It represents a logical unit of work or a user session.
+
+- **Phase**: A phase consists of multiple concurrent sessions that need to be completed before proceeding to the next phase. Phases help simulate concurrent workload scenarios.
+
+- **Workload**: A workload is a sequence of phases, defining the complete set of tasks, sessions, and phases to be executed during the evaluation.
+
+In LST-Bench, tasks are generated using task templates predefined in the task library.
+LST-Bench includes a default task library that encompasses tasks derived from the TPC-DS benchmark, along with workload definitions representing the original TPC-DS and multiple workload patterns. These resources can be located [here](src/main/resources/config/tpcds).
+
+Although LST-Bench provides this set of tasks and workload patterns,
+users have the flexibility to incorporate additional task templates or even create a completely new task library to model specific scenarios.
+This flexible model allows for the easy creation of diverse SQL workloads for evaluation purposes without the need to modify the application itself.
+
+### Telemetry and Metrics Processor
+LST-Bench captures execution telemetry during workload execution at multiple levels, including per experiment, phase, session, task, file, and statement.
+Each telemetry event is recorded with an associated identifier, such as the statement's name or the phase IDs defined in the workload YAML.
+The event includes information on whether it succeeded or not, along with any additional associated data.
+Specifically, each event includes a _start time_, _end time_, _event ID_, _event type_, _status_, and an optional _payload_.
+
+The telemetry registry in LST-Bench is configurable, providing flexibility for different systems and use cases.
+By default, LST-Bench includes an implementation for a JDBC-based registry and supports writing telemetry to DuckDB or Spark.
+LST-Bench writes these telemetry events into a table within the specified systems, enabling any application to consume and gain insights from the results.
+
+Alternatively, if the LST-Bench [Metrics Processor](metrics) is used, you can simply point it to the same database.
+The processor will then analyze and visualize the results, providing a streamlined solution for result analysis and visualization.
+
+## Documentation
 For more details about LST-Bench, please refer to the accompanying [technical report](https://arxiv.org/pdf/2305.01120):
 
 ```bibtex

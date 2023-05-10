@@ -153,7 +153,7 @@ public class Driver {
             .option("l")
             .longOpt(OPT_INPUT_TASK_LIBRARY_FILE)
             .hasArg()
-            .argName("file")
+            .argName("arg")
             .desc("Path to input file containing the library with task templates")
             .build();
     options.addOption(inputTaskLibraryFile);
@@ -164,7 +164,7 @@ public class Driver {
             .option("w")
             .longOpt(OPT_INPUT_WORKLOAD_FILE)
             .hasArg()
-            .argName("file")
+            .argName("arg")
             .desc("Path to input file containing the workload definition")
             .build();
     options.addOption(inputWorkloadFile);
@@ -175,7 +175,7 @@ public class Driver {
             .option("c")
             .longOpt(OPT_INPUT_CONNECTION_CONFIG_FILE)
             .hasArg()
-            .argName("file")
+            .argName("arg")
             .desc("Path to input file containing connections config details")
             .build();
     options.addOption(inputConnectionConfigFile);
@@ -186,7 +186,7 @@ public class Driver {
             .option("e")
             .longOpt(OPT_INPUT_EXPERIMENT_CONFIG_FILE)
             .hasArg()
-            .argName("file")
+            .argName("arg")
             .desc("Path to input file containing the experiment config details")
             .build();
     options.addOption(inputExperimentConfigFile);
@@ -197,7 +197,7 @@ public class Driver {
             .option("t")
             .longOpt(OPT_INPUT_TELEMETRY_CONFIG_FILE)
             .hasArg()
-            .argName("file")
+            .argName("arg")
             .desc("Path to input file containing the telemetry gathering config details")
             .build();
     options.addOption(inputTelemetryConfigFile);

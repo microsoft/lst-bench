@@ -1,3 +1,21 @@
+<!--
+{% comment %}
+Copyright (c) Microsoft Corporation.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+{% endcomment %}
+-->
+
 ## LST-Bench: Visualization of Telemetry
 
 LST-Bench captures execution statistics while executing the workload on multiple levels: per experiment, phase, session, task, file, and statement. Each of these events is logged with an associated identifier (for example the statement's name, the phase ids that were defined in the experiment yaml etc.), whether it succeeded or not, and any additional, associated data. These events are stored by default in DuckDB. For visualization, we rely on this dataset to determine the experiment parameters and associated metrics.
