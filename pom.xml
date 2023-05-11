@@ -136,7 +136,7 @@
                 <dependency>
                     <groupId>io.trino</groupId>
                     <artifactId>trino-jdbc</artifactId>
-                    <version>416</version>
+                    <version>417</version>
                 </dependency>
             </dependencies>
         </profile>
