@@ -81,7 +81,7 @@ In LST-Bench, the following concepts are used to define and organize SQL workloa
 
 - **Task**: A task is a collection of SQL statements grouped together in a sequence of files. Each file represents a step or subtask within the overall task.
 
-- **Session**: A session refers to a series of tasks executed together. It represents a logical unit of work or a user session.
+- **Session**: A session refers to a sequence of tasks. It represents a logical unit of work or a user session.
 
 - **Phase**: A phase consists of multiple concurrent sessions that need to be completed before proceeding to the next phase. Phases help simulate concurrent workload scenarios.
 
