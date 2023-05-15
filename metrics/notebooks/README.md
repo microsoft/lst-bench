@@ -23,7 +23,7 @@ LST-Bench captures execution statistics while executing the workload on multiple
 We currently support two types of visualizations: Execution time (``execTimePlots.ipynb``) and Azure storage information (``storagePlots.ipynb``) such as the I/O volume and API calls. For both, we require the following parameters:
 1. The experiment identifier(s) in a list (`EXPERIMENT_ID`).
 2. The experiment start time(s) in a list. The length of 1. and 2. need to be the same, i.e., every experiment identifier is associated with one start time. (`EXPERIMENT_START_TIME`).
-3. The path to the DuckDB database (`DUCKDB_PATH`). 
+3. The path to the DuckDB database (`DUCKDB_PATH`), set in ``utils/constants.py``. 
 4. The event identifiers that should be plotted (`EVENT_IDS`). 
 
 The first two parameters should be consistent with identifiers/start times that can be found in the database and have event type `EXEC_EXPERIMENT`. The event identifiers can point to any event type though we generally recommend to visualize the same event type at a time (for example to compare experiment phases or certain statements).
@@ -39,9 +39,4 @@ EVENT_IDS = ["single_user_1", "single_user_2", "single_user_3"]
 DUCKDB_PATH = "./telemetry"
 ```
 
-You can determine the available experiment identifiers and start times by running the following query against the database:
-```
-SELECT distinct event_id, event_start_time FROM experiment_telemetry WHERE event_type='EXEC_EXPERIMENT'
-```
-
-
+You can determine the available experiment identifiers and start times by using the ``listExperiments.ipynb`` notebook.

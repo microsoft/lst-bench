@@ -1,2 +1,6 @@
+# Telemetry database path. Set by default to "./telemetry" analogous to the
+# sample telemetry configuration.
+DUCKDB_PATH = "./telemetry"
+
 # Azure Log Analytics Workspace identifier.
-AZ_LAW_WORKSPACE = "4f1ed147-46d0-402a-a774-7acdc033ed84"
+AZ_LAW_WORKSPACE = ""
