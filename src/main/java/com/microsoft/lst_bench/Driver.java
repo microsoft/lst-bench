@@ -28,6 +28,8 @@ import com.microsoft.lst_bench.input.config.ExperimentConfig;
 import com.microsoft.lst_bench.input.config.TelemetryConfig;
 import com.microsoft.lst_bench.sql.ConnectionManager;
 import com.microsoft.lst_bench.telemetry.JDBCTelemetryRegistry;
+import com.microsoft.lst_bench.telemetry.TelemetryHook;
+
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -133,6 +135,8 @@ public class Driver {
             telemetryConfig.getDDLFile(),
             telemetryConfig.getInsertFile(),
             telemetryConfig.getParameterValues());
+    Thread telemetryHook = new TelemetryHook(telemetryRegistry);
+    Runtime.getRuntime().addShutdownHook(telemetryHook);
 
     // Create experiment configuration
     final BenchmarkConfig benchmarkConfig =
@@ -142,6 +146,9 @@ public class Driver {
     final BenchmarkRunnable experiment =
         new LSTBenchmarkExecutor(idToConnectionManager, benchmarkConfig, telemetryRegistry);
     experiment.execute();
+
+    // Remove hook.
+    Runtime.getRuntime().removeShutdownHook(telemetryHook);
   }
 
   private static Options createOptions() {
