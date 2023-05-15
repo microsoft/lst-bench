@@ -21,10 +21,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Simple JDBC connection manager. */
 public class ConnectionManager {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ConnectionManager.class);
   private final String url;
 
   @Nullable private final String username;
@@ -38,6 +41,7 @@ public class ConnectionManager {
   }
 
   public Connection createConnection() throws SQLException {
+    LOG.info("Creating connection: url: {}, username:{}", url, username);
     if (StringUtils.isEmpty(username)) {
       return DriverManager.getConnection(url);
     } else {
@@ -47,6 +51,7 @@ public class ConnectionManager {
 
   public static ConnectionManager from(ConnectionConfig connectionConfig) {
     try {
+      LOG.info("Loading driver: {}", connectionConfig.getDriver());
       Class.forName(connectionConfig.getDriver());
     } catch (ClassNotFoundException e) {
       throw new IllegalArgumentException(
