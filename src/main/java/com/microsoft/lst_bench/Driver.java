@@ -29,7 +29,6 @@ import com.microsoft.lst_bench.input.config.TelemetryConfig;
 import com.microsoft.lst_bench.sql.ConnectionManager;
 import com.microsoft.lst_bench.telemetry.JDBCTelemetryRegistry;
 import com.microsoft.lst_bench.telemetry.TelemetryHook;
-
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
