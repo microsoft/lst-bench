@@ -38,7 +38,7 @@ EXPERIMENT_START_TIME = ["2023-04-30T12:12:12.000000000Z", "2023-04-30T14:14:14.
 EVENT_IDS = ["single_user_1", "single_user_2", "single_user_3"]
 ```
 
-You can determine the available experiment identifiers and start times by running the following query against the database:
+You can determine the available experiment identifiers and start times by using the ``listExperiments.ipynb`` notebook.
 
 # Adding drivers for storage layers
 
