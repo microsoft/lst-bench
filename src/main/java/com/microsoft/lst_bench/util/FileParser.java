@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-/** Utility class with methods to parse supplemental files for the benchmark. */
+/** Utility class with methods to parse auxiliary files for the benchmark. */
 public class FileParser {
 
   private FileParser() {
