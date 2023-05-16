@@ -39,9 +39,6 @@ EVENT_IDS = ["single_user_1", "single_user_2", "single_user_3"]
 ```
 
 You can determine the available experiment identifiers and start times by running the following query against the database:
-```
-SELECT distinct event_id, event_start_time FROM experiment_telemetry WHERE event_type='EXEC_EXPERIMENT'
-```
 
 # Adding drivers for storage layers
 
