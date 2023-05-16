@@ -50,7 +50,7 @@ public class JDBCTelemetryRegistry {
       Map<String, Object> parameterValues)
       throws SQLException {
     this.connectionManager = connectionManager;
-    this.eventsStream = Collections.synchronizedList(new ArrayList<>());
+    this.eventsStream = new ArrayList<>();
     this.insertFileStatements =
         Collections.unmodifiableList(
             SQLParser.getStatements(insertFile).getStatements().stream()
@@ -105,7 +105,7 @@ public class JDBCTelemetryRegistry {
         statement.execute(currentQuery);
       }
 
-      eventsStream = Collections.synchronizedList(new ArrayList<>());
+      eventsStream = new ArrayList<>();
       LOGGER.info("Events flushed to database.");
     } catch (SQLException e) {
       LOGGER.error("Error while flushing events to database", e);

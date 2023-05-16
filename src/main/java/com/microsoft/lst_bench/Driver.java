@@ -145,9 +145,6 @@ public class Driver {
     final BenchmarkRunnable experiment =
         new LSTBenchmarkExecutor(idToConnectionManager, benchmarkConfig, telemetryRegistry);
     experiment.execute();
-
-    // Remove hook.
-    Runtime.getRuntime().removeShutdownHook(telemetryHook);
   }
 
   private static Options createOptions() {
