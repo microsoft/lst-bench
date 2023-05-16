@@ -36,7 +36,10 @@ Example for the comparison of three single user phases (phase identifiers taken 
 EXPERIMENT_ID = ["test_experiment1", "test_experiment2"]
 EXPERIMENT_START_TIME = ["2023-04-30T12:12:12.000000000Z", "2023-04-30T14:14:14.000000000Z"]
 EVENT_IDS = ["single_user_1", "single_user_2", "single_user_3"]
-DUCKDB_PATH = "./telemetry"
 ```
 
 You can determine the available experiment identifiers and start times by using the ``listExperiments.ipynb`` notebook.
+
+# Adding drivers for storage layers
+
+To add a new storage driver, extend class `StorageMetrics` (``utils/StorageMetrics.py``) and add an elif-clause in method `get_storage_metrics` in ``utils/functions.py``. By default, the notebook plotting the data ((``storagePlots.ipynb``) currently assumes that there is a `io_gb` as well as a `api_calls` column in the metrics dataframe, so the driver needs to be able to extract these metrics or implement appropriate error handling.
