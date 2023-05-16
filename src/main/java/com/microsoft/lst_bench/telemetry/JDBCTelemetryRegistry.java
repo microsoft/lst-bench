@@ -40,7 +40,8 @@ public class JDBCTelemetryRegistry {
 
   private final List<StatementExec> insertFileStatements;
 
-  private final List<EventInfo> eventsStream;
+  // TODO: Make writing events thread-safe.
+  private List<EventInfo> eventsStream;
 
   public JDBCTelemetryRegistry(
       ConnectionManager connectionManager,
@@ -50,7 +51,7 @@ public class JDBCTelemetryRegistry {
       Map<String, Object> parameterValues)
       throws SQLException {
     this.connectionManager = connectionManager;
-    this.eventsStream = Collections.synchronizedList(new ArrayList<>());
+    this.eventsStream = new ArrayList<>();
     this.insertFileStatements =
         Collections.unmodifiableList(
             SQLParser.getStatements(insertFile).getStatements().stream()
@@ -104,6 +105,8 @@ public class JDBCTelemetryRegistry {
         String currentQuery = StringUtils.replaceParameters(query, values).getStatement();
         statement.execute(currentQuery);
       }
+
+      eventsStream = new ArrayList<>();
       LOGGER.info("Events flushed to database.");
     } catch (SQLException e) {
       LOGGER.error("Error while flushing events to database", e);
