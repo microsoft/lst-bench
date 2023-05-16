@@ -10,7 +10,7 @@ task_templates:
 - id: setup_data_maintenance
   files:
   - src/main/resources/scripts/tpcds/setup_data_maintenance/spark/ddl-external-tables-refresh.sql
-  parameter_values_file: src/main/resources/aux/tpcds/setup_data_maintenance/parameter_values.dat
+  parameter_values_file: src/main/resources/supplements/tpcds/setup_data_maintenance/parameter_values.dat
 # Create schema and drop existing tables
 - id: init
   files:
@@ -195,7 +195,7 @@ task_templates:
   - src/main/resources/scripts/tpcds/single_user/spark/query97.sql
   - src/main/resources/scripts/tpcds/single_user/spark/query98.sql
   - src/main/resources/scripts/tpcds/single_user/spark/query99.sql
-  permutation_orders_path: src/main/resources/aux/tpcds/single_user/permutation_orders/
+  permutation_orders_path: src/main/resources/supplements/tpcds/single_user/permutation_orders/
   supports_time_travel: true
 # Execution of TPC-DS data maintenance queries (Delta)
 - id: data_maintenance_delta
@@ -211,7 +211,7 @@ task_templates:
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_SS.sql
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_WR.sql
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_WS.sql
-  parameter_values_file: src/main/resources/aux/tpcds/data_maintenance/parameter_values.dat
+  parameter_values_file: src/main/resources/supplements/tpcds/data_maintenance/parameter_values.dat
 # Execution of TPC-DS data maintenance queries (Iceberg)
 - id: data_maintenance_iceberg
   files:
@@ -226,7 +226,7 @@ task_templates:
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_SS.sql
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_WR.sql
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_WS.sql
-  parameter_values_file: src/main/resources/aux/tpcds/data_maintenance/parameter_values.dat
+  parameter_values_file: src/main/resources/supplements/tpcds/data_maintenance/parameter_values.dat
 # Execution of TPC-DS data maintenance queries (Hudi)
 - id: data_maintenance_hudi
   files:
@@ -241,7 +241,7 @@ task_templates:
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_SS.sql
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_WR.sql
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_WS.sql
-  parameter_values_file: src/main/resources/aux/tpcds/data_maintenance/parameter_values.dat
+  parameter_values_file: src/main/resources/supplements/tpcds/data_maintenance/parameter_values.dat
 # Execution of optimize on all benchmark tables (Delta)
 - id: optimize_delta
   files:
