@@ -40,6 +40,7 @@ public class JDBCTelemetryRegistry {
 
   private final List<StatementExec> insertFileStatements;
 
+  // TODO: Make writing events thread-safe.
   private List<EventInfo> eventsStream;
 
   public JDBCTelemetryRegistry(
