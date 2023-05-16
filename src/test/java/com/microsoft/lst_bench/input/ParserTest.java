@@ -113,12 +113,12 @@ public class ParserTest {
           break;
         case "setup_data_maintenance":
           Assertions.assertEquals(
-              "src/main/resources/supplements/tpcds/setup_data_maintenance/parameter_values.dat",
+              "src/main/resources/auxiliary/tpcds/setup_data_maintenance/parameter_values.dat",
               taskTemplate.getParameterValuesFile());
           break;
         case "single_user":
           Assertions.assertEquals(
-              "src/main/resources/supplements/tpcds/single_user/permutation_orders/",
+              "src/main/resources/auxiliary/tpcds/single_user/permutation_orders/",
               taskTemplate.getPermutationOrdersDirectory());
           Assertions.assertEquals(Boolean.TRUE, taskTemplate.supportsTimeTravel());
           break;
