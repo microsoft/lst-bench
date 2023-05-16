@@ -40,7 +40,7 @@ public class JDBCTelemetryRegistry {
 
   private final List<StatementExec> insertFileStatements;
 
-  private final List<EventInfo> eventsStream;
+  private List<EventInfo> eventsStream;
 
   public JDBCTelemetryRegistry(
       ConnectionManager connectionManager,
@@ -104,6 +104,8 @@ public class JDBCTelemetryRegistry {
         String currentQuery = StringUtils.replaceParameters(query, values).getStatement();
         statement.execute(currentQuery);
       }
+
+      eventsStream = Collections.synchronizedList(new ArrayList<>());
       LOGGER.info("Events flushed to database.");
     } catch (SQLException e) {
       LOGGER.error("Error while flushing events to database", e);

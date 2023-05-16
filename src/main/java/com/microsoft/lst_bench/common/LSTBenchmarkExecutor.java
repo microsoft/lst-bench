@@ -118,6 +118,8 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             LOGGER.error("Exception executing phase: " + phase.getId());
             writePhaseEvent(phaseStartTime, phase.getId(), Status.FAILURE);
             throw e;
+          } finally {
+            telemetryRegistry.flush();
           }
           LOGGER.info(
               "Phase {} finished in {} seconds.",
