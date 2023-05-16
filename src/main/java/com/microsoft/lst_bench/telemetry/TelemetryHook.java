@@ -23,6 +23,7 @@ public class TelemetryHook extends Thread {
     this.telemetryRegistry = telemetryRegistry;
   }
 
+  @Override
   public void run() {
     telemetryRegistry.flush();
   }
