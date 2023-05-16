@@ -43,8 +43,6 @@ You can determine the available experiment identifiers and start times by runnin
 SELECT distinct event_id, event_start_time FROM experiment_telemetry WHERE event_type='EXEC_EXPERIMENT'
 ```
 
-You can determine the available experiment identifiers and start times by using the ``listExperiments.ipynb`` notebook.
-
 # Adding drivers for storage layers
 
 To add a new storage driver, extend class `StorageMetrics` (``utils/StorageMetrics.py``) and add an elif-clause in method `get_storage_metrics` in ``utils/functions.py``. By default, the notebook plotting the data ((``storagePlots.ipynb``) currently assumes that there is a `io_gb` as well as a `api_calls` column in the metrics dataframe, so the driver needs to be able to extract these metrics or implement appropriate error handling.
