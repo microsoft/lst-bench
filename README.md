@@ -43,8 +43,6 @@ Apache Maven 3.9.2 (c9616018c7a021c1c39be70fb2843d6f5f9b8a1c)
 Maven home: /opt/apache-maven-3.9.2
 Java version: 1.8.0_45, vendor: Oracle Corporation
 Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre
-Default locale: en_US, platform encoding: UTF-8
-OS name: "mac os x", version: "10.8.5", arch: "x86_64", family: "mac"
 ```
 
 #### Mac:
