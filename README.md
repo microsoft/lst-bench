@@ -79,7 +79,8 @@ mvn package -Pspark-oss
 ```
 
 ### How to Run
-After building LST-Bench, run `launcher.sh` to display the usage options.
+
+After building LST-Bench, if you are on linux/mac run `launcher.sh` or open a Powershell `launcher.ps1` if you are on Windows to display the usage options.
 
 ```bash
 usage: ./launcher.sh -c <arg> -e <arg> -l <arg> -t <arg> -w <arg>
