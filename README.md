@@ -24,7 +24,45 @@ LST-Bench is a framework that allows users to run benchmarks specifically design
 
 ## Usage Guide
 
+### Prerequisites
+
+* Install open-source Java Development Kit. As a recommendation, install OpenJDK distribution from [Adoptium]('https://adoptium.net/en-GB/') .
+
+#### Windows:
+
+* Download Apache Maven from https://maven.apache.org/
+
+unzip apache-maven-X.X.X-bin.zip
+
+Add the bin directory of the created directory apache-maven-X.X.X to the PATH environment variable
+
+Confirm with mvn -v in a new shell. The result should look similar to:
+
+```
+Apache Maven 3.9.2 (c9616018c7a021c1c39be70fb2843d6f5f9b8a1c)
+Maven home: /opt/apache-maven-3.9.2
+Java version: 1.8.0_45, vendor: Oracle Corporation
+Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "mac os x", version: "10.8.5", arch: "x86_64", family: "mac"
+```
+
+#### Mac:
+
+Opening a console terminal, install brew:
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Now install Maven:
+
+```
+brew install maven
+```
+
 ### Installation
+
 To build LST-Bench, run the following command:
 
 ```bash
