@@ -24,28 +24,13 @@ LST-Bench is a framework that allows users to run benchmarks specifically design
 
 ## Usage Guide
 
-### Prerequisites
+### How to Build
 
-* Install open-source Java Development Kit. As a recommendation, install OpenJDK distribution from [Adoptium]('https://adoptium.net/en-GB/') .
+#### Prerequisites
 
-#### Windows:
+Install open-source Java Development Kit. As a recommendation, install OpenJDK distribution from [Adoptium]('https://adoptium.net/en-GB/').
 
-* Download Apache Maven from https://maven.apache.org/
-
-unzip apache-maven-X.X.X-bin.zip
-
-Add the bin directory of the created directory apache-maven-X.X.X to the PATH environment variable
-
-Confirm with mvn -v in a new shell. The result should look similar to:
-
-```
-Apache Maven 3.9.2 (c9616018c7a021c1c39be70fb2843d6f5f9b8a1c)
-Maven home: /opt/apache-maven-3.9.2
-Java version: 1.8.0_45, vendor: Oracle Corporation
-Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre
-```
-
-#### Mac:
+##### Mac:
 
 Opening a console terminal, install brew:
 
@@ -59,7 +44,26 @@ Now install Maven:
 brew install maven
 ```
 
-### Installation
+##### Windows:
+
+Download Apache Maven from https://maven.apache.org/.
+
+```
+unzip apache-maven-X.X.X-bin.zip
+```
+
+Add the `bin` directory of the created directory `apache-maven-X.X.X` to the `PATH` environment variable.
+
+Confirm with `mvn -v` in a new shell. The result should look similar to:
+
+```
+Apache Maven 3.9.2 (c9616018c7a021c1c39be70fb2843d6f5f9b8a1c)
+Maven home: /opt/apache-maven-3.9.2
+Java version: 1.8.0_45, vendor: Oracle Corporation
+Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre
+```
+
+#### Build
 
 To build LST-Bench, run the following command:
 
@@ -161,13 +165,29 @@ For more details about LST-Bench, please refer to the accompanying [technical re
 
 ## Contributing
 
-This project welcomes contributions and suggestions. Most contributions require you to agree to a
+Here are some ways you can contribute to the LST-Bench project:
+
+* Submit PRs to fix bugs or add new features.
+* Review currently [open PRs](https://github.com/microsoft/lst-bench/pulls).
+* Provide feedback and report bugs related to the software or the documentation.
+* Enhance our design documents, examples, tutorials, and overall documentation.
+
+To get started, please take a look at the [issues](https://github.com/microsoft/lst-bench/issues) and leave a comment if any of them interest you.
+
+If you plan to make significant changes, we recommend [discussing](https://github.com/microsoft/lst-bench/discussions) them with the LST-Bench community first.
+This helps ensure that your contributions align with the project's goals and avoids duplicating efforts.
+
+## Contributor License Agreement
+
+Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
 the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
 
 When you submit a pull request, a CLA bot will automatically determine whether you need to provide
 a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
 provided by the bot. You will only need to do this once across all repos using our CLA.
+
+## Code of Conduct
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
