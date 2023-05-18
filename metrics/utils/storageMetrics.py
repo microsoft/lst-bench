@@ -1,12 +1,24 @@
+# Copyright (c) Microsoft Corporation.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from azure.azure_utils import *
 from constant import *
 
-from datetime import datetime
-from dateutil.tz import tzutc
 import pandas as pd
 
-from azure.core.exceptions import HttpResponseError
 from azure.identity import DefaultAzureCredential
-from azure.monitor.query import LogsQueryClient, LogsQueryStatus
+from azure.monitor.query import LogsQueryClient
 
 # Superclass for any type of storage telemetry extraction. `fetch_metrics`
 # should be overwritten by child class. Any child class needs to add columns
@@ -34,11 +46,6 @@ class StorageMetrics:
         else:
             pass
 
-    def get_time(self, time_str):
-        utc_format = '%Y-%m-%dT%H:%M:%S.%f'
-        time = datetime.strptime(time_str[:-4], utc_format)
-        time = time.replace(tzinfo=tzutc())
-        return time
 
 # Implementation of the extraction of Azure storage telemetry. Connects to a
 # log analytics workspace and queries that workspace for storage information,
@@ -47,26 +54,6 @@ class AzureStorageMetrics(StorageMetrics):
 
     def __init__(self, df, storage_path):
         StorageMetrics.__init__(self, df, storage_path)
-
-
-    # Connect to Azure and issue query with a set timeframe.
-    def retrieve_az_metrics(self, query, start_time, end_time, logs_client, workspace_id, allow_partial=False):
-        try:
-            response = logs_client.query_workspace(workspace_id=workspace_id, query=query, timespan=(start_time, end_time))
-            if response.status == LogsQueryStatus.PARTIAL:
-                error = response.partial_error
-                if not allow_partial:
-                    raise Exception(f"Partial Error: {error.message}")
-                data = response.partial_data
-                print(error.message)
-                # TODO return continuation token
-            elif response.status == LogsQueryStatus.SUCCESS:
-                data = response.tables
-
-            for table in data:
-                return pd.DataFrame(data=table.rows, columns=table.columns)
-        except HttpResponseError as err:
-            raise(err)
 
 
     # Overwrites the parent method. Fetches Azure storage metrics.
@@ -78,8 +65,8 @@ class AzureStorageMetrics(StorageMetrics):
         for _, row in self.df.iterrows():
             event_id = row["event_id"]
             exp_name = row["exp_name"]
-            start_time = self.get_time(row['event_start_time'])
-            end_time = self.get_time(row['event_end_time'])
+            start_time = get_time(row['event_start_time'])
+            end_time = get_time(row['event_end_time'])
             project_cols = f"""
                 event_id = '{event_id}',
                 exp_name = '{exp_name}',
@@ -96,7 +83,7 @@ class AzureStorageMetrics(StorageMetrics):
                 by event_id, exp_name
             """
 
-            azure_data = pd.concat([azure_data, self.retrieve_az_metrics(query, start_time, end_time, logs_client, AZ_LAW_WORKSPACE)])
+            azure_data = pd.concat([azure_data, retrieve_az_metrics(query, start_time, end_time, logs_client, AZ_LAW_WORKSPACE)])
 
         # Consolidate the dataframes.
         self.df = azure_data.merge(self.df, on = ['event_id', 'exp_name'])
