@@ -30,13 +30,22 @@ import org.junit.jupiter.api.Test;
 /** Tests for YAML parser into POJO representation. */
 public class ParserTest {
 
+  private static final String CONFIG_PATH =
+      "src"
+          + File.separator
+          + "main"
+          + File.separator
+          + "resources"
+          + File.separator
+          + "config"
+          + File.separator;
+
   @Test
   public void testParseExperimentConfig() throws IOException {
     ObjectMapper mapper = new YAMLMapper();
     ExperimentConfig experimentConfig =
         mapper.readValue(
-            new File("src/main/resources/config/sample_experiment_config.yaml"),
-            ExperimentConfig.class);
+            new File(CONFIG_PATH + "sample_experiment_config.yaml"), ExperimentConfig.class);
     Assertions.assertEquals(1, experimentConfig.getVersion());
     Assertions.assertEquals("spark_del_sf_10", experimentConfig.getId());
     Assertions.assertNotNull(experimentConfig.getMetadata());
@@ -75,8 +84,7 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     ConnectionsConfig connectionsConfig =
         mapper.readValue(
-            new File("src/main/resources/config/sample_connections_config.yaml"),
-            ConnectionsConfig.class);
+            new File(CONFIG_PATH + "sample_connections_config.yaml"), ConnectionsConfig.class);
     Assertions.assertEquals(1, connectionsConfig.getVersion());
     Assertions.assertEquals(2, connectionsConfig.getConnections().size());
     ConnectionConfig connection0 = connectionsConfig.getConnections().get(0);
@@ -98,7 +106,8 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     TaskLibrary taskLibrary =
         mapper.readValue(
-            new File("src/main/resources/config/tpcds/task_library.yaml"), TaskLibrary.class);
+            new File(CONFIG_PATH + "tpcds" + File.separator + "task_library.yaml"),
+            TaskLibrary.class);
     Assertions.assertEquals(1, taskLibrary.getVersion());
     Assertions.assertEquals(12, taskLibrary.getTaskTemplates().size());
     for (TaskTemplate taskTemplate : taskLibrary.getTaskTemplates()) {
@@ -150,7 +159,8 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =
         mapper.readValue(
-            new File("src/main/resources/config/tpcds/w0_tpcds_delta.yaml"), Workload.class);
+            new File(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds_delta.yaml"),
+            Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("w0_tpcds", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
@@ -213,7 +223,8 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =
         mapper.readValue(
-            new File("src/main/resources/config/tpcds/w0_tpcds_hudi.yaml"), Workload.class);
+            new File(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds_hudi.yaml"),
+            Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("w0_tpcds", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
@@ -291,7 +302,8 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =
         mapper.readValue(
-            new File("src/main/resources/config/tpcds/w0_tpcds_iceberg.yaml"), Workload.class);
+            new File(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds_iceberg.yaml"),
+            Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("w0_tpcds", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
@@ -354,7 +366,8 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =
         mapper.readValue(
-            new File("src/main/resources/config/tpcds/wp1_longevity.yaml"), Workload.class);
+            new File(CONFIG_PATH + "tpcds" + File.separator + "wp1_longevity.yaml"),
+            Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp1_longevity", workload.getId());
     Assertions.assertEquals(15, workload.getPhases().size());
@@ -365,7 +378,8 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =
         mapper.readValue(
-            new File("src/main/resources/config/tpcds/wp2_resilience.yaml"), Workload.class);
+            new File(CONFIG_PATH + "tpcds" + File.separator + "wp2_resilience.yaml"),
+            Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp2_resilience", workload.getId());
     Assertions.assertEquals(17, workload.getPhases().size());
@@ -401,7 +415,8 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =
         mapper.readValue(
-            new File("src/main/resources/config/tpcds/wp3_rw_concurrency.yaml"), Workload.class);
+            new File(CONFIG_PATH + "tpcds" + File.separator + "wp3_rw_concurrency.yaml"),
+            Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp3_rw_concurrency", workload.getId());
     Assertions.assertEquals(10, workload.getPhases().size());
@@ -469,7 +484,8 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =
         mapper.readValue(
-            new File("src/main/resources/config/tpcds/wp4_time_travel.yaml"), Workload.class);
+            new File(CONFIG_PATH + "tpcds" + File.separator + "wp4_time_travel.yaml"),
+            Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp4_time_travel", workload.getId());
     Assertions.assertEquals(18, workload.getPhases().size());
@@ -525,8 +541,7 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     TelemetryConfig telemetryConfig =
         mapper.readValue(
-            new File("src/main/resources/config/sample_telemetry_config.yaml"),
-            TelemetryConfig.class);
+            new File(CONFIG_PATH + "sample_telemetry_config.yaml"), TelemetryConfig.class);
     Assertions.assertEquals(1, telemetryConfig.getVersion());
     Assertions.assertNotNull(telemetryConfig.getConnection());
     Assertions.assertEquals("duckdb_0", telemetryConfig.getConnection().getId());
