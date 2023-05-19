@@ -32,11 +32,33 @@ import java.nio.file.Paths;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /** Tests for POJO representation matching to YAML schema. */
 public class ValidationTest {
+
+  private static final String CONFIG_PATH =
+      "src"
+          + File.separator
+          + "main"
+          + File.separator
+          + "resources"
+          + File.separator
+          + "config"
+          + File.separator;
+
+  private static final String SCHEMAS_PATH =
+      "src"
+          + File.separator
+          + "main"
+          + File.separator
+          + "resources"
+          + File.separator
+          + "schemas"
+          + File.separator;
 
   @Test
   public void testValidationExperimentConfig() throws IOException {
@@ -47,21 +69,18 @@ public class ValidationTest {
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
-        factory.getSchema(
-            Files.newInputStream(Paths.get("src/main/resources/schemas/experiment_config.json")));
+        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "experiment_config.json")));
     // Validate YAML file contents
     JsonNode jsonNodeDirect =
         mapper.readTree(
-            Files.newInputStream(
-                Paths.get("src/main/resources/config/sample_experiment_config.yaml")));
+            Files.newInputStream(Paths.get(CONFIG_PATH + "sample_experiment_config.yaml")));
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     Assertions.assertEquals(
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     ExperimentConfig experimentConfig =
         mapper.readValue(
-            new File("src/main/resources/config/sample_experiment_config.yaml"),
-            ExperimentConfig.class);
+            new File(CONFIG_PATH + "sample_experiment_config.yaml"), ExperimentConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(experimentConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -78,20 +97,18 @@ public class ValidationTest {
             .build();
     JsonSchema schema =
         factory.getSchema(
-            Files.newInputStream(Paths.get("src/main/resources/schemas/connections_config.json")));
+            Files.newInputStream(Paths.get(SCHEMAS_PATH + "connections_config.json")));
     // Validate YAML file contents
     JsonNode jsonNodeDirect =
         mapper.readTree(
-            Files.newInputStream(
-                Paths.get("src/main/resources/config/sample_connections_config.yaml")));
+            Files.newInputStream(Paths.get(CONFIG_PATH + "sample_connections_config.yaml")));
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     Assertions.assertEquals(
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     ConnectionsConfig connectionsConfig =
         mapper.readValue(
-            new File("src/main/resources/config/sample_connections_config.yaml"),
-            ConnectionsConfig.class);
+            new File(CONFIG_PATH + "sample_connections_config.yaml"), ConnectionsConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(connectionsConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -107,19 +124,20 @@ public class ValidationTest {
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
-        factory.getSchema(
-            Files.newInputStream(Paths.get("src/main/resources/schemas/task_library.json")));
+        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "task_library.json")));
     // Validate YAML file contents
     JsonNode jsonNodeDirect =
         mapper.readTree(
-            Files.newInputStream(Paths.get("src/main/resources/config/tpcds/task_library.yaml")));
+            Files.newInputStream(
+                Paths.get(CONFIG_PATH + "tpcds" + File.separator + "task_library.yaml")));
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     Assertions.assertEquals(
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     TaskLibrary taskLibrary =
         mapper.readValue(
-            new File("src/main/resources/config/tpcds/task_library.yaml"), TaskLibrary.class);
+            new File(CONFIG_PATH + "tpcds" + File.separator + "task_library.yaml"),
+            TaskLibrary.class);
     JsonNode jsonNodeObject = mapper.convertValue(taskLibrary, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -127,6 +145,7 @@ public class ValidationTest {
   }
 
   @ParameterizedTest
+  @EnabledOnOs({OS.LINUX, OS.MAC})
   @ValueSource(
       strings = {
         "src/main/resources/config/tpcds/w0_tpcds_delta.yaml",
@@ -145,8 +164,41 @@ public class ValidationTest {
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
-        factory.getSchema(
-            Files.newInputStream(Paths.get("src/main/resources/schemas/workload.json")));
+        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "workload.json")));
+    // Validate YAML file contents
+    JsonNode jsonNodeDirect = mapper.readTree(Files.newInputStream(Paths.get(workloadFilePath)));
+    Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
+    Assertions.assertEquals(
+        0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
+    // Validate YAML generated from POJO object
+    Workload workload = mapper.readValue(new File(workloadFilePath), Workload.class);
+    JsonNode jsonNodeObject = mapper.convertValue(workload, JsonNode.class);
+    Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
+    Assertions.assertEquals(
+        0, errorsFromPOJO.size(), () -> "Errors found in validation: " + errorsFromPOJO);
+  }
+
+  @ParameterizedTest
+  @EnabledOnOs({OS.WINDOWS})
+  @ValueSource(
+      strings = {
+        "src\\main\\resources\\config\\tpcds\\w0_tpcds_delta.yaml",
+        "src\\main\\resources\\config\\tpcds\\w0_tpcds_hudi.yaml",
+        "src\\main\\resources\\config\\tpcds\\w0_tpcds_iceberg.yaml",
+        "src\\main\\resources\\config\\tpcds\\wp1_longevity.yaml",
+        "src\\main\\resources\\config\\tpcds\\wp2_resilience.yaml",
+        "src\\main\\resources\\config\\tpcds\\wp3_rw_concurrency.yaml",
+        "src\\main\\resources\\config\\tpcds\\wp4_time_travel.yaml"
+      })
+  public void testValidationWorkloadWin(String workloadFilePath) throws IOException {
+    ObjectMapper mapper = new YAMLMapper();
+    // Read schema
+    JsonSchemaFactory factory =
+        JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
+            .objectMapper(mapper)
+            .build();
+    JsonSchema schema =
+        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "workload.json")));
     // Validate YAML file contents
     JsonNode jsonNodeDirect = mapper.readTree(Files.newInputStream(Paths.get(workloadFilePath)));
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
@@ -169,21 +221,18 @@ public class ValidationTest {
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
-        factory.getSchema(
-            Files.newInputStream(Paths.get("src/main/resources/schemas/telemetry_config.json")));
+        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "telemetry_config.json")));
     // Validate YAML file contents
     JsonNode jsonNodeDirect =
         mapper.readTree(
-            Files.newInputStream(
-                Paths.get("src/main/resources/config/sample_telemetry_config.yaml")));
+            Files.newInputStream(Paths.get(CONFIG_PATH + "sample_telemetry_config.yaml")));
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     Assertions.assertEquals(
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     TelemetryConfig telemetryConfig =
         mapper.readValue(
-            new File("src/main/resources/config/sample_telemetry_config.yaml"),
-            TelemetryConfig.class);
+            new File(CONFIG_PATH + "sample_telemetry_config.yaml"), TelemetryConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(telemetryConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
