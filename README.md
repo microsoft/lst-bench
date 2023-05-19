@@ -30,59 +30,38 @@ LST-Bench is a framework that allows users to run benchmarks specifically design
 
 Install open-source Java Development Kit. As a recommendation, install OpenJDK distribution from [Adoptium]('https://adoptium.net/en-GB/').
 
-##### Mac:
-
-Opening a console terminal, install brew:
-
-```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-Now install Maven:
-
-```
-brew install maven
-```
-
-##### Windows:
-
-Download Apache Maven from https://maven.apache.org/.
-
-```
-unzip apache-maven-X.X.X-bin.zip
-```
-
-Add the `bin` directory of the created directory `apache-maven-X.X.X` to the `PATH` environment variable.
-
-Confirm with `mvn -v` in a new shell. The result should look similar to:
-
-```
-Apache Maven 3.9.2 (c9616018c7a021c1c39be70fb2843d6f5f9b8a1c)
-Maven home: /opt/apache-maven-3.9.2
-Java version: 1.8.0_45, vendor: Oracle Corporation
-Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre
-```
-
 #### Build
 
-To build LST-Bench, run the following command:
+To build LST-Bench in Linux/macOS, run the following command:
 
 ```bash
-mvn package
+./mvnw package
+```
+
+Or use the following command for Windows:
+
+```bat
+mvnw.cmd package
 ```
 
 To build LST-Bench for a specific database, you can use the profile name (`-P`) option. 
 This will include the corresponding JDBC driver in the `./target` directory. 
 Currently, the following profiles are supported: `spark-oss`, `spark-databricks`, and `trino-oss`.
-For example, to build LST-Bench for open-source Spark, you can run the following command:
+For example, to build LST-Bench for open-source Spark in Linux/macOS, you can run the following command:
 
 ```bash
-mvn package -Pspark-oss
+./mvnw package -Pspark-oss
+```
+
+Or use the following command for Windows:
+
+```bat
+mvnw.cmd package -Pspark-oss
 ```
 
 ### How to Run
 
-After building LST-Bench, if you are on Linux/Mac run `launcher.sh` or open a Powershell `launcher.ps1` if you are on Windows to display the usage options.
+After building LST-Bench, if you are on Linux/macOS run `launcher.sh` or open a Powershell `launcher.ps1` if you are on Windows to display the usage options.
 
 ```bash
 usage: ./launcher.sh -c <arg> -e <arg> -l <arg> -t <arg> -w <arg>
