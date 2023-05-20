@@ -26,8 +26,10 @@ import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 
 /** Tests for YAML parser into POJO representation. */
+@DisabledIfSystemProperty(named = "lst-bench.test.db", matches = ".*")
 public class ParserTest {
 
   private static final String CONFIG_PATH =
