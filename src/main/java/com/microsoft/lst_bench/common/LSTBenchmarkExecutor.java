@@ -115,7 +115,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             checkResults(executor.invokeAll(threads));
             eventInfo = writePhaseEvent(phaseStartTime, phase.getId(), Status.SUCCESS);
           } catch (Exception e) {
-            LOGGER.error("Exception executing phase: " + phase.getId());
+            LOGGER.error("Exception executing phase: " + phase.getId(), e);
             writePhaseEvent(phaseStartTime, phase.getId(), Status.FAILURE);
             throw e;
           } finally {
@@ -138,7 +138,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             Status.SUCCESS,
             new ObjectMapper().writeValueAsString(experimentMetadata));
       } catch (Exception e) {
-        LOGGER.error("Exception executing experiment: " + config.getId());
+        LOGGER.error("Exception executing experiment: " + config.getId(), e);
         writeExperimentEvent(
             repetitionStartTime,
             config.getId(),
@@ -234,14 +234,14 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             Map<String, Object> values = getRuntimeParameterValues(task);
             executeTask(connection, task, values);
           } catch (Exception e) {
-            LOGGER.error("Exception executing task: " + task.getId());
+            LOGGER.error("Exception executing task: " + task.getId(), e);
             writeTaskEvent(taskStartTime, task.getId(), Status.FAILURE);
             throw e;
           }
           writeTaskEvent(taskStartTime, task.getId(), Status.SUCCESS);
         }
       } catch (Exception e) {
-        LOGGER.error("Exception executing session: " + session.getId());
+        LOGGER.error("Exception executing session: " + session.getId(), e);
         writeSessionEvent(sessionStartTime, session.getId(), Status.FAILURE);
         throw e;
       }
@@ -257,8 +257,9 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
           for (StatementExec statement : file.getStatements()) {
             Instant statementStartTime = Instant.now();
             try (Statement s = connection.createStatement()) {
-              boolean hasResults =
-                  s.execute(StringUtils.replaceParameters(statement, values).getStatement());
+              String sqlStr = StringUtils.replaceParameters(statement, values).getStatement();
+              LOGGER.debug("Executing query: {}", sqlStr);
+              boolean hasResults = s.execute(sqlStr);
               if (hasResults) {
                 ResultSet rs = s.getResultSet();
                 while (rs.next()) {
@@ -266,14 +267,14 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
                 }
               }
             } catch (Exception e) {
-              LOGGER.error("Exception executing statement: " + statement.getId());
+              LOGGER.error("Exception executing statement: " + statement.getId(), e);
               writeStatementEvent(statementStartTime, statement.getId(), Status.FAILURE);
               throw e;
             }
             writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
           }
         } catch (Exception e) {
-          LOGGER.error("Exception executing file: " + file.getId());
+          LOGGER.error("Exception executing file: " + file.getId(), e);
           writeFileEvent(fileStartTime, file.getId(), Status.FAILURE);
           throw e;
         }
