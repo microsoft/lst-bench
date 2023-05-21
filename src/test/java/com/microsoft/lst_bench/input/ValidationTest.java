@@ -32,12 +32,14 @@ import java.nio.file.Paths;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /** Tests for POJO representation matching to YAML schema. */
+@DisabledIfSystemProperty(named = "lst-bench.test.db", matches = ".*")
 public class ValidationTest {
 
   private static final String CONFIG_PATH =

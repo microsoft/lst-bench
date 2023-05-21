@@ -1,0 +1,33 @@
+# Description: Workload for test: All task types, TPC-DS, Delta
+---
+version: 1
+id: w_all_tpcds
+phases:
+- id: setup
+  sessions:
+  - tasks:
+    - template_id: setup
+- id: setup_data_maintenance
+  sessions:
+  - tasks:
+    - template_id: setup_data_maintenance
+- id: init
+  sessions:
+  - tasks:
+    - template_id: init
+- id: build
+  sessions:
+  - tasks:
+    - template_id: build
+- id: single_user
+  sessions:
+  - tasks:
+    - template_id: single_user
+- id: data_maintenance
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_delta
+- id: optimize
+  sessions:
+  - tasks:
+    - template_id: optimize_delta

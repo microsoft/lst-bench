@@ -150,7 +150,9 @@
                 <version>3.1.0</version>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -186,20 +188,6 @@
                             <file>${project.basedir}/src/main/resources/license-header</file>
                         </licenseHeader>
                     </java>
-                    <json>
-                        <includes>
-                            <include>src/main/resources/**/*.json</include>
-                        </includes>
-                        <jackson>
-                            <version>2.14.2</version>
-                        </jackson>
-                    </json>
-                    <sql>
-                        <includes>
-                            <include>src/main/resources/**/*.sql</include>
-                        </includes>
-                        <dbeaver />
-                    </sql>
                 </configuration>
                 <executions>
                     <execution>

@@ -1,4 +1,3 @@
 CALL ${catalog}.system.run_clustering(
-    TABLE
-        => '${database}.catalog_page'
+    table => '${database}.catalog_page'
 );

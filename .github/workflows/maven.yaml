@@ -30,7 +30,8 @@ jobs:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Check out repository code
+        uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -39,3 +40,43 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+
+  ## ----------------------------------------------------------------------------------
+  ## Apache Spark
+  ## ----------------------------------------------------------------------------------
+  spark:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        lst: [ delta, hudi ]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: maven
+      - name: Start Spark container
+        run: |
+          CONTAINER_ID=$(docker run -d -p 10000:10000 -p 15002:15002 apache/spark:v3.3.2 tail -f /dev/null)
+          echo "SPARK_CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
+      - name: Read properties for setup
+        id: yaml-data
+        uses: jbutcher5/read-yaml@1.6
+        with:
+          file: './src/test/resources/config/spark/experiment_config_${{ matrix.lst }}.yaml'
+          key-path: '["parameter_values", "external_data_path"]'
+      - name: Write properties to environment
+        run: echo "external_data_path=${{ steps.yaml-data.outputs.data }}" >> $GITHUB_ENV
+      - name: Setup Spark container
+        run: ./.github/scripts/spark/setup.sh
+      - name: Start Spark
+        run: ./.github/scripts/spark/start.sh
+      - name: Start Spark Thrift Server
+        run: ./.github/scripts/spark/start_thrift_server.sh ${{ matrix.lst }}
+      - name: Run tests
+        run: mvn -B test --file pom.xml -Pspark-oss -Dlst-bench.test.db=spark -Dlst-bench.test.lst=${{ matrix.lst }}

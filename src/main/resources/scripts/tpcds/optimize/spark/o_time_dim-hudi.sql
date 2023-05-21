@@ -1,4 +1,3 @@
 CALL ${catalog}.system.run_clustering(
-    TABLE
-        => '${database}.time_dim'
+    table => '${database}.time_dim'
 );

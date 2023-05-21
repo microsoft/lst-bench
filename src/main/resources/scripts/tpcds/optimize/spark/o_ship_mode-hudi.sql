@@ -1,4 +1,3 @@
 CALL ${catalog}.system.run_clustering(
-    TABLE
-        => '${database}.ship_mode'
+    table => '${database}.ship_mode'
 );

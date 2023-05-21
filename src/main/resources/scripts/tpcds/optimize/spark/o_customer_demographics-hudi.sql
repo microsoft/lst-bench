@@ -1,4 +1,3 @@
 CALL ${catalog}.system.run_clustering(
-    TABLE
-        => '${database}.customer_demographics'
+    table => '${database}.customer_demographics'
 );
