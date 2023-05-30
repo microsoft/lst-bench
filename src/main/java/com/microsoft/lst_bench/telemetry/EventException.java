@@ -15,20 +15,14 @@
  */
 package com.microsoft.lst_bench.telemetry;
 
-public class TelemetryHook extends Thread {
+/** An exception related to management of {@link EventInfo}. */
+public class EventException extends Exception {
 
-  private final JDBCTelemetryRegistry telemetryRegistry;
-
-  public TelemetryHook(JDBCTelemetryRegistry telemetryRegistry) {
-    this.telemetryRegistry = telemetryRegistry;
+  public EventException(Exception cause) {
+    super(cause);
   }
 
-  @Override
-  public void run() {
-    try {
-      telemetryRegistry.flush();
-    } catch (EventException e) {
-      throw new RuntimeException(e);
-    }
+  public EventException(String message) {
+    super(message);
   }
 }

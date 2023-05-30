@@ -82,7 +82,7 @@ public class JDBCTelemetryRegistry {
   }
 
   /** Flushes the events to the database. */
-  public void flush() {
+  public void flush() throws EventException {
     LOGGER.info("Flushing events to database...");
     try (Connection connection = connectionManager.createConnection();
         Statement statement = connection.createStatement()) {
@@ -109,7 +109,7 @@ public class JDBCTelemetryRegistry {
       eventsStream = Collections.synchronizedList(new ArrayList<>());
       LOGGER.info("Events flushed to database.");
     } catch (SQLException e) {
-      LOGGER.error("Error while flushing events to database", e);
+      throw new EventException(e);
     }
   }
 }
