@@ -109,7 +109,6 @@ public class JDBCTelemetryRegistry {
       eventsStream = Collections.synchronizedList(new ArrayList<>());
       LOGGER.info("Events flushed to database.");
     } catch (SQLException e) {
-      LOGGER.error("Error while flushing events to database");
       throw new EventException(e);
     }
   }
