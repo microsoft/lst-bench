@@ -94,6 +94,7 @@ public class JDBCTelemetryRegistry {
                   o ->
                       String.join(
                           ",",
+                          StringUtils.quote(o.getExperimentRunId().toString()),
                           StringUtils.quote(o.getStartTime().toString()),
                           StringUtils.quote(o.getEndTime().toString()),
                           StringUtils.quote(o.getEventId()),
