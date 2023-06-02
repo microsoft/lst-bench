@@ -80,9 +80,9 @@ usage: ./launcher.sh -c <arg> -e <arg> -l <arg> -t <arg> -w <arg>
 ## Configuration Files
 The configuration files used in LST-Bench are YAML files. 
 
-You can find their schema, which provides a description of the expected structure and properties, [here](src/main/resources/schemas).
+You can find their schema, which describes the expected structure and properties, [here](src/main/resources/schemas).
 
-Additionally, you can find sample configurations that can serve as guidelines for creating your own configurations [here](src/main/resources/config).
+Additionally, you can find sample configurations that can serve as guidelines for creating your configurations [here](src/main/resources/config).
 
 ## Architecture
 
@@ -118,7 +118,7 @@ This flexible model allows for the easy creation of diverse SQL workloads for ev
 LST-Bench captures execution telemetry during workload execution at multiple levels, including per experiment, phase, session, task, file, and statement.
 Each telemetry event is recorded with an associated identifier, such as the statement's name or the phase IDs defined in the workload YAML.
 The event includes information on whether it succeeded or not, along with any additional associated data.
-Specifically, each event includes a _start time_, _end time_, _event ID_, _event type_, _status_, and an optional _payload_.
+Specifically, each event includes a _start time_, _end time_, _event ID_, _event type_, _status_, and optional _payload_.
 
 The telemetry registry in LST-Bench is configurable, providing flexibility for different systems and use cases.
 By default, LST-Bench includes an implementation for a JDBC-based registry and supports writing telemetry to DuckDB or Spark.
