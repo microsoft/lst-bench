@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) Microsoft Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.microsoft.lst_bench.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,12 +61,10 @@ class LSTBenchmarkExecutorTest {
   @Test
   void testNoOpSetup() throws Exception {
     var idToConnectionManager = new HashMap<String, ConnectionManager>();
-    ExperimentConfig experimentConfig = ImmutableExperimentConfig.builder()
-        .id("telemetryTest").version(1).repetitions(1).build();
-    TaskLibrary taskLibrary = ImmutableTaskLibrary.builder()
-        .version(1).build();
-    Workload workload = ImmutableWorkload.builder()
-        .id("telemetryTest").version(1).build();
+    ExperimentConfig experimentConfig =
+        ImmutableExperimentConfig.builder().id("telemetryTest").version(1).repetitions(1).build();
+    TaskLibrary taskLibrary = ImmutableTaskLibrary.builder().version(1).build();
+    Workload workload = ImmutableWorkload.builder().id("telemetryTest").version(1).build();
 
     var config = BenchmarkConfig.from(experimentConfig, taskLibrary, workload);
 
@@ -62,9 +75,11 @@ class LSTBenchmarkExecutorTest {
     TelemetryConfig telemetryConfig =
         mapper.readValue(new File(telemetryConfigFile.getFile()), TelemetryConfig.class);
 
-    var uniqueTelemetryDbName
-        = ImmutableConnectionConfig.builder().from(telemetryConfig.getConnection())
-        .url("jdbc:duckdb:./" + telemetryDbFileName).build();
+    var uniqueTelemetryDbName =
+        ImmutableConnectionConfig.builder()
+            .from(telemetryConfig.getConnection())
+            .url("jdbc:duckdb:./" + telemetryDbFileName)
+            .build();
 
     final JDBCTelemetryRegistry telemetryRegistry =
         new JDBCTelemetryRegistry(
@@ -74,8 +89,8 @@ class LSTBenchmarkExecutorTest {
             telemetryConfig.getInsertFile(),
             telemetryConfig.getParameterValues());
 
-    LSTBenchmarkExecutor benchmark
-        = new LSTBenchmarkExecutor(idToConnectionManager, config, telemetryRegistry);
+    LSTBenchmarkExecutor benchmark =
+        new LSTBenchmarkExecutor(idToConnectionManager, config, telemetryRegistry);
     benchmark.run();
   }
 }
