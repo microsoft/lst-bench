@@ -53,7 +53,7 @@ public class BenchmarkConfig {
       String id, int repetitions, Map<String, String> metadata, WorkloadExec workload) {
     this.id = id;
     this.repetitions = repetitions;
-    this.metadata = Collections.unmodifiableMap(metadata);
+    this.metadata = Collections.unmodifiableMap(metadata == null ? new HashMap<>() : metadata);
     this.workload = workload;
   }
 
