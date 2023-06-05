@@ -83,6 +83,8 @@ public class JDBCTelemetryRegistry {
 
   /** Flushes the events to the database. */
   public void flush() throws EventException {
+    if (eventsStream.isEmpty()) return;
+
     LOGGER.info("Flushing events to database...");
     try (Connection connection = connectionManager.createConnection();
         Statement statement = connection.createStatement()) {
