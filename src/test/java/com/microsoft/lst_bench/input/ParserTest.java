@@ -70,7 +70,7 @@ public class ParserTest {
     Assertions.assertEquals(
         ",header=\"true\"", experimentConfig.getParameterValues().get("external_options_suffix"));
     Assertions.assertEquals(
-        "", experimentConfig.getParameterValues().get("external_tblproperties_suffix"));
+        "", experimentConfig.getParameterValues().get("external_table_props_suffix"));
     Assertions.assertEquals("spark_catalog", experimentConfig.getParameterValues().get("catalog"));
     Assertions.assertEquals("delta_tpcds", experimentConfig.getParameterValues().get("database"));
     Assertions.assertEquals("delta", experimentConfig.getParameterValues().get("table_format"));
@@ -78,7 +78,7 @@ public class ParserTest {
         "abfss://mycontainer@myaccount.dfs.core.windows.net/delta/sf_10/",
         experimentConfig.getParameterValues().get("data_path"));
     Assertions.assertEquals("", experimentConfig.getParameterValues().get("options_suffix"));
-    Assertions.assertEquals("", experimentConfig.getParameterValues().get("tblproperties_suffix"));
+    Assertions.assertEquals("", experimentConfig.getParameterValues().get("table_props_suffix"));
   }
 
   @Test

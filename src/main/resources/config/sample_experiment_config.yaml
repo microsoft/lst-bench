@@ -19,10 +19,10 @@ parameter_values:
   external_table_format: csv
   external_data_path: 'abfss://mycontainer@myaccount.dfs.core.windows.net/sf_10/'
   external_options_suffix: ',header="true"'
-  external_tblproperties_suffix: ''
+  external_table_props_suffix: ''
   catalog: spark_catalog
   database: delta_tpcds
   table_format: delta
   data_path: 'abfss://mycontainer@myaccount.dfs.core.windows.net/delta/sf_10/'
   options_suffix: ''
-  tblproperties_suffix: ''
+  table_props_suffix: ''
