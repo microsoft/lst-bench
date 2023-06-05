@@ -16,7 +16,6 @@
 package com.microsoft.lst_bench.telemetry;
 
 import java.time.Instant;
-import java.util.UUID;
 import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
@@ -26,25 +25,48 @@ import org.immutables.value.Value;
 public interface EventInfo {
   /**
    * Returns the unique identifier for the experiment run. This identifier helps in distinguishing
-   * events of one experiment run from another.
+   * events of one experiment run from another. Currently, the experiment run start timestamp is
+   * used as the unique identifier.
    */
-  UUID getExperimentRunId();
+  String getExperimentId();
 
   Instant getStartTime();
 
   Instant getEndTime();
 
+  /**
+   * Returns the type of operation that generated the event, e.g., phase name, task name, etc.
+   * provided in the workload specification.
+   */
+  @Value.Parameter(false)
+  @Nullable String getOperationType();
+
+  /**
+   * Returns the unique identifier of the operation run that generated the event. Currently, the
+   * operation run start timestamp is used as the unique identifier.
+   */
+  @Value.Parameter(false)
+  @Nullable String getOperationId();
+
   String getEventId();
 
   EventType getEventType();
 
-  Status getStatus();
+  @Nullable Status getStatus();
 
   @Value.Parameter(false)
   @Nullable String getPayload();
 
   /** Enumerates the different types of events that can be captured. */
   enum EventType {
+    // Event types related to workload execution timeline
+    EXPERIMENT_STARTED,
+    PHASE_STARTED,
+    SESSION_STARTED,
+    TASK_STARTED,
+    FILE_STARTED,
+    STATEMENT_STARTED,
+
     EXEC_EXPERIMENT,
     EXEC_PHASE,
     EXEC_SESSION,
