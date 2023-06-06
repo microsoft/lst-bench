@@ -8,5 +8,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/income_band/'
         ) TBLPROPERTIES(
-            'primaryKey' = 'ib_income_band_sk' ${table_props_suffix}
+            'primaryKey' = 'ib_income_band_sk' ${tblproperties_suffix}
         );

@@ -14,5 +14,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/customer_demographics/'
         ) TBLPROPERTIES(
-            'primaryKey' = 'cd_demo_sk' ${table_props_suffix}
+            'primaryKey' = 'cd_demo_sk' ${tblproperties_suffix}
         );

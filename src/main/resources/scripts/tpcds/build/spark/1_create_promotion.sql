@@ -27,5 +27,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/promotion/'
         ) TBLPROPERTIES(
-            'primaryKey' = 'p_promo_sk' ${table_props_suffix}
+            'primaryKey' = 'p_promo_sk' ${tblproperties_suffix}
         );

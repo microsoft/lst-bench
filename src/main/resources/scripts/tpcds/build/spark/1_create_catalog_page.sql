@@ -14,5 +14,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/catalog_page/'
         ) TBLPROPERTIES(
-            'primaryKey' = 'cp_catalog_page_sk' ${table_props_suffix}
+            'primaryKey' = 'cp_catalog_page_sk' ${tblproperties_suffix}
         );
