@@ -17,9 +17,10 @@ package com.microsoft.lst_bench.input;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.microsoft.lst_bench.input.config.ConnectionConfig;
 import com.microsoft.lst_bench.input.config.ConnectionsConfig;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
+import com.microsoft.lst_bench.input.config.JDBCConnectionConfig;
+import com.microsoft.lst_bench.input.config.SparkConnectionConfig;
 import com.microsoft.lst_bench.input.config.TelemetryConfig;
 import java.io.File;
 import java.io.IOException;
@@ -88,19 +89,26 @@ public class ParserTest {
         mapper.readValue(
             new File(CONFIG_PATH + "sample_connections_config.yaml"), ConnectionsConfig.class);
     Assertions.assertEquals(1, connectionsConfig.getVersion());
-    Assertions.assertEquals(2, connectionsConfig.getConnections().size());
-    ConnectionConfig connection0 = connectionsConfig.getConnections().get(0);
+    Assertions.assertEquals(3, connectionsConfig.getConnections().size());
+    JDBCConnectionConfig connection0 =
+        (JDBCConnectionConfig) connectionsConfig.getConnections().get(0);
     Assertions.assertEquals("spark_0", connection0.getId());
     Assertions.assertEquals("org.apache.hive.jdbc.HiveDriver", connection0.getDriver());
     Assertions.assertEquals("jdbc:hive2://127.0.0.1:10000", connection0.getUrl());
     Assertions.assertEquals("admin", connection0.getUsername());
     Assertions.assertEquals("p@ssw0rd0", connection0.getPassword());
-    ConnectionConfig connection1 = connectionsConfig.getConnections().get(1);
+    JDBCConnectionConfig connection1 =
+        (JDBCConnectionConfig) connectionsConfig.getConnections().get(1);
     Assertions.assertEquals("spark_1", connection1.getId());
     Assertions.assertEquals("org.apache.hive.jdbc.HiveDriver", connection1.getDriver());
     Assertions.assertEquals("jdbc:hive2://127.0.0.1:10001", connection1.getUrl());
     Assertions.assertEquals("admin", connection1.getUsername());
     Assertions.assertEquals("p@ssw0rd1", connection1.getPassword());
+    SparkConnectionConfig connection2 =
+        (SparkConnectionConfig) connectionsConfig.getConnections().get(2);
+    Assertions.assertEquals("spark_2", connection2.getId());
+    Assertions.assertEquals("spark://127.0.0.1:7077", connection2.getUrl());
+    // TODO
   }
 
   @Test
@@ -546,11 +554,12 @@ public class ParserTest {
             new File(CONFIG_PATH + "sample_telemetry_config.yaml"), TelemetryConfig.class);
     Assertions.assertEquals(1, telemetryConfig.getVersion());
     Assertions.assertNotNull(telemetryConfig.getConnection());
-    Assertions.assertEquals("duckdb_0", telemetryConfig.getConnection().getId());
-    Assertions.assertEquals("org.duckdb.DuckDBDriver", telemetryConfig.getConnection().getDriver());
-    Assertions.assertEquals("jdbc:duckdb:./telemetry", telemetryConfig.getConnection().getUrl());
-    Assertions.assertNull(telemetryConfig.getConnection().getUsername());
-    Assertions.assertNull(telemetryConfig.getConnection().getPassword());
+    JDBCConnectionConfig connectionConfig = (JDBCConnectionConfig) telemetryConfig.getConnection();
+    Assertions.assertEquals("duckdb_0", connectionConfig.getId());
+    Assertions.assertEquals("org.duckdb.DuckDBDriver", connectionConfig.getDriver());
+    Assertions.assertEquals("jdbc:duckdb:./telemetry", connectionConfig.getUrl());
+    Assertions.assertNull(connectionConfig.getUsername());
+    Assertions.assertNull(connectionConfig.getPassword());
     Assertions.assertEquals(Boolean.TRUE, telemetryConfig.isExecuteDDL());
     Assertions.assertEquals(
         "src/main/resources/scripts/logging/duckdb/ddl.sql", telemetryConfig.getDDLFile());

@@ -1,0 +1,10 @@
+# Description: Connections Configuration
+---
+version: 1
+connections:
+- id: spark_0
+  type: spark
+  url: local[*]
+  config:
+    spark.sql.catalog.spark_catalog: org.apache.iceberg.spark.SparkSessionCatalog
+    spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions

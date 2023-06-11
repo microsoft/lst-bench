@@ -11,10 +11,11 @@ connections:
   type: jdbc
   driver: org.apache.hive.jdbc.HiveDriver
   url: jdbc:hive2://127.0.0.1:10001
-  username: admin
-  password: p@ssw0rd1
 - id: spark_2
   type: spark
   url: spark://127.0.0.1:7077
+- id: spark_3
+  type: spark
+  url: spark://127.0.0.1:7078
   config:
     spark.worker.timeout: "60"

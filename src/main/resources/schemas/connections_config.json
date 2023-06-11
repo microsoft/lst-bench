@@ -1,6 +1,63 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/schemas/lst-bench/connections_config.json",
+  "definitions": {
+    "connection": {
+      "type": "object",
+      "title": "Connection configuration",
+      "anyOf": [ {
+        "$ref": "#/definitions/connection/definitions/jdbc_connection"
+      }, {
+        "$ref": "#/definitions/connection/definitions/spark_connection"
+      } ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Connection type (default: jdbc)"
+        },
+        "id": {
+          "type": "string",
+          "title": "Identifier for the connection"
+        },
+        "url": {
+          "type": "string",
+          "title": "Connection URL"
+        }
+      },
+      "required": [ "id", "url" ],
+      "definitions": {
+        "jdbc_connection": {
+          "type": "object",
+          "title": "JDBC connection configuration",
+          "properties": {
+            "driver": {
+              "type": "string",
+              "title": "JDBC driver class name"
+            },
+            "username": {
+              "type": "string",
+              "title": "Username for authentication"
+            },
+            "password": {
+              "type": "string",
+              "title": "Password for authentication"
+            }
+          },
+          "required": [ "driver" ]
+        },
+        "spark_connection": {
+          "type": "object",
+          "title": "Spark connection configuration",
+          "properties": {
+            "config": {
+              "type": "object",
+              "title": "Configuration parameter values",
+              "description": "Map of configuration parameter name-value pairs for Spark"
+            }
+          }
+        }
+      }
+    }
+  },
   "type": "object",
   "title": "Schema for connections configuration input file",
   "required": [ "version", "connections" ],
@@ -13,31 +70,7 @@
       "type": "array",
       "title": "List of JDBC connection configurations",
       "items": {
-        "type": "object",
-        "title": "Connection configuration",
-        "required": [ "id", "driver", "url" ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Identifier for the connection"
-          },
-          "driver": {
-            "type": "string",
-            "title": "JDBC driver class name"
-          },
-          "url": {
-            "type": "string",
-            "title": "JDBC connection URL"
-          },
-          "username": {
-            "type": "string",
-            "title": "Username for authentication"
-          },
-          "password": {
-            "type": "string",
-            "title": "Password for authentication"
-          }
-        }
+        "$ref": "#/definitions/connection"
       }
     }
   }

@@ -17,16 +17,17 @@ package com.microsoft.lst_bench.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.input.ImmutableTaskLibrary;
 import com.microsoft.lst_bench.input.ImmutableWorkload;
+import com.microsoft.lst_bench.input.InputToBench;
 import com.microsoft.lst_bench.input.TaskLibrary;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
-import com.microsoft.lst_bench.input.config.ImmutableConnectionConfig;
 import com.microsoft.lst_bench.input.config.ImmutableExperimentConfig;
+import com.microsoft.lst_bench.input.config.ImmutableJDBCConnectionConfig;
 import com.microsoft.lst_bench.input.config.TelemetryConfig;
-import com.microsoft.lst_bench.sql.ConnectionManager;
-import com.microsoft.lst_bench.telemetry.JDBCTelemetryRegistry;
+import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ class LSTBenchmarkExecutorTest {
     TaskLibrary taskLibrary = ImmutableTaskLibrary.builder().version(1).build();
     Workload workload = ImmutableWorkload.builder().id("telemetryTest").version(1).build();
 
-    var config = BenchmarkConfig.from(experimentConfig, taskLibrary, workload);
+    var config = InputToBench.benchmarkConfig(experimentConfig, taskLibrary, workload);
 
     URL telemetryConfigFile =
         getClass().getClassLoader().getResource("./config/spark/telemetry_config.yaml");
@@ -76,14 +77,14 @@ class LSTBenchmarkExecutorTest {
         mapper.readValue(new File(telemetryConfigFile.getFile()), TelemetryConfig.class);
 
     var uniqueTelemetryDbName =
-        ImmutableConnectionConfig.builder()
+        ImmutableJDBCConnectionConfig.builder()
             .from(telemetryConfig.getConnection())
             .url("jdbc:duckdb:./" + telemetryDbFileName)
             .build();
 
-    final JDBCTelemetryRegistry telemetryRegistry =
-        new JDBCTelemetryRegistry(
-            ConnectionManager.from(uniqueTelemetryDbName),
+    final SQLTelemetryRegistry telemetryRegistry =
+        new SQLTelemetryRegistry(
+            InputToBench.connectionManager(uniqueTelemetryDbName),
             telemetryConfig.isExecuteDDL(),
             telemetryConfig.getDDLFile(),
             telemetryConfig.getInsertFile(),

@@ -17,17 +17,18 @@ package com.microsoft.lst_bench;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.common.BenchmarkConfig;
 import com.microsoft.lst_bench.common.BenchmarkRunnable;
 import com.microsoft.lst_bench.common.LSTBenchmarkExecutor;
+import com.microsoft.lst_bench.input.InputToBench;
 import com.microsoft.lst_bench.input.TaskLibrary;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ConnectionConfig;
 import com.microsoft.lst_bench.input.config.ConnectionsConfig;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
 import com.microsoft.lst_bench.input.config.TelemetryConfig;
-import com.microsoft.lst_bench.sql.ConnectionManager;
-import com.microsoft.lst_bench.telemetry.JDBCTelemetryRegistry;
+import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.telemetry.TelemetryHook;
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -114,10 +115,21 @@ public class Driver {
     final TelemetryConfig telemetryConfig =
         mapper.readValue(new File(inputTelemetryConfigFile), TelemetryConfig.class);
 
+    run(taskLibrary, workload, connectionsConfig, experimentConfig, telemetryConfig);
+  }
+
+  /** Run benchmark. */
+  public static void run(
+      TaskLibrary taskLibrary,
+      Workload workload,
+      ConnectionsConfig connectionsConfig,
+      ExperimentConfig experimentConfig,
+      TelemetryConfig telemetryConfig)
+      throws Exception {
     // Create connections manager
     Map<String, ConnectionManager> idToConnectionManager = new LinkedHashMap<>();
     for (ConnectionConfig connectionConfig : connectionsConfig.getConnections()) {
-      ConnectionManager connectionManager = ConnectionManager.from(connectionConfig);
+      ConnectionManager connectionManager = InputToBench.connectionManager(connectionConfig);
       if (idToConnectionManager.containsKey(connectionConfig.getId())) {
         throw new IllegalArgumentException("Duplicate connection id: " + connectionConfig.getId());
       }
@@ -126,9 +138,9 @@ public class Driver {
 
     // Create log utility
     final ConnectionManager telemetryConnectionManager =
-        ConnectionManager.from(telemetryConfig.getConnection());
-    final JDBCTelemetryRegistry telemetryRegistry =
-        new JDBCTelemetryRegistry(
+        InputToBench.connectionManager(telemetryConfig.getConnection());
+    final SQLTelemetryRegistry telemetryRegistry =
+        new SQLTelemetryRegistry(
             telemetryConnectionManager,
             telemetryConfig.isExecuteDDL(),
             telemetryConfig.getDDLFile(),
@@ -139,7 +151,7 @@ public class Driver {
 
     // Create experiment configuration
     final BenchmarkConfig benchmarkConfig =
-        BenchmarkConfig.from(experimentConfig, taskLibrary, workload);
+        InputToBench.benchmarkConfig(experimentConfig, taskLibrary, workload);
 
     // Run experiment
     final BenchmarkRunnable experiment =
