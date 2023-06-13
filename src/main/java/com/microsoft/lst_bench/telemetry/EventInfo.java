@@ -34,20 +34,6 @@ public interface EventInfo {
 
   Instant getEndTime();
 
-  /**
-   * Returns the type of operation that generated the event, e.g., phase name, task name, etc.
-   * provided in the workload specification.
-   */
-  @Value.Parameter(false)
-  @Nullable String getOperationType();
-
-  /**
-   * Returns the unique identifier of the operation run that generated the event. Currently, the
-   * operation run start timestamp is used as the unique identifier.
-   */
-  @Value.Parameter(false)
-  @Nullable String getOperationId();
-
   String getEventId();
 
   EventType getEventType();
@@ -59,14 +45,6 @@ public interface EventInfo {
 
   /** Enumerates the different types of events that can be captured. */
   enum EventType {
-    // Event types related to workload execution timeline
-    EXPERIMENT_STARTED,
-    PHASE_STARTED,
-    SESSION_STARTED,
-    TASK_STARTED,
-    FILE_STARTED,
-    STATEMENT_STARTED,
-
     EXEC_EXPERIMENT,
     EXEC_PHASE,
     EXEC_SESSION,
