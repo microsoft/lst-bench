@@ -22,5 +22,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/warehouse/'
         ) TBLPROPERTIES(
-            'primaryKey' = 'w_warehouse_sk' ${table_props_suffix}
+            'primaryKey' = 'w_warehouse_sk' ${tblproperties_suffix}
         );

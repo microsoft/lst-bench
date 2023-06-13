@@ -1,0 +1,11 @@
+jupyter==1.0.0
+duckdb==0.8.0
+matplotlib==3.7.1
+seaborn==0.12.2
+pandas==2.0.2
+python_dateutil==2.8.2
+azure-core==1.27.0
+azure-cli-core==2.49.0
+azure-mgmt-compute==30.0.0
+azure-monitor-query==1.2.0
+azure-identity==1.13.0

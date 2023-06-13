@@ -42,5 +42,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/call_center/'
         ) TBLPROPERTIES(
-            'primaryKey' = 'cc_call_center_sk' ${table_props_suffix}
+            'primaryKey' = 'cc_call_center_sk' ${tblproperties_suffix}
         );

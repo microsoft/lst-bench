@@ -52,5 +52,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/store_returns/'
         ) PARTITIONED BY(sr_returned_date_sk) TBLPROPERTIES(
-            'primaryKey' = 'sr_item_sk,sr_ticket_number' ${table_props_suffix}
+            'primaryKey' = 'sr_item_sk,sr_ticket_number' ${tblproperties_suffix}
         );

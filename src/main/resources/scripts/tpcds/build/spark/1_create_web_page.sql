@@ -19,5 +19,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/web_page/'
         ) TBLPROPERTIES(
-            'primaryKey' = 'wp_web_page_sk' ${table_props_suffix}
+            'primaryKey' = 'wp_web_page_sk' ${tblproperties_suffix}
         );

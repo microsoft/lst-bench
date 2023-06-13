@@ -59,5 +59,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/catalog_returns/'
         ) PARTITIONED BY(cr_returned_date_sk) TBLPROPERTIES(
-            'primaryKey' = 'cr_item_sk,cr_order_number' ${table_props_suffix}
+            'primaryKey' = 'cr_item_sk,cr_order_number' ${tblproperties_suffix}
         );

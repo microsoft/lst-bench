@@ -33,5 +33,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/item/'
         ) TBLPROPERTIES(
-            'primaryKey' = 'i_item_sk' ${table_props_suffix}
+            'primaryKey' = 'i_item_sk' ${tblproperties_suffix}
         );

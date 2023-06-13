@@ -310,6 +310,8 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             DateTimeFormatter.AS_OF_FORMATTER.format(
                 ttPhaseEndTime.truncatedTo(ChronoUnit.SECONDS).plusSeconds(1));
         values.put("asof", "TIMESTAMP AS OF " + StringUtils.quote(timeTravelValue));
+      } else {
+        values.put("asof", "");
       }
       return values;
     }

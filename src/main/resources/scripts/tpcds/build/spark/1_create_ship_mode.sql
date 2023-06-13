@@ -11,5 +11,5 @@ CREATE
             USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/ship_mode/'
         ) TBLPROPERTIES(
-            'primaryKey' = 'sm_ship_mode_sk' ${table_props_suffix}
+            'primaryKey' = 'sm_ship_mode_sk' ${tblproperties_suffix}
         );
