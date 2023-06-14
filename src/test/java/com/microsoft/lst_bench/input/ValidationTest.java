@@ -31,7 +31,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -41,18 +40,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 /** Tests for POJO representation matching to YAML schema. */
 @DisabledIfSystemProperty(named = "lst-bench.test.db", matches = ".*")
 public class ValidationTest {
-
-  private static final String CONFIG_PATH =
-      "src"
-          + File.separator
-          + "main"
-          + File.separator
-          + "resources"
-          + File.separator
-          + "config"
-          + File.separator
-          + "spark"
-          + File.separator;
 
   private static final String SCHEMAS_PATH =
       "src"
@@ -64,8 +51,35 @@ public class ValidationTest {
           + "schemas"
           + File.separator;
 
-  @Test
-  public void testValidationExperimentConfig() throws IOException {
+  @ParameterizedTest
+  @EnabledOnOs({OS.LINUX, OS.MAC})
+  @ValueSource(
+      strings = {
+        "src/main/resources/config/spark/sample_experiment_config.yaml",
+        "src/main/resources/config/trino/sample_experiment_config-delta.yaml",
+        "src/main/resources/config/trino/sample_experiment_config-hudi.yaml",
+        "src/main/resources/config/trino/sample_experiment_config-iceberg.yaml"
+      })
+  public void testValidationExperimentConfigUnix(String experimentConfigFilePath)
+      throws IOException {
+    testValidationExperimentConfig(experimentConfigFilePath);
+  }
+
+  @ParameterizedTest
+  @EnabledOnOs({OS.WINDOWS})
+  @ValueSource(
+      strings = {
+        "src\\main\\resources\\config\\spark\\sample_experiment_config.yaml",
+        "src\\main\\resources\\config\\trino\\sample_experiment_config-delta.yaml",
+        "src\\main\\resources\\config\\trino\\sample_experiment_config-hudi.yaml",
+        "src\\main\\resources\\config\\trino\\sample_experiment_config-iceberg.yaml"
+      })
+  public void testValidationExperimentConfigWin(String experimentConfigFilePath)
+      throws IOException {
+    testValidationExperimentConfig(experimentConfigFilePath);
+  }
+
+  private void testValidationExperimentConfig(String experimentConfigFilePath) throws IOException {
     ObjectMapper mapper = new YAMLMapper();
     // Read schema
     JsonSchemaFactory factory =
@@ -76,15 +90,13 @@ public class ValidationTest {
         factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "experiment_config.json")));
     // Validate YAML file contents
     JsonNode jsonNodeDirect =
-        mapper.readTree(
-            Files.newInputStream(Paths.get(CONFIG_PATH + "sample_experiment_config.yaml")));
+        mapper.readTree(Files.newInputStream(Paths.get(experimentConfigFilePath)));
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     Assertions.assertEquals(
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     ExperimentConfig experimentConfig =
-        mapper.readValue(
-            new File(CONFIG_PATH + "sample_experiment_config.yaml"), ExperimentConfig.class);
+        mapper.readValue(new File(experimentConfigFilePath), ExperimentConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(experimentConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -95,8 +107,9 @@ public class ValidationTest {
   @EnabledOnOs({OS.LINUX, OS.MAC})
   @ValueSource(
       strings = {
-        "src/main/resources/config/sample_connections_config.yaml",
-        "src/test/resources/config/validation/connections_config_test0.yaml"
+        "src/test/resources/config/samples/connections_config_test0.yaml",
+        "src/main/resources/config/spark/sample_connections_config.yaml",
+        "src/main/resources/config/trino/sample_connections_config.yaml"
       })
   public void testValidationConnectionsConfigUnix(String configFilePath) throws IOException {
     testValidationConnectionsConfig(configFilePath);
@@ -106,8 +119,9 @@ public class ValidationTest {
   @EnabledOnOs({OS.WINDOWS})
   @ValueSource(
       strings = {
-        "src\\main\\resources\\config\\sample_connections_config.yaml",
-        "src\\test\\resources\\config\\validation\\connections_config_test0.yaml"
+        "src\\main\\resources\\config\\spark\\sample_connections_config.yaml",
+        "src\\test\\resources\\config\\samples\\connections_config_test0.yaml",
+        "src\\main\\resources\\config\\trino\\sample_connections_config.yaml"
       })
   public void testValidationConnectionsConfigWin(String configFilePath) throws IOException {
     testValidationConnectionsConfig(configFilePath);
@@ -137,8 +151,22 @@ public class ValidationTest {
         0, errorsFromPOJO.size(), () -> "Errors found in validation: " + errorsFromPOJO);
   }
 
-  @Test
-  public void testValidationTaskLibrary() throws IOException {
+  @ParameterizedTest
+  @EnabledOnOs({OS.LINUX, OS.MAC})
+  @ValueSource(strings = {"src/main/resources/config/spark/", "src/main/resources/config/trino/"})
+  public void testValidationTaskLibraryUnix(String configPath) throws IOException {
+    testValidationTaskLibrary(configPath);
+  }
+
+  @ParameterizedTest
+  @EnabledOnOs({OS.WINDOWS})
+  @ValueSource(
+      strings = {"src\\main\\resources\\config\\spark\\", "src\\main\\resources\\config\\trino\\"})
+  public void testValidationTaskLibraryWin(String configPath) throws IOException {
+    testValidationTaskLibrary(configPath);
+  }
+
+  private void testValidationTaskLibrary(String configPath) throws IOException {
     ObjectMapper mapper = new YAMLMapper();
     // Read schema
     JsonSchemaFactory factory =
@@ -151,14 +179,14 @@ public class ValidationTest {
     JsonNode jsonNodeDirect =
         mapper.readTree(
             Files.newInputStream(
-                Paths.get(CONFIG_PATH + "tpcds" + File.separator + "task_library.yaml")));
+                Paths.get(configPath + "tpcds" + File.separator + "task_library.yaml")));
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     Assertions.assertEquals(
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     TaskLibrary taskLibrary =
         mapper.readValue(
-            new File(CONFIG_PATH + "tpcds" + File.separator + "task_library.yaml"),
+            new File(configPath + "tpcds" + File.separator + "task_library.yaml"),
             TaskLibrary.class);
     JsonNode jsonNodeObject = mapper.convertValue(taskLibrary, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
@@ -176,7 +204,11 @@ public class ValidationTest {
         "src/main/resources/config/spark/tpcds/wp1_longevity.yaml",
         "src/main/resources/config/spark/tpcds/wp2_resilience.yaml",
         "src/main/resources/config/spark/tpcds/wp3_rw_concurrency.yaml",
-        "src/main/resources/config/spark/tpcds/wp4_time_travel.yaml"
+        "src/main/resources/config/spark/tpcds/wp4_time_travel.yaml",
+        "src/main/resources/config/trino/tpcds/w0_tpcds.yaml",
+        "src/main/resources/config/trino/tpcds/wp1_longevity.yaml",
+        "src/main/resources/config/trino/tpcds/wp2_resilience.yaml",
+        "src/main/resources/config/trino/tpcds/wp3_rw_concurrency.yaml"
       })
   public void testValidationWorkloadUnix(String workloadFilePath) throws IOException {
     testValidationWorkload(workloadFilePath);
@@ -192,7 +224,11 @@ public class ValidationTest {
         "src\\main\\resources\\config\\spark\\tpcds\\wp1_longevity.yaml",
         "src\\main\\resources\\config\\spark\\tpcds\\wp2_resilience.yaml",
         "src\\main\\resources\\config\\spark\\tpcds\\wp3_rw_concurrency.yaml",
-        "src\\main\\resources\\config\\spark\\tpcds\\wp4_time_travel.yaml"
+        "src\\main\\resources\\config\\spark\\tpcds\\wp4_time_travel.yaml",
+        "src\\main\\resources\\config\\trino\\tpcds\\w0_tpcds.yaml",
+        "src\\main\\resources\\config\\trino\\tpcds\\wp1_longevity.yaml",
+        "src\\main\\resources\\config\\trino\\tpcds\\wp2_resilience.yaml",
+        "src\\main\\resources\\config\\trino\\tpcds\\wp3_rw_concurrency.yaml"
       })
   public void testValidationWorkloadWin(String workloadFilePath) throws IOException {
     testValidationWorkload(workloadFilePath);
@@ -220,8 +256,22 @@ public class ValidationTest {
         0, errorsFromPOJO.size(), () -> "Errors found in validation: " + errorsFromPOJO);
   }
 
-  @Test
-  public void testValidationTelemetryConfig() throws IOException {
+  @ParameterizedTest
+  @EnabledOnOs({OS.LINUX, OS.MAC})
+  @ValueSource(strings = {"src/main/resources/config/spark/", "src/main/resources/config/trino/"})
+  public void testValidationTelemetryConfigUnix(String configPath) throws IOException {
+    testValidationTelemetryConfig(configPath);
+  }
+
+  @ParameterizedTest
+  @EnabledOnOs({OS.WINDOWS})
+  @ValueSource(
+      strings = {"src\\main\\resources\\config\\spark\\", "src\\main\\resources\\config\\trino\\"})
+  public void testValidationTelemetryConfigWin(String configPath) throws IOException {
+    testValidationTelemetryConfig(configPath);
+  }
+
+  private void testValidationTelemetryConfig(String configPath) throws IOException {
     ObjectMapper mapper = new YAMLMapper();
     // Read schema
     JsonSchemaFactory factory =
@@ -233,14 +283,14 @@ public class ValidationTest {
     // Validate YAML file contents
     JsonNode jsonNodeDirect =
         mapper.readTree(
-            Files.newInputStream(Paths.get(CONFIG_PATH + "sample_telemetry_config.yaml")));
+            Files.newInputStream(Paths.get(configPath + "sample_telemetry_config.yaml")));
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     Assertions.assertEquals(
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     TelemetryConfig telemetryConfig =
         mapper.readValue(
-            new File(CONFIG_PATH + "sample_telemetry_config.yaml"), TelemetryConfig.class);
+            new File(configPath + "sample_telemetry_config.yaml"), TelemetryConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(telemetryConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
