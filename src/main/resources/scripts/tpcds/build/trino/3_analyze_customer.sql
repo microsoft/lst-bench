@@ -1,0 +1,1 @@
+ANALYZE ${catalog}.${database}.customer;
