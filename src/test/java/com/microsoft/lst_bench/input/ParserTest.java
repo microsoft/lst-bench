@@ -41,6 +41,8 @@ public class ParserTest {
           + "resources"
           + File.separator
           + "config"
+          + File.separator
+          + "spark"
           + File.separator;
 
   @Test
@@ -169,7 +171,7 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =
         mapper.readValue(
-            new File(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds_delta.yaml"),
+            new File(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-delta.yaml"),
             Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("w0_tpcds", workload.getId());
@@ -233,7 +235,7 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =
         mapper.readValue(
-            new File(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds_hudi.yaml"),
+            new File(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-hudi.yaml"),
             Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("w0_tpcds", workload.getId());
@@ -312,7 +314,7 @@ public class ParserTest {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =
         mapper.readValue(
-            new File(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds_iceberg.yaml"),
+            new File(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-iceberg.yaml"),
             Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("w0_tpcds", workload.getId());

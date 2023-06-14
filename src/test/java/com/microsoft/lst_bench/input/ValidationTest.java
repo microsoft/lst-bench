@@ -50,6 +50,8 @@ public class ValidationTest {
           + "resources"
           + File.separator
           + "config"
+          + File.separator
+          + "spark"
           + File.separator;
 
   private static final String SCHEMAS_PATH =
@@ -168,13 +170,13 @@ public class ValidationTest {
   @EnabledOnOs({OS.LINUX, OS.MAC})
   @ValueSource(
       strings = {
-        "src/main/resources/config/tpcds/w0_tpcds_delta.yaml",
-        "src/main/resources/config/tpcds/w0_tpcds_hudi.yaml",
-        "src/main/resources/config/tpcds/w0_tpcds_iceberg.yaml",
-        "src/main/resources/config/tpcds/wp1_longevity.yaml",
-        "src/main/resources/config/tpcds/wp2_resilience.yaml",
-        "src/main/resources/config/tpcds/wp3_rw_concurrency.yaml",
-        "src/main/resources/config/tpcds/wp4_time_travel.yaml"
+        "src/main/resources/config/spark/tpcds/w0_tpcds-delta.yaml",
+        "src/main/resources/config/spark/tpcds/w0_tpcds-hudi.yaml",
+        "src/main/resources/config/spark/tpcds/w0_tpcds-iceberg.yaml",
+        "src/main/resources/config/spark/tpcds/wp1_longevity.yaml",
+        "src/main/resources/config/spark/tpcds/wp2_resilience.yaml",
+        "src/main/resources/config/spark/tpcds/wp3_rw_concurrency.yaml",
+        "src/main/resources/config/spark/tpcds/wp4_time_travel.yaml"
       })
   public void testValidationWorkloadUnix(String workloadFilePath) throws IOException {
     testValidationWorkload(workloadFilePath);
@@ -184,13 +186,13 @@ public class ValidationTest {
   @EnabledOnOs({OS.WINDOWS})
   @ValueSource(
       strings = {
-        "src\\main\\resources\\config\\tpcds\\w0_tpcds_delta.yaml",
-        "src\\main\\resources\\config\\tpcds\\w0_tpcds_hudi.yaml",
-        "src\\main\\resources\\config\\tpcds\\w0_tpcds_iceberg.yaml",
-        "src\\main\\resources\\config\\tpcds\\wp1_longevity.yaml",
-        "src\\main\\resources\\config\\tpcds\\wp2_resilience.yaml",
-        "src\\main\\resources\\config\\tpcds\\wp3_rw_concurrency.yaml",
-        "src\\main\\resources\\config\\tpcds\\wp4_time_travel.yaml"
+        "src\\main\\resources\\config\\spark\\tpcds\\w0_tpcds-delta.yaml",
+        "src\\main\\resources\\config\\spark\\tpcds\\w0_tpcds-hudi.yaml",
+        "src\\main\\resources\\config\\spark\\tpcds\\w0_tpcds-iceberg.yaml",
+        "src\\main\\resources\\config\\spark\\tpcds\\wp1_longevity.yaml",
+        "src\\main\\resources\\config\\spark\\tpcds\\wp2_resilience.yaml",
+        "src\\main\\resources\\config\\spark\\tpcds\\wp3_rw_concurrency.yaml",
+        "src\\main\\resources\\config\\spark\\tpcds\\wp4_time_travel.yaml"
       })
   public void testValidationWorkloadWin(String workloadFilePath) throws IOException {
     testValidationWorkload(workloadFilePath);

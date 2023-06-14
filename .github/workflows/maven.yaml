@@ -90,7 +90,7 @@ jobs:
         id: yaml-data
         uses: jbutcher5/read-yaml@1.6
         with:
-          file: './src/test/resources/config/spark/experiment_config_${{ matrix.lst }}.yaml'
+          file: './src/test/resources/config/spark/experiment_config-${{ matrix.lst }}.yaml'
           key-path: '["parameter_values", "external_data_path"]'
       - name: Write properties to environment
         run: echo "external_data_path=${{ steps.yaml-data.outputs.data }}" >> $GITHUB_ENV
