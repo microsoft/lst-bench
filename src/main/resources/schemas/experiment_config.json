@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/schemas/lst-bench/experiment_config.json",
   "type": "object",
   "title": "Schema for experiment configuration input file",
   "required": [ "version", "id", "repetitions" ],

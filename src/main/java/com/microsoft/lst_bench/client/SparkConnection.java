@@ -13,22 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microsoft.lst_bench.input.config;
+package com.microsoft.lst_bench.client;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import java.util.List;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 
-/** Represents a single input connection configuration. */
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    property = "type",
-    defaultImpl = JDBCConnectionConfig.class)
-@JsonSubTypes({
-  @JsonSubTypes.Type(value = JDBCConnectionConfig.class, name = "jdbc"),
-  @JsonSubTypes.Type(value = SparkConnectionConfig.class, name = "spark")
-})
-public interface ConnectionConfig {
-  String getId();
+/** A Spark connection. */
+public class SparkConnection implements Connection {
 
-  String getUrl();
+  private final SparkSession session;
+
+  public SparkConnection(SparkSession session) {
+    this.session = session;
+  }
+
+  @Override
+  public void execute(String sqlText) {
+    List<Row> results = session.sql(sqlText).collectAsList();
+    for (Row row : results) {
+      // do nothing
+    }
+  }
+
+  @Override
+  public void close() {
+    session.close();
+  }
 }

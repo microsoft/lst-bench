@@ -15,20 +15,19 @@
  */
 package com.microsoft.lst_bench.input.config;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.Map;
+import javax.annotation.Nullable;
+import org.immutables.value.Value;
 
 /** Represents a single input connection configuration. */
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    property = "type",
-    defaultImpl = JDBCConnectionConfig.class)
-@JsonSubTypes({
-  @JsonSubTypes.Type(value = JDBCConnectionConfig.class, name = "jdbc"),
-  @JsonSubTypes.Type(value = SparkConnectionConfig.class, name = "spark")
-})
-public interface ConnectionConfig {
-  String getId();
-
-  String getUrl();
+@Value.Immutable
+@Value.Style(jdkOnly = true)
+@JsonSerialize(as = ImmutableSparkConnectionConfig.class)
+@JsonDeserialize(as = ImmutableSparkConnectionConfig.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public interface SparkConnectionConfig extends ConnectionConfig {
+  @Nullable Map<String, String> getConfig();
 }

@@ -15,13 +15,12 @@
  */
 package com.microsoft.lst_bench.telemetry;
 
+import com.microsoft.lst_bench.client.ClientException;
+import com.microsoft.lst_bench.client.Connection;
+import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.exec.StatementExec;
-import com.microsoft.lst_bench.sql.ConnectionManager;
 import com.microsoft.lst_bench.sql.SQLParser;
 import com.microsoft.lst_bench.util.StringUtils;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,10 +30,10 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** A telemetry registry that writes events to a JDBC database. */
-public class JDBCTelemetryRegistry {
+/** A telemetry registry that writes events to a SQL-compatible database. */
+public class SQLTelemetryRegistry {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(JDBCTelemetryRegistry.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SQLTelemetryRegistry.class);
 
   private final ConnectionManager connectionManager;
 
@@ -43,13 +42,13 @@ public class JDBCTelemetryRegistry {
   // TODO: Make writing events thread-safe.
   private List<EventInfo> eventsStream;
 
-  public JDBCTelemetryRegistry(
+  public SQLTelemetryRegistry(
       ConnectionManager connectionManager,
       boolean executeDdl,
       String ddlFile,
       String insertFile,
       Map<String, Object> parameterValues)
-      throws SQLException {
+      throws ClientException {
     this.connectionManager = connectionManager;
     this.eventsStream = Collections.synchronizedList(new ArrayList<>());
     this.insertFileStatements =
@@ -62,14 +61,14 @@ public class JDBCTelemetryRegistry {
     }
   }
 
-  private void executeDdl(String ddlFile, Map<String, Object> parameterValues) throws SQLException {
+  private void executeDdl(String ddlFile, Map<String, Object> parameterValues)
+      throws ClientException {
     LOGGER.info("Creating new logging tables...");
-    try (Connection connection = connectionManager.createConnection();
-        Statement statement = connection.createStatement()) {
+    try (Connection connection = connectionManager.createConnection()) {
       List<StatementExec> ddlFileStatements = SQLParser.getStatements(ddlFile).getStatements();
       for (StatementExec query : ddlFileStatements) {
         String currentQuery = StringUtils.replaceParameters(query, parameterValues).getStatement();
-        statement.execute(currentQuery);
+        connection.execute(currentQuery);
       }
     }
     LOGGER.info("Logging tables created.");
@@ -85,8 +84,7 @@ public class JDBCTelemetryRegistry {
     if (eventsStream.isEmpty()) return;
 
     LOGGER.info("Flushing events to database...");
-    try (Connection connection = connectionManager.createConnection();
-        Statement statement = connection.createStatement()) {
+    try (Connection connection = connectionManager.createConnection()) {
       Map<String, Object> values = new HashMap<>();
       values.put(
           "tuples",
@@ -105,12 +103,12 @@ public class JDBCTelemetryRegistry {
               .collect(Collectors.joining("),(", "(", ")")));
       for (StatementExec query : insertFileStatements) {
         String currentQuery = StringUtils.replaceParameters(query, values).getStatement();
-        statement.execute(currentQuery);
+        connection.execute(currentQuery);
       }
 
       eventsStream = Collections.synchronizedList(new ArrayList<>());
       LOGGER.info("Events flushed to database.");
-    } catch (SQLException e) {
+    } catch (ClientException e) {
       throw new EventException(e);
     }
   }

@@ -17,24 +17,24 @@ package com.microsoft.lst_bench.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.microsoft.lst_bench.client.ClientException;
+import com.microsoft.lst_bench.client.Connection;
+import com.microsoft.lst_bench.client.ConnectionManager;
+import com.microsoft.lst_bench.input.BenchmarkObjectFactory;
 import com.microsoft.lst_bench.input.ImmutableTaskLibrary;
 import com.microsoft.lst_bench.input.ImmutableWorkload;
 import com.microsoft.lst_bench.input.TaskLibrary;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
-import com.microsoft.lst_bench.input.config.ImmutableConnectionConfig;
 import com.microsoft.lst_bench.input.config.ImmutableExperimentConfig;
+import com.microsoft.lst_bench.input.config.ImmutableJDBCConnectionConfig;
 import com.microsoft.lst_bench.input.config.TelemetryConfig;
-import com.microsoft.lst_bench.sql.ConnectionManager;
-import com.microsoft.lst_bench.telemetry.JDBCTelemetryRegistry;
+import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -78,9 +78,9 @@ class LSTBenchmarkExecutorTest {
     TaskLibrary taskLibrary = ImmutableTaskLibrary.builder().version(1).build();
     Workload workload = ImmutableWorkload.builder().id("nooptest").version(1).build();
 
-    var config = BenchmarkConfig.from(experimentConfig, taskLibrary, workload);
+    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
 
-    JDBCTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
+    SQLTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
 
     LSTBenchmarkExecutor benchmark =
         new LSTBenchmarkExecutor(idToConnectionManager, config, telemetryRegistry);
@@ -97,9 +97,6 @@ class LSTBenchmarkExecutorTest {
     ObjectMapper mapper = new YAMLMapper();
 
     Connection mockConnection = Mockito.mock(Connection.class);
-    Statement mockStatement = Mockito.mock(Statement.class);
-    Mockito.when(mockConnection.createStatement()).thenReturn(mockStatement);
-
     ConnectionManager mockConnectionManager = Mockito.mock(ConnectionManager.class);
     Mockito.when(mockConnectionManager.createConnection()).thenReturn(mockConnection);
 
@@ -119,9 +116,9 @@ class LSTBenchmarkExecutorTest {
     Assertions.assertNotNull(workloadFile);
     Workload workload = mapper.readValue(new File(workloadFile.getFile()), Workload.class);
 
-    var config = BenchmarkConfig.from(experimentConfig, taskLibrary, workload);
+    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
 
-    JDBCTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
+    SQLTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
 
     LSTBenchmarkExecutor benchmark =
         new LSTBenchmarkExecutor(idToConnectionManager, config, telemetryRegistry);
@@ -141,7 +138,7 @@ class LSTBenchmarkExecutorTest {
     }
   }
 
-  private JDBCTelemetryRegistry getTelemetryRegistry() throws IOException, SQLException {
+  private SQLTelemetryRegistry getTelemetryRegistry() throws ClientException, IOException {
     URL telemetryConfigFile =
         getClass().getClassLoader().getResource("./config/spark/telemetry_config.yaml");
     Assertions.assertNotNull(telemetryConfigFile);
@@ -150,13 +147,13 @@ class LSTBenchmarkExecutorTest {
         mapper.readValue(new File(telemetryConfigFile.getFile()), TelemetryConfig.class);
 
     var uniqueTelemetryDbName =
-        ImmutableConnectionConfig.builder()
+        ImmutableJDBCConnectionConfig.builder()
             .from(telemetryConfig.getConnection())
             .url("jdbc:duckdb:./" + telemetryDbFileName)
             .build();
 
-    return new JDBCTelemetryRegistry(
-        ConnectionManager.from(uniqueTelemetryDbName),
+    return new SQLTelemetryRegistry(
+        BenchmarkObjectFactory.connectionManager(uniqueTelemetryDbName),
         telemetryConfig.isExecuteDDL(),
         telemetryConfig.getDDLFile(),
         telemetryConfig.getInsertFile(),

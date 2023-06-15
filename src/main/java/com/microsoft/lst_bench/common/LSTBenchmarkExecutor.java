@@ -16,24 +16,22 @@
 package com.microsoft.lst_bench.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microsoft.lst_bench.client.ClientException;
+import com.microsoft.lst_bench.client.Connection;
+import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.PhaseExec;
 import com.microsoft.lst_bench.exec.SessionExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
 import com.microsoft.lst_bench.exec.WorkloadExec;
-import com.microsoft.lst_bench.sql.ConnectionManager;
 import com.microsoft.lst_bench.telemetry.EventInfo;
 import com.microsoft.lst_bench.telemetry.EventInfo.EventType;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.ImmutableEventInfo;
-import com.microsoft.lst_bench.telemetry.JDBCTelemetryRegistry;
+import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.DateTimeFormatter;
 import com.microsoft.lst_bench.util.StringUtils;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -58,7 +56,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
 
   private final Map<String, ConnectionManager> idToConnectionManager;
   private final BenchmarkConfig config;
-  private final JDBCTelemetryRegistry telemetryRegistry;
+  private final SQLTelemetryRegistry telemetryRegistry;
 
   // timestamp of the start of the first iteration of an experiment.
   private String experimentStartTime;
@@ -66,7 +64,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
   public LSTBenchmarkExecutor(
       Map<String, ConnectionManager> idToConnectionManager,
       BenchmarkConfig config,
-      JDBCTelemetryRegistry telemetryRegistry) {
+      SQLTelemetryRegistry telemetryRegistry) {
     super();
     this.idToConnectionManager = Collections.unmodifiableMap(idToConnectionManager);
     this.config = config;
@@ -240,7 +238,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
     }
 
     @Override
-    public Boolean call() throws SQLException {
+    public Boolean call() throws ClientException {
       Instant sessionStartTime = Instant.now();
       try (Connection connection = connectionManager.createConnection()) {
         for (TaskExec task : session.getTasks()) {
@@ -265,21 +263,14 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
     }
 
     private void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
-        throws SQLException {
+        throws ClientException {
       for (FileExec file : task.getFiles()) {
         Instant fileStartTime = Instant.now();
         try {
           for (StatementExec statement : file.getStatements()) {
             Instant statementStartTime = Instant.now();
-            try (Statement s = connection.createStatement()) {
-              boolean hasResults =
-                  s.execute(StringUtils.replaceParameters(statement, values).getStatement());
-              if (hasResults) {
-                ResultSet rs = s.getResultSet();
-                while (rs.next()) {
-                  // do nothing
-                }
-              }
+            try {
+              connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
             } catch (Exception e) {
               LOGGER.error("Exception executing statement: " + statement.getId());
               writeStatementEvent(statementStartTime, statement.getId(), Status.FAILURE);
