@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/schemas/lst-bench/telemetry_config.json",
   "type": "object",
   "title": "Schema for telemetry configuration input file",
   "required": [ "version", "connection", "execute_ddl", "ddl_file", "insert_file" ],
@@ -10,31 +9,7 @@
       "title": "File format version"
     },
     "connection": {
-      "type": "object",
-      "title": "Connection configuration",
-      "required": [ "id", "driver", "url" ],
-      "properties": {
-        "id": {
-          "type": "string",
-          "title": "Identifier for the connection"
-        },
-        "driver": {
-          "type": "string",
-          "title": "JDBC driver class name"
-        },
-        "url": {
-          "type": "string",
-          "title": "JDBC connection URL"
-        },
-        "username": {
-          "type": "string",
-          "title": "Username for authentication"
-        },
-        "password": {
-          "type": "string",
-          "title": "Password for authentication"
-        }
-      }
+      "$ref": "resource:/schemas/connections_config.json#/definitions/connection"
     },
     "execute_ddl": {
       "type": "boolean",

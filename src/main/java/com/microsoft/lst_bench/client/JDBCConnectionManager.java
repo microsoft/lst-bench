@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microsoft.lst_bench.sql;
+package com.microsoft.lst_bench.client;
 
-import com.microsoft.lst_bench.input.config.ConnectionConfig;
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 
 /** Simple JDBC connection manager. */
-public class ConnectionManager {
+public class JDBCConnectionManager implements ConnectionManager {
 
   private final String url;
 
@@ -31,28 +29,22 @@ public class ConnectionManager {
 
   @Nullable private final String password;
 
-  private ConnectionManager(String url, String username, String password) {
+  public JDBCConnectionManager(String url, String username, String password) {
     this.url = url;
     this.username = username;
     this.password = password;
   }
 
-  public Connection createConnection() throws SQLException {
-    if (StringUtils.isEmpty(username)) {
-      return DriverManager.getConnection(url);
-    } else {
-      return DriverManager.getConnection(url, username, password);
-    }
-  }
-
-  public static ConnectionManager from(ConnectionConfig connectionConfig) {
+  @Override
+  public Connection createConnection() throws ClientException {
     try {
-      Class.forName(connectionConfig.getDriver());
-    } catch (ClassNotFoundException e) {
-      throw new IllegalArgumentException(
-          "Unable to load driver class: " + connectionConfig.getDriver(), e);
+      if (StringUtils.isEmpty(username)) {
+        return new JDBCConnection(DriverManager.getConnection(url));
+      } else {
+        return new JDBCConnection(DriverManager.getConnection(url, username, password));
+      }
+    } catch (SQLException e) {
+      throw new ClientException(e);
     }
-    return new ConnectionManager(
-        connectionConfig.getUrl(), connectionConfig.getUsername(), connectionConfig.getPassword());
   }
 }

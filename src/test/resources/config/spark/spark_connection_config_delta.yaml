@@ -1,0 +1,11 @@
+# Description: Connections Configuration
+---
+version: 1
+connections:
+- id: spark_0
+  type: spark
+  url: local[*]
+  config:
+    spark.sql.catalog.spark_catalog: org.apache.spark.sql.delta.catalog.DeltaCatalog
+    spark.sql.extensions: io.delta.sql.DeltaSparkSessionExtension
+

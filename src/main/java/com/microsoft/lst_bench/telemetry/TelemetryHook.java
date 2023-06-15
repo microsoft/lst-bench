@@ -17,9 +17,9 @@ package com.microsoft.lst_bench.telemetry;
 
 public class TelemetryHook extends Thread {
 
-  private final JDBCTelemetryRegistry telemetryRegistry;
+  private final SQLTelemetryRegistry telemetryRegistry;
 
-  public TelemetryHook(JDBCTelemetryRegistry telemetryRegistry) {
+  public TelemetryHook(SQLTelemetryRegistry telemetryRegistry) {
     this.telemetryRegistry = telemetryRegistry;
   }
 

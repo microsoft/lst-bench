@@ -9,8 +9,8 @@
     <version>0.1-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -34,6 +34,12 @@
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
             <version>2.9.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.12</artifactId>
+            <version>3.3.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -84,12 +90,36 @@
             <version>5.9.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.delta</groupId>
+            <artifactId>delta-core_2.12</artifactId>
+            <version>2.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.delta</groupId>
+            <artifactId>delta-storage</artifactId>
+            <version>2.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hudi</groupId>
+            <artifactId>hudi-spark3.3-bundle_2.12</artifactId>
+            <version>0.12.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.iceberg</groupId>
+            <artifactId>iceberg-spark-runtime-3.3_2.12</artifactId>
+            <version>1.1.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
         <!-- Per-engine profile for drivers -->
         <profile>
-            <id>spark-databricks</id>
+            <id>databricks-jdbc</id>
             <dependencies>
                 <dependency>
                     <groupId>com.databricks</groupId>
@@ -99,7 +129,7 @@
             </dependencies>
         </profile>
         <profile>
-            <id>spark-oss</id>
+            <id>spark-jdbc</id>
             <dependencies>
                 <dependency>
                     <groupId>org.apache.hive</groupId>
@@ -131,7 +161,17 @@
             </dependencies>
         </profile>
         <profile>
-            <id>trino-oss</id>
+            <id>spark-client</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.spark</groupId>
+                    <artifactId>spark-sql_2.12</artifactId>
+                    <version>3.3.2</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>trino-jdbc</id>
             <dependencies>
                 <dependency>
                     <groupId>io.trino</groupId>
@@ -160,6 +200,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
+                            <excludeScope>provided</excludeScope>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
                         </configuration>
                     </execution>

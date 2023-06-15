@@ -89,8 +89,29 @@ public class ValidationTest {
         0, errorsFromPOJO.size(), () -> "Errors found in validation: " + errorsFromPOJO);
   }
 
-  @Test
-  public void testValidationConnectionsConfig() throws IOException {
+  @ParameterizedTest
+  @EnabledOnOs({OS.LINUX, OS.MAC})
+  @ValueSource(
+      strings = {
+        "src/main/resources/config/sample_connections_config.yaml",
+        "src/test/resources/config/validation/connections_config_test0.yaml"
+      })
+  public void testValidationConnectionsConfigUnix(String configFilePath) throws IOException {
+    testValidationConnectionsConfig(configFilePath);
+  }
+
+  @ParameterizedTest
+  @EnabledOnOs({OS.WINDOWS})
+  @ValueSource(
+      strings = {
+        "src\\main\\resources\\config\\sample_connections_config.yaml",
+        "src\\test\\resources\\config\\validation\\connections_config_test0.yaml"
+      })
+  public void testValidationConnectionsConfigWin(String configFilePath) throws IOException {
+    testValidationConnectionsConfig(configFilePath);
+  }
+
+  private void testValidationConnectionsConfig(String configFilePath) throws IOException {
     ObjectMapper mapper = new YAMLMapper();
     // Read schema
     JsonSchemaFactory factory =
@@ -101,16 +122,13 @@ public class ValidationTest {
         factory.getSchema(
             Files.newInputStream(Paths.get(SCHEMAS_PATH + "connections_config.json")));
     // Validate YAML file contents
-    JsonNode jsonNodeDirect =
-        mapper.readTree(
-            Files.newInputStream(Paths.get(CONFIG_PATH + "sample_connections_config.yaml")));
+    JsonNode jsonNodeDirect = mapper.readTree(Files.newInputStream(Paths.get(configFilePath)));
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     Assertions.assertEquals(
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     ConnectionsConfig connectionsConfig =
-        mapper.readValue(
-            new File(CONFIG_PATH + "sample_connections_config.yaml"), ConnectionsConfig.class);
+        mapper.readValue(new File(configFilePath), ConnectionsConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(connectionsConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -158,26 +176,8 @@ public class ValidationTest {
         "src/main/resources/config/tpcds/wp3_rw_concurrency.yaml",
         "src/main/resources/config/tpcds/wp4_time_travel.yaml"
       })
-  public void testValidationWorkload(String workloadFilePath) throws IOException {
-    ObjectMapper mapper = new YAMLMapper();
-    // Read schema
-    JsonSchemaFactory factory =
-        JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
-            .objectMapper(mapper)
-            .build();
-    JsonSchema schema =
-        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "workload.json")));
-    // Validate YAML file contents
-    JsonNode jsonNodeDirect = mapper.readTree(Files.newInputStream(Paths.get(workloadFilePath)));
-    Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
-    Assertions.assertEquals(
-        0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
-    // Validate YAML generated from POJO object
-    Workload workload = mapper.readValue(new File(workloadFilePath), Workload.class);
-    JsonNode jsonNodeObject = mapper.convertValue(workload, JsonNode.class);
-    Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
-    Assertions.assertEquals(
-        0, errorsFromPOJO.size(), () -> "Errors found in validation: " + errorsFromPOJO);
+  public void testValidationWorkloadUnix(String workloadFilePath) throws IOException {
+    testValidationWorkload(workloadFilePath);
   }
 
   @ParameterizedTest
@@ -193,6 +193,10 @@ public class ValidationTest {
         "src\\main\\resources\\config\\tpcds\\wp4_time_travel.yaml"
       })
   public void testValidationWorkloadWin(String workloadFilePath) throws IOException {
+    testValidationWorkload(workloadFilePath);
+  }
+
+  private void testValidationWorkload(String workloadFilePath) throws IOException {
     ObjectMapper mapper = new YAMLMapper();
     // Read schema
     JsonSchemaFactory factory =

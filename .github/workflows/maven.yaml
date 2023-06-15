@@ -21,7 +21,7 @@ on:
     branches: [ main ]
 
 env:
-  JAVA_VERSION: 17
+  JAVA_VERSION: 11
 
 jobs:
   build:
@@ -42,9 +42,31 @@ jobs:
         run: mvn -B package --file pom.xml
 
   ## ----------------------------------------------------------------------------------
-  ## Apache Spark
+  ## Apache Spark (Session)
   ## ----------------------------------------------------------------------------------
-  spark:
+  spark-local-session:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        lst: [ delta ]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: maven
+      - name: Run tests
+        run: mvn -B test --file pom.xml -Pspark-client -Dlst-bench.test.db=spark -Dlst-bench.test.lst=${{ matrix.lst }} -Dlst-bench.test.connection=spark
+
+  ## ----------------------------------------------------------------------------------
+  ## Apache Spark (JDBC)
+  ## ----------------------------------------------------------------------------------
+  spark-jdbc:
     needs: build
     runs-on: ubuntu-latest
     strategy:
@@ -79,4 +101,4 @@ jobs:
       - name: Start Spark Thrift Server
         run: ./.github/scripts/spark/start_thrift_server.sh ${{ matrix.lst }}
       - name: Run tests
-        run: mvn -B test --file pom.xml -Pspark-oss -Dlst-bench.test.db=spark -Dlst-bench.test.lst=${{ matrix.lst }}
+        run: mvn -B test --file pom.xml -Pspark-jdbc -Dlst-bench.test.db=spark -Dlst-bench.test.lst=${{ matrix.lst }} -Dlst-bench.test.connection=jdbc
