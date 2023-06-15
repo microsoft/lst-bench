@@ -112,7 +112,7 @@ class LSTBenchmarkExecutorTest {
     TaskLibrary taskLibrary = mapper.readValue(new File(taskLibFile.getFile()), TaskLibrary.class);
 
     URL workloadFile =
-        getClass().getClassLoader().getResource("./config/spark/w_all_tpcds_delta.yaml");
+        getClass().getClassLoader().getResource("./config/spark/w_all_tpcds-delta.yaml");
     Assertions.assertNotNull(workloadFile);
     Workload workload = mapper.readValue(new File(workloadFile.getFile()), Workload.class);
 
