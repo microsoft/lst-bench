@@ -44,10 +44,10 @@ public class DriverSparkTest {
   public void testJDBCTPCDSAllTasksDelta() throws Exception {
     runDriver(
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
-        "src/test/resources/config/spark/experiment_config_delta.yaml",
+        "src/test/resources/config/spark/experiment_config-delta.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/tpcds/task_library.yaml",
-        "src/test/resources/config/spark/w_all_tpcds_delta.yaml");
+        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "src/test/resources/config/spark/w_all_tpcds-delta.yaml");
   }
 
   @Test
@@ -56,10 +56,10 @@ public class DriverSparkTest {
   public void testJDBCTPCDSAllTasksHudi() throws Exception {
     runDriver(
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
-        "src/test/resources/config/spark/experiment_config_hudi.yaml",
+        "src/test/resources/config/spark/experiment_config-hudi.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/tpcds/task_library.yaml",
-        "src/test/resources/config/spark/w_all_tpcds_hudi.yaml");
+        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "src/test/resources/config/spark/w_all_tpcds-hudi.yaml");
   }
 
   @Test
@@ -68,10 +68,10 @@ public class DriverSparkTest {
   public void testJDBCTPCDSAllTasksIceberg() throws Exception {
     runDriver(
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
-        "src/test/resources/config/spark/experiment_config_iceberg.yaml",
+        "src/test/resources/config/spark/experiment_config-iceberg.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/tpcds/task_library.yaml",
-        "src/test/resources/config/spark/w_all_tpcds_iceberg.yaml");
+        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "src/test/resources/config/spark/w_all_tpcds-iceberg.yaml");
   }
 
   private void runDriver(String arg0, String arg1, String arg2, String arg3, String arg4)
@@ -84,10 +84,10 @@ public class DriverSparkTest {
   @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "spark")
   public void testSparkSessionDelta(@TempDir Path tempDir) throws Exception {
     testSparkSession(
-        "src/main/resources/config/tpcds/task_library.yaml",
-        "src/test/resources/config/spark/w_all_tpcds_single_session_delta.yaml",
-        "src/test/resources/config/spark/spark_connection_config_delta.yaml",
-        "src/test/resources/config/spark/experiment_config_delta.yaml",
+        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "src/test/resources/config/spark/w_all_tpcds_single_session-delta.yaml",
+        "src/test/resources/config/spark/spark_connection_config-delta.yaml",
+        "src/test/resources/config/spark/experiment_config-delta.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
         tempDir);
   }
@@ -97,10 +97,10 @@ public class DriverSparkTest {
   @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "spark")
   public void testSparkSessionHudi(@TempDir Path tempDir) throws Exception {
     testSparkSession(
-        "src/main/resources/config/tpcds/task_library.yaml",
-        "src/test/resources/config/spark/w_all_tpcds_single_session_hudi.yaml",
-        "src/test/resources/config/spark/spark_connection_config_hudi.yaml",
-        "src/test/resources/config/spark/experiment_config_hudi.yaml",
+        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "src/test/resources/config/spark/w_all_tpcds_single_session-hudi.yaml",
+        "src/test/resources/config/spark/spark_connection_config-hudi.yaml",
+        "src/test/resources/config/spark/experiment_config-hudi.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
         tempDir);
   }
@@ -110,10 +110,10 @@ public class DriverSparkTest {
   @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "spark")
   public void testSparkSessionIceberg(@TempDir Path tempDir) throws Exception {
     testSparkSession(
-        "src/main/resources/config/tpcds/task_library.yaml",
-        "src/test/resources/config/spark/w_all_tpcds_single_session_iceberg.yaml",
-        "src/test/resources/config/spark/spark_connection_config_iceberg.yaml",
-        "src/test/resources/config/spark/experiment_config_iceberg.yaml",
+        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "src/test/resources/config/spark/w_all_tpcds_single_session-iceberg.yaml",
+        "src/test/resources/config/spark/spark_connection_config-iceberg.yaml",
+        "src/test/resources/config/spark/experiment_config-iceberg.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
         tempDir);
   }

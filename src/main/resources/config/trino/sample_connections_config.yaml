@@ -1,0 +1,14 @@
+# Description: Connections Configuration
+---
+version: 1
+connections:
+- id: trino_0
+  driver: io.trino.jdbc.TrinoDriver
+  url: jdbc:trino://127.0.0.1:8081
+  username: admin
+  password: p@ssw0rd0
+- id: trino_1
+  driver: io.trino.jdbc.TrinoDriver
+  url: jdbc:trino://127.0.0.1:8081
+  username: admin
+  password: p@ssw0rd1
