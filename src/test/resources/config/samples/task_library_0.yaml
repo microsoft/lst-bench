@@ -1,0 +1,36 @@
+# Description: Tasks Library
+---
+version: 1
+task_templates:
+# Create external tables needed for benchmark
+- id: setup
+  files:
+  - src/main/resources/scripts/tpcds/setup/spark/ddl-external-tables.sql
+# Create data maintenance external tables needed for benchmark
+- id: setup_data_maintenance
+  files:
+  - src/main/resources/scripts/tpcds/setup_data_maintenance/spark/ddl-external-tables-refresh.sql
+  parameter_values_file: src/main/resources/auxiliary/tpcds/setup_data_maintenance/parameter_values.dat
+# Create schema and drop existing tables
+- id: init
+  files:
+  - src/main/resources/scripts/tpcds/init/spark/init.sql
+# Create benchmark tables and load data into them
+- id: build
+  files:
+  - src/main/resources/scripts/tpcds/build/spark/1_create_call_center.sql
+  - src/main/resources/scripts/tpcds/build/spark/1_create_catalog_page.sql
+  - src/main/resources/scripts/tpcds/build/spark/2_load_customer.sql
+# Execution of TPC-DS queries (possibly in a previous point-in-time)
+- id: single_user
+  files:
+  - src/main/resources/scripts/tpcds/single_user/spark/query7.sql
+  - src/main/resources/scripts/tpcds/single_user/spark/query15.sql
+  supports_time_travel: true
+# Execution of TPC-DS data maintenance queries (Delta)
+- id: data_maintenance_delta
+  files:
+  - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_CS.sql
+- id: optimize_delta
+  files:
+  - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-delta.sql

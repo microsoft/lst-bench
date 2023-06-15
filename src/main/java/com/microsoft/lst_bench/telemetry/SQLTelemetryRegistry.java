@@ -52,10 +52,9 @@ public class SQLTelemetryRegistry {
     this.connectionManager = connectionManager;
     this.eventsStream = Collections.synchronizedList(new ArrayList<>());
     this.insertFileStatements =
-        Collections.unmodifiableList(
-            SQLParser.getStatements(insertFile).getStatements().stream()
-                .map(s -> StringUtils.replaceParameters(s, parameterValues))
-                .collect(Collectors.toList()));
+        SQLParser.getStatements(insertFile).getStatements().stream()
+            .map(s -> StringUtils.replaceParameters(s, parameterValues))
+            .collect(Collectors.toUnmodifiableList());
     // Create the tables if they don't exist.
     if (executeDdl) {
       executeDdl(ddlFile, parameterValues);
@@ -94,7 +93,7 @@ public class SQLTelemetryRegistry {
                   o ->
                       String.join(
                           ",",
-                          StringUtils.quote(o.getExperimentRunId().toString()),
+                          StringUtils.quote(o.getExperimentId()),
                           StringUtils.quote(o.getStartTime().toString()),
                           StringUtils.quote(o.getEndTime().toString()),
                           StringUtils.quote(o.getEventId()),

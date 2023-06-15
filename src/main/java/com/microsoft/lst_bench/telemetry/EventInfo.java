@@ -16,7 +16,6 @@
 package com.microsoft.lst_bench.telemetry;
 
 import java.time.Instant;
-import java.util.UUID;
 import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
@@ -26,9 +25,10 @@ import org.immutables.value.Value;
 public interface EventInfo {
   /**
    * Returns the unique identifier for the experiment run. This identifier helps in distinguishing
-   * events of one experiment run from another.
+   * events of one experiment run from another. Currently, the experiment run start timestamp is
+   * used as the unique identifier.
    */
-  UUID getExperimentRunId();
+  String getExperimentId();
 
   Instant getStartTime();
 

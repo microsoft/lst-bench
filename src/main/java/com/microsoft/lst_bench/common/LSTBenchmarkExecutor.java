@@ -39,7 +39,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -59,8 +58,8 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
   private final BenchmarkConfig config;
   private final SQLTelemetryRegistry telemetryRegistry;
 
-  // UUID to identify the experiment run. The experiment telemetry will be tagged with this UUID.
-  private final UUID experimentRunId;
+  // timestamp of the start of the first iteration of an experiment.
+  private String experimentStartTime;
 
   public LSTBenchmarkExecutor(
       Map<String, ConnectionManager> idToConnectionManager,
@@ -70,16 +69,14 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
     this.idToConnectionManager = Collections.unmodifiableMap(idToConnectionManager);
     this.config = config;
     this.telemetryRegistry = telemetryRegistry;
-    this.experimentRunId = UUID.randomUUID();
   }
 
   /** This method runs the experiment. */
   public void execute() throws Exception {
-    LOGGER.info("Running experiment: {}, run-id: {}", config.getId(), experimentRunId);
+    this.experimentStartTime = DateTimeFormatter.U_FORMATTER.format(Instant.now());
+    LOGGER.info("Running experiment: {}, start-time: {}", config.getId(), experimentStartTime);
 
     final WorkloadExec workload = config.getWorkload();
-    final String experimentStartTimeStr = DateTimeFormatter.U_FORMATTER.format(Instant.now());
-    LOGGER.info("Experiment start time: {}", experimentStartTimeStr);
 
     for (int i = 0; i < config.getRepetitions(); i++) {
       LOGGER.info("Starting repetition: {}", i);
@@ -97,7 +94,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
         // Fill in specific runtime parameter values
         Map<String, Object> runtimeParameterValues = new HashMap<>();
         runtimeParameterValues.put("repetition", i);
-        runtimeParameterValues.put("experiment_start_time", experimentStartTimeStr);
+        runtimeParameterValues.put("experiment_start_time", experimentStartTime);
         experimentMetadata.putAll(runtimeParameterValues);
         // Go over phases and execute
         Map<String, Instant> phaseIdToEndTime = new HashMap<>();
@@ -171,7 +168,12 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
       Instant startTime, String id, Status status, String payload) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
-                experimentRunId, startTime, Instant.now(), id, EventType.EXEC_EXPERIMENT, status)
+                experimentStartTime,
+                startTime,
+                Instant.now(),
+                id,
+                EventType.EXEC_EXPERIMENT,
+                status)
             .withPayload(payload);
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
@@ -180,7 +182,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
   private EventInfo writePhaseEvent(Instant startTime, String id, Status status) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
-            experimentRunId, startTime, Instant.now(), id, EventType.EXEC_PHASE, status);
+            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_PHASE, status);
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
   }
@@ -188,7 +190,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
   private EventInfo writeSessionEvent(Instant startTime, String id, Status status) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
-            experimentRunId, startTime, Instant.now(), id, EventType.EXEC_SESSION, status);
+            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_SESSION, status);
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
   }
@@ -196,7 +198,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
   private EventInfo writeTaskEvent(Instant startTime, String id, Status status) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
-            experimentRunId, startTime, Instant.now(), id, EventType.EXEC_TASK, status);
+            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_TASK, status);
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
   }
@@ -204,7 +206,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
   private EventInfo writeFileEvent(Instant startTime, String id, Status status) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
-            experimentRunId, startTime, Instant.now(), id, EventType.EXEC_FILE, status);
+            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_FILE, status);
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
   }
@@ -212,7 +214,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
   private EventInfo writeStatementEvent(Instant startTime, String id, Status status) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
-            experimentRunId, startTime, Instant.now(), id, EventType.EXEC_STATEMENT, status);
+            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_STATEMENT, status);
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
   }
