@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -72,7 +72,7 @@ class LSTBenchmarkExecutorTest {
    */
   @Test
   void testNoOpSetup() throws Exception {
-    var idToConnectionManager = new HashMap<String, ConnectionManager>();
+    var idToConnectionManager = new ArrayList<ConnectionManager>();
     ExperimentConfig experimentConfig =
         ImmutableExperimentConfig.builder().id("nooptest").version(1).repetitions(1).build();
     TaskLibrary taskLibrary = ImmutableTaskLibrary.builder().version(1).build();
@@ -100,8 +100,10 @@ class LSTBenchmarkExecutorTest {
     ConnectionManager mockConnectionManager = Mockito.mock(ConnectionManager.class);
     Mockito.when(mockConnectionManager.createConnection()).thenReturn(mockConnection);
 
-    var idToConnectionManager = new HashMap<String, ConnectionManager>();
-    idToConnectionManager.put("telemetryTest", mockConnectionManager);
+    // Current workload relies on 2 connection managers
+    var connectionManagers = new ArrayList<ConnectionManager>();
+    connectionManagers.add(mockConnectionManager);
+    connectionManagers.add(mockConnectionManager);
 
     ExperimentConfig experimentConfig =
         ImmutableExperimentConfig.builder().id("telemetryTest").version(1).repetitions(1).build();
@@ -121,7 +123,7 @@ class LSTBenchmarkExecutorTest {
     SQLTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
 
     LSTBenchmarkExecutor benchmark =
-        new LSTBenchmarkExecutor(idToConnectionManager, config, telemetryRegistry);
+        new LSTBenchmarkExecutor(connectionManagers, config, telemetryRegistry);
     benchmark.run();
 
     try (var validationConnection =

@@ -7,3 +7,8 @@ connections:
   url: jdbc:hive2://127.0.0.1:10000
   username: admin
   password: p@ssw0rd0
+- id: spark_1
+  driver: org.apache.hive.jdbc.HiveDriver
+  url: jdbc:hive2://127.0.0.1:10000
+  username: admin
+  password: p@ssw0rd0

@@ -77,6 +77,11 @@
                       }
                     }
                   }
+                },
+                "connection_manager": {
+                  "type": "integer",
+                  "title": "Connection manager index",
+                  "description": "Positional index of the connection manager within the connections configuration"
                 }
               }
             }

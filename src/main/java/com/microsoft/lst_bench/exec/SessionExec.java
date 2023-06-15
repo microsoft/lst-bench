@@ -26,4 +26,7 @@ public interface SessionExec {
   String getId();
 
   List<TaskExec> getTasks();
+
+  /** Connection manager for this session (positional index). */
+  int getConnectionManager();
 }

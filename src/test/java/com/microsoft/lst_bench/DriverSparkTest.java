@@ -74,6 +74,42 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/w_all_tpcds-iceberg.yaml");
   }
 
+  @Test
+  @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "delta")
+  @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
+  public void testJDBCMultiConnectionDelta() throws Exception {
+    runDriver(
+        "src/test/resources/config/spark/jdbc_connection_config.yaml",
+        "src/test/resources/config/spark/experiment_config-delta.yaml",
+        "src/test/resources/config/spark/telemetry_config.yaml",
+        "src/test/resources/config/spark/simplified_task_library.yaml",
+        "src/test/resources/config/spark/w_multi_connection-delta.yaml");
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "hudi")
+  @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
+  public void testJDBCMultiConnectionHudi() throws Exception {
+    runDriver(
+        "src/test/resources/config/spark/jdbc_connection_config.yaml",
+        "src/test/resources/config/spark/experiment_config-hudi.yaml",
+        "src/test/resources/config/spark/telemetry_config.yaml",
+        "src/test/resources/config/spark/simplified_task_library.yaml",
+        "src/test/resources/config/spark/w_multi_connection-hudi.yaml");
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "iceberg")
+  @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
+  public void testJDBCMultiConnectionIceberg() throws Exception {
+    runDriver(
+        "src/test/resources/config/spark/jdbc_connection_config.yaml",
+        "src/test/resources/config/spark/experiment_config-iceberg.yaml",
+        "src/test/resources/config/spark/telemetry_config.yaml",
+        "src/test/resources/config/spark/simplified_task_library.yaml",
+        "src/test/resources/config/spark/w_multi_connection-iceberg.yaml");
+  }
+
   private void runDriver(String arg0, String arg1, String arg2, String arg3, String arg4)
       throws Exception {
     Driver.main(new String[] {"-c", arg0, "-e", arg1, "-t", arg2, "-l", arg3, "-w", arg4});

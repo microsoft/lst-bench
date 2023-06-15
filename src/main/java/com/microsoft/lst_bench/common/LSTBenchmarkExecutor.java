@@ -54,7 +54,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LSTBenchmarkExecutor.class);
 
-  private final Map<String, ConnectionManager> idToConnectionManager;
+  private final List<ConnectionManager> connectionManagers;
   private final BenchmarkConfig config;
   private final SQLTelemetryRegistry telemetryRegistry;
 
@@ -62,11 +62,11 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
   private String experimentStartTime;
 
   public LSTBenchmarkExecutor(
-      Map<String, ConnectionManager> idToConnectionManager,
+      List<ConnectionManager> connectionManagers,
       BenchmarkConfig config,
       SQLTelemetryRegistry telemetryRegistry) {
     super();
-    this.idToConnectionManager = Collections.unmodifiableMap(idToConnectionManager);
+    this.connectionManagers = Collections.unmodifiableList(connectionManagers);
     this.config = config;
     this.telemetryRegistry = telemetryRegistry;
   }
@@ -107,8 +107,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             for (SessionExec session : phase.getSessions()) {
               threads.add(
                   new Worker(
-                      // TODO: Multiple connections
-                      idToConnectionManager.values().iterator().next(),
+                      connectionManagers.get(session.getConnectionManager()),
                       session,
                       runtimeParameterValues,
                       phaseIdToEndTime));
