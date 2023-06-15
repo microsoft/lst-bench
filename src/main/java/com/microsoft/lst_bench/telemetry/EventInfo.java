@@ -38,7 +38,7 @@ public interface EventInfo {
 
   EventType getEventType();
 
-  @Nullable Status getStatus();
+  Status getStatus();
 
   @Value.Parameter(false)
   @Nullable String getPayload();
