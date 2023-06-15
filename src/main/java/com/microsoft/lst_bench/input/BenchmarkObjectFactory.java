@@ -40,9 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class InputToBench {
+/** Factory class for creating benchmark objects from the input configuration. */
+public class BenchmarkObjectFactory {
 
-  private InputToBench() {
+  private BenchmarkObjectFactory() {
     // Defeat instantiation
   }
 

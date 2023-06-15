@@ -21,7 +21,7 @@ import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.common.BenchmarkConfig;
 import com.microsoft.lst_bench.common.BenchmarkRunnable;
 import com.microsoft.lst_bench.common.LSTBenchmarkExecutor;
-import com.microsoft.lst_bench.input.InputToBench;
+import com.microsoft.lst_bench.input.BenchmarkObjectFactory;
 import com.microsoft.lst_bench.input.TaskLibrary;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ConnectionConfig;
@@ -129,7 +129,8 @@ public class Driver {
     // Create connections manager
     Map<String, ConnectionManager> idToConnectionManager = new LinkedHashMap<>();
     for (ConnectionConfig connectionConfig : connectionsConfig.getConnections()) {
-      ConnectionManager connectionManager = InputToBench.connectionManager(connectionConfig);
+      ConnectionManager connectionManager =
+          BenchmarkObjectFactory.connectionManager(connectionConfig);
       if (idToConnectionManager.containsKey(connectionConfig.getId())) {
         throw new IllegalArgumentException("Duplicate connection id: " + connectionConfig.getId());
       }
@@ -138,7 +139,7 @@ public class Driver {
 
     // Create log utility
     final ConnectionManager telemetryConnectionManager =
-        InputToBench.connectionManager(telemetryConfig.getConnection());
+        BenchmarkObjectFactory.connectionManager(telemetryConfig.getConnection());
     final SQLTelemetryRegistry telemetryRegistry =
         new SQLTelemetryRegistry(
             telemetryConnectionManager,
@@ -151,7 +152,7 @@ public class Driver {
 
     // Create experiment configuration
     final BenchmarkConfig benchmarkConfig =
-        InputToBench.benchmarkConfig(experimentConfig, taskLibrary, workload);
+        BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
 
     // Run experiment
     final BenchmarkRunnable experiment =

@@ -18,9 +18,9 @@ package com.microsoft.lst_bench.common;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.microsoft.lst_bench.client.ConnectionManager;
+import com.microsoft.lst_bench.input.BenchmarkObjectFactory;
 import com.microsoft.lst_bench.input.ImmutableTaskLibrary;
 import com.microsoft.lst_bench.input.ImmutableWorkload;
-import com.microsoft.lst_bench.input.InputToBench;
 import com.microsoft.lst_bench.input.TaskLibrary;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
@@ -67,7 +67,7 @@ class LSTBenchmarkExecutorTest {
     TaskLibrary taskLibrary = ImmutableTaskLibrary.builder().version(1).build();
     Workload workload = ImmutableWorkload.builder().id("telemetryTest").version(1).build();
 
-    var config = InputToBench.benchmarkConfig(experimentConfig, taskLibrary, workload);
+    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
 
     URL telemetryConfigFile =
         getClass().getClassLoader().getResource("./config/spark/telemetry_config.yaml");
@@ -84,7 +84,7 @@ class LSTBenchmarkExecutorTest {
 
     final SQLTelemetryRegistry telemetryRegistry =
         new SQLTelemetryRegistry(
-            InputToBench.connectionManager(uniqueTelemetryDbName),
+            BenchmarkObjectFactory.connectionManager(uniqueTelemetryDbName),
             telemetryConfig.isExecuteDDL(),
             telemetryConfig.getDDLFile(),
             telemetryConfig.getInsertFile(),

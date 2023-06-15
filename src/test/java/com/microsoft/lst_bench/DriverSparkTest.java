@@ -25,7 +25,9 @@ import com.microsoft.lst_bench.input.config.ImmutableExperimentConfig;
 import com.microsoft.lst_bench.input.config.TelemetryConfig;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.junit.jupiter.api.Test;
@@ -151,53 +153,35 @@ public class DriverSparkTest {
   }
 
   private void createTempDirs(Path tempDir) {
-    File ccDir = new File(tempDir + "/call_center");
-    ccDir.mkdirs();
-    File cpDir = new File(tempDir + "/catalog_page");
-    cpDir.mkdirs();
-    File crDir = new File(tempDir + "/catalog_returns");
-    crDir.mkdirs();
-    File csDir = new File(tempDir + "/catalog_sales");
-    csDir.mkdirs();
-    File cDir = new File(tempDir + "/customer");
-    cDir.mkdirs();
-    File caDir = new File(tempDir + "/customer_address");
-    caDir.mkdirs();
-    File cdDir = new File(tempDir + "/customer_demographics");
-    cdDir.mkdirs();
-    File ddDir = new File(tempDir + "/date_dim");
-    ddDir.mkdirs();
-    File hdDir = new File(tempDir + "/household_demographics");
-    hdDir.mkdirs();
-    File ibDir = new File(tempDir + "/income_band");
-    ibDir.mkdirs();
-    File iDir = new File(tempDir + "/inventory");
-    iDir.mkdirs();
-    File itDir = new File(tempDir + "/item");
-    itDir.mkdirs();
-    File pDir = new File(tempDir + "/promotion");
-    pDir.mkdirs();
-    File rDir = new File(tempDir + "/reason");
-    rDir.mkdirs();
-    File smDir = new File(tempDir + "/ship_mode");
-    smDir.mkdirs();
-    File sDir = new File(tempDir + "/store");
-    sDir.mkdirs();
-    File srDir = new File(tempDir + "/store_returns");
-    srDir.mkdirs();
-    File ssDir = new File(tempDir + "/store_sales");
-    ssDir.mkdirs();
-    File tdDir = new File(tempDir + "/time_dim");
-    tdDir.mkdirs();
-    File wDir = new File(tempDir + "/warehouse");
-    wDir.mkdirs();
-    File wpDir = new File(tempDir + "/web_page");
-    wpDir.mkdirs();
-    File wrDir = new File(tempDir + "/web_returns");
-    wrDir.mkdirs();
-    File wsDir = new File(tempDir + "/web_sales");
-    wsDir.mkdirs();
-    File wvDir = new File(tempDir + "/web_site");
-    wvDir.mkdirs();
+    List<String> tableDirs =
+        Arrays.asList(
+            "/call_center",
+            "/catalog_page",
+            "/catalog_returns",
+            "/catalog_sales",
+            "/customer",
+            "/customer_address",
+            "/customer_demographics",
+            "/date_dim",
+            "/household_demographics",
+            "/income_band",
+            "/inventory",
+            "/item",
+            "/promotion",
+            "/reason",
+            "/ship_mode",
+            "/store",
+            "/store_returns",
+            "/store_sales",
+            "/time_dim",
+            "/warehouse",
+            "/web_page",
+            "/web_returns",
+            "/web_sales",
+            "/web_site");
+    for (String tableDir : tableDirs) {
+      File dir = new File(tempDir + tableDir);
+      dir.mkdirs();
+    }
   }
 }
