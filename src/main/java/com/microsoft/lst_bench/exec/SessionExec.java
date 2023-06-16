@@ -28,5 +28,5 @@ public interface SessionExec {
   List<TaskExec> getTasks();
 
   /** Connection manager for this session (positional index). */
-  int getConnectionManager();
+  int getTargetEndpoint();
 }

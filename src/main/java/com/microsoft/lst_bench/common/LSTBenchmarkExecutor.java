@@ -107,7 +107,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             for (SessionExec session : phase.getSessions()) {
               threads.add(
                   new Worker(
-                      connectionManagers.get(session.getConnectionManager()),
+                      connectionManagers.get(session.getTargetEndpoint()),
                       session,
                       runtimeParameterValues,
                       phaseIdToEndTime));

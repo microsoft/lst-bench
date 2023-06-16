@@ -78,10 +78,10 @@
                     }
                   }
                 },
-                "connection_manager": {
+                "target_endpoint": {
                   "type": "integer",
-                  "title": "Connection manager index",
-                  "description": "Positional index of the connection manager within the connections configuration"
+                  "title": "Target endpoint index (default: 0)",
+                  "description": "The positional index (starting from 0) of the connection manager within the connections configuration file"
                 }
               }
             }

@@ -194,7 +194,7 @@ public class BenchmarkObjectFactory {
       tasks.add(taskExec);
     }
     return ImmutableSessionExec.of(
-        sessionId, tasks, ObjectUtils.defaultIfNull(session.getConnectionManager(), 0));
+        sessionId, tasks, ObjectUtils.defaultIfNull(session.getTargetEndpoint(), 0));
   }
 
   private static TaskExec createTaskExec(

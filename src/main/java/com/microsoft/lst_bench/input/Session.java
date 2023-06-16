@@ -32,6 +32,6 @@ import org.immutables.value.Value;
 public interface Session {
   List<Task> getTasks();
 
-  @JsonProperty("connection_manager")
-  @Nullable Integer getConnectionManager();
+  @JsonProperty("target_endpoint")
+  @Nullable Integer getTargetEndpoint();
 }
