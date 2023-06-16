@@ -492,6 +492,52 @@ public class ParserTest {
   }
 
   @Test
+  public void testParseWP3RWConcurrencyMulti() throws IOException {
+    ObjectMapper mapper = new YAMLMapper();
+    Workload workload =
+        mapper.readValue(
+            new File(CONFIG_PATH + "tpcds" + File.separator + "wp3_rw_concurrency_multi.yaml"),
+            Workload.class);
+    Assertions.assertEquals(1, workload.getVersion());
+    Assertions.assertEquals("wp3_rw_concurrency_multi", workload.getId());
+    Assertions.assertEquals(10, workload.getPhases().size());
+    for (Phase phase : workload.getPhases()) {
+      switch (phase.getId()) {
+        case "single_user_1_data_maintenance_1":
+          {
+            List<Session> sessions = phase.getSessions();
+            Assertions.assertEquals(2, sessions.size());
+            List<Task> tasksDM = sessions.get(1).getTasks();
+            Assertions.assertEquals(2, tasksDM.size());
+            Assertions.assertEquals(1, sessions.get(1).getTargetEndpoint());
+          }
+          break;
+        case "single_user_2_optimize_1":
+          {
+            List<Session> sessions = phase.getSessions();
+            Assertions.assertEquals(2, sessions.size());
+            List<Task> tasksO = sessions.get(1).getTasks();
+            Assertions.assertEquals(1, tasksO.size());
+            Assertions.assertEquals(1, sessions.get(1).getTargetEndpoint());
+          }
+          break;
+        case "setup":
+        case "setup_data_maintenance":
+        case "init":
+        case "build":
+        case "single_user_2o_data_maintenance_2":
+        case "single_user_3_optimize_2":
+        case "single_user_3o_data_maintenance_3":
+        case "single_user_4_optimize_3":
+          // Nothing checked
+          break;
+        default:
+          Assertions.fail("Unexpected phase id: " + phase.getId());
+      }
+    }
+  }
+
+  @Test
   public void testParseWP4TimeTravel() throws IOException {
     ObjectMapper mapper = new YAMLMapper();
     Workload workload =

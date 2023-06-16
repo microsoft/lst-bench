@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.ObjectUtils;
 
 /** Factory class for creating benchmark objects from the input configuration. */
 public class BenchmarkObjectFactory {
@@ -192,7 +193,8 @@ public class BenchmarkObjectFactory {
               taskTemplateIdToParameterValuesCounter);
       tasks.add(taskExec);
     }
-    return ImmutableSessionExec.of(sessionId, tasks);
+    return ImmutableSessionExec.of(
+        sessionId, tasks, ObjectUtils.defaultIfNull(session.getTargetEndpoint(), 0));
   }
 
   private static TaskExec createTaskExec(

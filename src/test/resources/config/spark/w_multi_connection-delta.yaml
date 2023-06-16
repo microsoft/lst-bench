@@ -1,0 +1,44 @@
+# Description: Workload for test: Multiple connections, simplified TPC-DS, Delta
+---
+version: 1
+id: w_multi_connection
+phases:
+- id: setup
+  sessions:
+  - tasks:
+    - template_id: setup
+- id: setup_data_maintenance
+  sessions:
+  - tasks:
+    - template_id: setup_data_maintenance
+- id: init
+  sessions:
+  - tasks:
+    - template_id: init
+- id: build
+  sessions:
+  - tasks:
+    - template_id: build
+- id: multi_single_user
+  sessions:
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: single_user
+    target_endpoint: 1
+- id: multi_mixed_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+    target_endpoint: 0
+  - tasks:
+    - template_id: data_maintenance
+    target_endpoint: 1
+- id: multi_mixed_2
+  sessions:
+  - tasks:
+    - template_id: single_user
+    target_endpoint: 0
+  - tasks:
+    - template_id: optimize_delta
+    target_endpoint: 1

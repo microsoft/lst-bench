@@ -31,8 +31,10 @@ import com.microsoft.lst_bench.input.config.TelemetryConfig;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.telemetry.TelemetryHook;
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -126,15 +128,16 @@ public class Driver {
       ExperimentConfig experimentConfig,
       TelemetryConfig telemetryConfig)
       throws Exception {
-    // Create connections manager
-    Map<String, ConnectionManager> idToConnectionManager = new LinkedHashMap<>();
+    // Create connections managers
+    Set<String> connectionManagerIds = new HashSet<>();
+    List<ConnectionManager> connectionManagers = new ArrayList<>();
     for (ConnectionConfig connectionConfig : connectionsConfig.getConnections()) {
       ConnectionManager connectionManager =
           BenchmarkObjectFactory.connectionManager(connectionConfig);
-      if (idToConnectionManager.containsKey(connectionConfig.getId())) {
+      if (!connectionManagerIds.add(connectionConfig.getId())) {
         throw new IllegalArgumentException("Duplicate connection id: " + connectionConfig.getId());
       }
-      idToConnectionManager.put(connectionConfig.getId(), connectionManager);
+      connectionManagers.add(connectionManager);
     }
 
     // Create log utility
@@ -156,7 +159,7 @@ public class Driver {
 
     // Run experiment
     final BenchmarkRunnable experiment =
-        new LSTBenchmarkExecutor(idToConnectionManager, benchmarkConfig, telemetryRegistry);
+        new LSTBenchmarkExecutor(connectionManagers, benchmarkConfig, telemetryRegistry);
     experiment.execute();
   }
 
