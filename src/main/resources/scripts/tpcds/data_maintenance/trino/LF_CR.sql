@@ -19,16 +19,15 @@ AS SELECT d_date_sk cr_return_date_sk
 ,r_reason_sk cr_reason_sk
 ,cret_order_id cr_order_number
 ,cret_return_qty cr_return_quantity
-,cret_return_amt cr_return_amount
-,cret_return_tax cr_return_tax
-,cret_return_amt + cret_return_tax AS cr_return_amt_inc_tax
-,cret_return_fee cr_fee
-,cret_return_ship_cost cr_return_ship_cost
-,cret_refunded_cash cr_refunded_cash
-,cret_reversed_charge cr_reversed_charge
-,cret_merchant_credit cr_merchant_credit
-,cret_return_amt+cret_return_tax+cret_return_fee
--cret_refunded_cash-cret_reversed_charge-cret_merchant_credit cr_net_loss
+,try_cast(cret_return_amt as decimal(7,2)) cr_return_amount
+,try_cast(cret_return_tax as decimal(7,2)) cr_return_tax
+,try_cast(cret_return_amt + cret_return_tax as decimal(7,2)) AS cr_return_amt_inc_tax
+,try_cast(cret_return_fee as decimal(7,2)) cr_fee
+,try_cast(cret_return_ship_cost as decimal(7,2)) cr_return_ship_cost
+,try_cast(cret_refunded_cash as decimal(7,2)) cr_refunded_cash
+,try_cast(cret_reversed_charge as decimal(7,2)) cr_reversed_charge
+,try_cast(cret_merchant_credit as decimal(7,2)) cr_merchant_credit
+,try_cast(cret_return_amt+cret_return_tax+cret_return_fee-cret_refunded_cash-cret_reversed_charge-cret_merchant_credit as decimal(7,2)) cr_net_loss
 FROM ${external_catalog}.${external_database}.s_catalog_returns_${stream_num}
 LEFT OUTER JOIN ${catalog}.${database}.date_dim
 ON (cast(cast(cret_return_date as varchar) as date) = d_date)

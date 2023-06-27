@@ -20,24 +20,21 @@ w_warehouse_sk ws_warehouse_sk,
 p_promo_sk ws_promo_sk,
 word_order_id ws_order_number,
 wlin_quantity ws_quantity,
-i_wholesale_cost ws_wholesale_cost,
-i_current_price ws_list_price,
-wlin_sales_price ws_sales_price,
-(i_current_price-wlin_sales_price)*wlin_quantity ws_ext_discount_amt,
-wlin_sales_price * wlin_quantity ws_ext_sales_price,
-i_wholesale_cost * wlin_quantity ws_ext_wholesale_cost,
-i_current_price * wlin_quantity ws_ext_list_price,
-i_current_price * web_tax_percentage ws_ext_tax,
-wlin_coupon_amt ws_coupon_amt,
-wlin_ship_cost * wlin_quantity WS_EXT_SHIP_COST,
-(wlin_sales_price * wlin_quantity)-wlin_coupon_amt ws_net_paid,
-((wlin_sales_price * wlin_quantity)-wlin_coupon_amt)*(1+web_tax_percentage) ws_net_paid_inc_tax,
-((wlin_sales_price * wlin_quantity)-wlin_coupon_amt)-(wlin_quantity*i_wholesale_cost)
-WS_NET_PAID_INC_SHIP,
-(wlin_sales_price * wlin_quantity)-wlin_coupon_amt + (wlin_ship_cost * wlin_quantity)
-+ i_current_price * web_tax_percentage WS_NET_PAID_INC_SHIP_TAX,
-((wlin_sales_price * wlin_quantity)-wlin_coupon_amt)-(i_wholesale_cost * wlin_quantity)
-WS_NET_PROFIT
+try_cast(i_wholesale_cost as decimal(7,2)) ws_wholesale_cost,
+try_cast(i_current_price as decimal(7,2)) ws_list_price,
+try_cast(wlin_sales_price as decimal(7,2)) ws_sales_price,
+try_cast((i_current_price-wlin_sales_price)*wlin_quantity as decimal(7,2)) ws_ext_discount_amt,
+try_cast(wlin_sales_price * wlin_quantity as decimal(7,2)) ws_ext_sales_price,
+try_cast(i_wholesale_cost * wlin_quantity as decimal(7,2)) ws_ext_wholesale_cost,
+try_cast(i_current_price * wlin_quantity as decimal(7,2)) ws_ext_list_price,
+try_cast(i_current_price * web_tax_percentage as decimal(7,2)) ws_ext_tax,
+try_cast(wlin_coupon_amt as decimal(7,2)) ws_coupon_amt,
+try_cast(wlin_ship_cost * wlin_quantity as decimal(7,2)) WS_EXT_SHIP_COST,
+try_cast((wlin_sales_price * wlin_quantity)-wlin_coupon_amt as decimal(7,2)) ws_net_paid,
+try_cast(((wlin_sales_price * wlin_quantity)-wlin_coupon_amt)*(1+web_tax_percentage) as decimal(7,2)) ws_net_paid_inc_tax,
+try_cast(((wlin_sales_price * wlin_quantity)-wlin_coupon_amt)-(wlin_quantity*i_wholesale_cost) as decimal(7,2)) WS_NET_PAID_INC_SHIP,
+try_cast((wlin_sales_price * wlin_quantity)-wlin_coupon_amt + (wlin_ship_cost * wlin_quantity) + i_current_price * web_tax_percentage as decimal(7,2)) WS_NET_PAID_INC_SHIP_TAX,
+try_cast(((wlin_sales_price * wlin_quantity)-wlin_coupon_amt)-(i_wholesale_cost * wlin_quantity) as decimal(7,2)) WS_NET_PROFIT
 FROM
 ${external_catalog}.${external_database}.s_web_order_${stream_num}
 LEFT OUTER JOIN ${catalog}.${database}.date_dim d1 ON (cast(cast(word_order_date as varchar) as date) = d1.d_date)

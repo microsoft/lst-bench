@@ -12,19 +12,18 @@ s_store_sk ss_store_sk,
 p_promo_sk ss_promo_sk,
 purc_purchase_id ss_ticket_number,
 plin_quantity ss_quantity,
-i_wholesale_cost ss_wholesale_cost,
-i_current_price ss_list_price,
-plin_sale_price ss_sales_price,
-(i_current_price-plin_sale_price)*plin_quantity ss_ext_discount_amt,
-plin_sale_price * plin_quantity ss_ext_sales_price,
-i_wholesale_cost * plin_quantity ss_ext_wholesale_cost,
-i_current_price * plin_quantity ss_ext_list_price,
-i_current_price * s_tax_precentage ss_ext_tax,
-plin_coupon_amt ss_coupon_amt,
-(plin_sale_price * plin_quantity)-plin_coupon_amt ss_net_paid,
-((plin_sale_price * plin_quantity)-plin_coupon_amt)*(1+s_tax_precentage) ss_net_paid_inc_tax,
-((plin_sale_price * plin_quantity)-plin_coupon_amt)-(plin_quantity*i_wholesale_cost)
-ss_net_profit
+try_cast(i_wholesale_cost as decimal(7,2)) ss_wholesale_cost,
+try_cast(i_current_price as decimal(7,2)) ss_list_price,
+try_cast(plin_sale_price as decimal(7,2)) ss_sales_price,
+try_cast((i_current_price-plin_sale_price)*plin_quantity as decimal(7,2)) ss_ext_discount_amt,
+try_cast(plin_sale_price * plin_quantity as decimal(7,2)) ss_ext_sales_price,
+try_cast(i_wholesale_cost * plin_quantity as decimal(7,2)) ss_ext_wholesale_cost,
+try_cast(i_current_price * plin_quantity as decimal(7,2)) ss_ext_list_price,
+try_cast(i_current_price * s_tax_precentage as decimal(7,2)) ss_ext_tax,
+try_cast(plin_coupon_amt as decimal(7,2)) ss_coupon_amt,
+try_cast((plin_sale_price * plin_quantity)-plin_coupon_amt as decimal(7,2)) ss_net_paid,
+try_cast(((plin_sale_price * plin_quantity)-plin_coupon_amt)*(1+s_tax_precentage) as decimal(7,2)) ss_net_paid_inc_tax,
+try_cast(((plin_sale_price * plin_quantity)-plin_coupon_amt)-(plin_quantity*i_wholesale_cost) as decimal(7,2)) ss_net_profit
 FROM
 ${external_catalog}.${external_database}.s_purchase_${stream_num}
 LEFT OUTER JOIN ${catalog}.${database}.customer ON (purc_customer_id = c_customer_id)

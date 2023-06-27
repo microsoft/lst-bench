@@ -12,16 +12,15 @@ AS SELECT d_date_sk sr_returned_date_sk
 ,r_reason_sk sr_reason_sk
 ,cast(trim(sret_ticket_number) as bigint) sr_ticket_number
 ,sret_return_qty sr_return_quantity
-,sret_return_amt sr_return_amt
-,sret_return_tax sr_return_tax
-,sret_return_amt + sret_return_tax sr_return_amt_inc_tax
-,sret_return_fee sr_fee
-,sret_return_ship_cost sr_return_ship_cost
-,sret_refunded_cash sr_refunded_cash
-,sret_reversed_charge sr_reversed_charge
-,sret_store_credit sr_store_credit
-,sret_return_amt+sret_return_tax+sret_return_fee
--sret_refunded_cash-sret_reversed_charge-sret_store_credit sr_net_loss
+,try_cast(sret_return_amt as decimal(7,2)) sr_return_amt
+,try_cast(sret_return_tax as decimal(7,2)) sr_return_tax
+,try_cast(sret_return_amt + sret_return_tax as decimal(7,2)) sr_return_amt_inc_tax
+,try_cast(sret_return_fee as decimal(7,2)) sr_fee
+,try_cast(sret_return_ship_cost as decimal(7,2)) sr_return_ship_cost
+,try_cast(sret_refunded_cash as decimal(7,2)) sr_refunded_cash
+,try_cast(sret_reversed_charge as decimal(7,2)) sr_reversed_charge
+,try_cast(sret_store_credit as decimal(7,2)) sr_store_credit
+,try_cast(sret_return_amt+sret_return_tax+sret_return_fee-sret_refunded_cash-sret_reversed_charge-sret_store_credit as decimal(7,2)) sr_net_loss
 FROM ${external_catalog}.${external_database}.s_store_returns_${stream_num}
 LEFT OUTER JOIN ${catalog}.${database}.date_dim
 ON (cast(cast(sret_return_date as varchar) as date) = d_date)

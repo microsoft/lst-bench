@@ -20,22 +20,21 @@ AS SELECT d1.d_date_sk cs_sold_date_sk
 ,p_promo_sk cs_promo_sk
 ,cord_order_id cs_order_number
 ,clin_quantity cs_quantity
-,i_wholesale_cost cs_wholesale_cost
-,i_current_price cs_list_price
-,clin_sales_price cs_sales_price
-,(i_current_price-clin_sales_price)*clin_quantity cs_ext_discount_amt
-,clin_sales_price * clin_quantity cs_ext_sales_price
-,i_wholesale_cost * clin_quantity cs_ext_wholesale_cost
-,i_current_price * clin_quantity CS_EXT_LIST_PRICE
-,i_current_price * cc_tax_percentage CS_EXT_TAX
-,clin_coupon_amt cs_coupon_amt
-,clin_ship_cost * clin_quantity CS_EXT_SHIP_COST
-,(clin_sales_price * clin_quantity)-clin_coupon_amt cs_net_paid
-,((clin_sales_price * clin_quantity)-clin_coupon_amt)*(1+cc_tax_percentage) cs_net_paid_inc_tax
-,(clin_sales_price * clin_quantity)-clin_coupon_amt + (clin_ship_cost * clin_quantity) CS_NET_PAID_INC_SHIP
-,(clin_sales_price * clin_quantity)-clin_coupon_amt + (clin_ship_cost * clin_quantity)
-+ i_current_price * cc_tax_percentage CS_NET_PAID_INC_SHIP_TAX
-,((clin_sales_price * clin_quantity)-clin_coupon_amt)-(clin_quantity*i_wholesale_cost) cs_net_profit
+,try_cast(i_wholesale_cost as decimal(7,2)) cs_wholesale_cost
+,try_cast(i_current_price as decimal(7,2)) cs_list_price
+,try_cast(clin_sales_price as decimal(7,2)) cs_sales_price
+,try_cast((i_current_price-clin_sales_price)*clin_quantity as decimal(7,2)) cs_ext_discount_amt
+,try_cast(clin_sales_price * clin_quantity as decimal(7,2)) cs_ext_sales_price
+,try_cast(i_wholesale_cost * clin_quantity as decimal(7,2)) cs_ext_wholesale_cost
+,try_cast(i_current_price * clin_quantity as decimal(7,2)) CS_EXT_LIST_PRICE
+,try_cast(i_current_price * cc_tax_percentage as decimal(7,2)) CS_EXT_TAX
+,try_cast(clin_coupon_amt as decimal(7,2)) cs_coupon_amt
+,try_cast(clin_ship_cost * clin_quantity as decimal(7,2)) CS_EXT_SHIP_COST
+,try_cast((clin_sales_price * clin_quantity)-clin_coupon_amt as decimal(7,2)) cs_net_paid
+,try_cast(((clin_sales_price * clin_quantity)-clin_coupon_amt)*(1+cc_tax_percentage) as decimal(7,2)) cs_net_paid_inc_tax
+,try_cast((clin_sales_price * clin_quantity)-clin_coupon_amt + (clin_ship_cost * clin_quantity) as decimal(7,2)) CS_NET_PAID_INC_SHIP
+,try_cast((clin_sales_price * clin_quantity)-clin_coupon_amt + (clin_ship_cost * clin_quantity) + i_current_price * cc_tax_percentage as decimal(7,2)) CS_NET_PAID_INC_SHIP_TAX
+,try_cast(((clin_sales_price * clin_quantity)-clin_coupon_amt)-(clin_quantity*i_wholesale_cost) as decimal(7,2)) cs_net_profit
 FROM
 ${external_catalog}.${external_database}.s_catalog_order_${stream_num}
 LEFT OUTER JOIN ${catalog}.${database}.date_dim d1 ON

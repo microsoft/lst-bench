@@ -16,16 +16,15 @@ AS SELECT d_date_sk wr_return_date_sk
 ,r_reason_sk wr_reason_sk
 ,wret_order_id wr_order_number
 ,wret_return_qty wr_return_quantity
-,wret_return_amt wr_return_amt
-,wret_return_tax wr_return_tax
-,wret_return_amt + wret_return_tax AS wr_return_amt_inc_tax
-,wret_return_fee wr_fee
-,wret_return_ship_cost wr_return_ship_cost
-,wret_refunded_cash wr_refunded_cash
-,wret_reversed_charge wr_reversed_charge
-,wret_account_credit wr_account_credit
-,wret_return_amt+wret_return_tax+wret_return_fee
--wret_refunded_cash-wret_reversed_charge-wret_account_credit wr_net_loss
+,try_cast(wret_return_amt as decimal(7,2)) wr_return_amt
+,try_cast(wret_return_tax as decimal(7,2)) wr_return_tax
+,try_cast(wret_return_amt + wret_return_tax as decimal(7,2)) AS wr_return_amt_inc_tax
+,try_cast(wret_return_fee as decimal(7,2)) wr_fee
+,try_cast(wret_return_ship_cost as decimal(7,2)) wr_return_ship_cost
+,try_cast(wret_refunded_cash as decimal(7,2)) wr_refunded_cash
+,try_cast(wret_reversed_charge as decimal(7,2)) wr_reversed_charge
+,try_cast(wret_account_credit as decimal(7,2)) wr_account_credit
+,try_cast(wret_return_amt+wret_return_tax+wret_return_fee-wret_refunded_cash-wret_reversed_charge-wret_account_credit as decimal(7,2)) wr_net_loss
 FROM ${external_catalog}.${external_database}.s_web_returns_${stream_num}
 LEFT OUTER JOIN ${catalog}.${database}.date_dim ON (cast(cast(wret_return_date as varchar) as date) = d_date)
 LEFT OUTER JOIN ${catalog}.${database}.time_dim ON ((CAST(SUBSTR(wret_return_time,1,2) AS integer)*3600
