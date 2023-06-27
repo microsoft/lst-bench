@@ -36,7 +36,7 @@ CREATE TABLE ${external_catalog}.${external_database}.catalog_sales(
     cs_net_paid_inc_ship_tax  decimal(7,2)                  ,
     cs_net_profit             decimal(7,2)                  ,
     cs_sold_date_sk           int                           
-) with (external_location='${external_data_path}catalog_sales/',format='${external_data_format}',partitioned_by=ARRAY['cs_sold_date_sk']);
+) with (external_location='${external_data_path}catalog_sales/',format='${external_table_format}',partitioned_by=ARRAY['cs_sold_date_sk'] ${external_tblproperties_suffix});
 CALL ${external_catalog}.system.sync_partition_metadata('${external_database}','catalog_sales','FULL');
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.catalog_returns;
@@ -68,7 +68,7 @@ CREATE TABLE ${external_catalog}.${external_database}.catalog_returns(
     cr_store_credit           decimal(7,2)                  ,
     cr_net_loss               decimal(7,2)                  ,
     cr_returned_date_sk       int                           
-) with (external_location='${external_data_path}catalog_returns/',format='${external_data_format}',partitioned_by=ARRAY['cr_returned_date_sk']);
+) with (external_location='${external_data_path}catalog_returns/',format='${external_table_format}',partitioned_by=ARRAY['cr_returned_date_sk'] ${external_tblproperties_suffix});
 CALL ${external_catalog}.system.sync_partition_metadata('${external_database}','catalog_returns','FULL');
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.inventory;
@@ -77,7 +77,7 @@ CREATE TABLE ${external_catalog}.${external_database}.inventory(
     inv_warehouse_sk          int                           ,
     inv_quantity_on_hand      int                           ,
     inv_date_sk               int                           
-) with (external_location='${external_data_path}inventory/',format='${external_data_format}',partitioned_by=ARRAY['inv_date_sk']);
+) with (external_location='${external_data_path}inventory/',format='${external_table_format}',partitioned_by=ARRAY['inv_date_sk'] ${external_tblproperties_suffix});
 CALL ${external_catalog}.system.sync_partition_metadata('${external_database}','inventory','FULL');
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.store_sales;
@@ -105,7 +105,7 @@ CREATE TABLE ${external_catalog}.${external_database}.store_sales(
     ss_net_paid_inc_tax       decimal(7,2)                  ,
     ss_net_profit             decimal(7,2)                  ,
     ss_sold_date_sk           int                           
-) with (external_location='${external_data_path}store_sales/',format='${external_data_format}',partitioned_by=ARRAY['ss_sold_date_sk']);
+) with (external_location='${external_data_path}store_sales/',format='${external_table_format}',partitioned_by=ARRAY['ss_sold_date_sk'] ${external_tblproperties_suffix});
 CALL ${external_catalog}.system.sync_partition_metadata('${external_database}','store_sales','FULL');
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.store_returns;
@@ -130,7 +130,7 @@ CREATE TABLE ${external_catalog}.${external_database}.store_returns(
     sr_store_credit           decimal(7,2)                  ,
     sr_net_loss               decimal(7,2)                  ,
     sr_returned_date_sk       int                           
-) with (external_location='${external_data_path}store_returns/',format='${external_data_format}',partitioned_by=ARRAY['sr_returned_date_sk']);
+) with (external_location='${external_data_path}store_returns/',format='${external_table_format}',partitioned_by=ARRAY['sr_returned_date_sk'] ${external_tblproperties_suffix});
 CALL ${external_catalog}.system.sync_partition_metadata('${external_database}','store_returns','FULL');
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.web_sales;
@@ -169,7 +169,7 @@ CREATE TABLE ${external_catalog}.${external_database}.web_sales(
     ws_net_paid_inc_ship_tax  decimal(7,2)                  ,
     ws_net_profit             decimal(7,2)                  ,
     ws_sold_date_sk           int                           
-) with (external_location='${external_data_path}web_sales/',format='${external_data_format}',partitioned_by=ARRAY['ws_sold_date_sk']);
+) with (external_location='${external_data_path}web_sales/',format='${external_table_format}',partitioned_by=ARRAY['ws_sold_date_sk'] ${external_tblproperties_suffix});
 CALL ${external_catalog}.system.sync_partition_metadata('${external_database}','web_sales','FULL');
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.web_returns;
@@ -198,7 +198,7 @@ CREATE TABLE ${external_catalog}.${external_database}.web_returns(
     wr_account_credit         decimal(7,2)                  ,
     wr_net_loss               decimal(7,2)                  ,
     wr_returned_date_sk       int                           
-) with (external_location='${external_data_path}web_returns/',format='${external_data_format}',partitioned_by=ARRAY['wr_returned_date_sk']);
+) with (external_location='${external_data_path}web_returns/',format='${external_table_format}',partitioned_by=ARRAY['wr_returned_date_sk'] ${external_tblproperties_suffix});
 CALL ${external_catalog}.system.sync_partition_metadata('${external_database}','web_returns','FULL');
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.call_center;
@@ -234,7 +234,7 @@ CREATE TABLE ${external_catalog}.${external_database}.call_center(
     cc_country                varchar(20)                   ,
     cc_gmt_offset             decimal(5,2)                  ,
     cc_tax_percentage         decimal(5,2)                   
-) with (external_location='${external_data_path}call_center/',format='${external_data_format}');
+) with (external_location='${external_data_path}call_center/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.catalog_page;
 CREATE TABLE ${external_catalog}.${external_database}.catalog_page(
@@ -247,7 +247,7 @@ CREATE TABLE ${external_catalog}.${external_database}.catalog_page(
     cp_catalog_page_number    int                           ,
     cp_description            varchar(100)                  ,
     cp_type                   varchar(100)                   
-) with (external_location='${external_data_path}catalog_page/',format='${external_data_format}');
+) with (external_location='${external_data_path}catalog_page/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.customer;
 CREATE TABLE ${external_catalog}.${external_database}.customer(
@@ -269,7 +269,7 @@ CREATE TABLE ${external_catalog}.${external_database}.customer(
     c_login                   varchar(13)                      ,
     c_email_address           varchar(50)                      ,
     c_last_review_date_sk        varchar(10)                       
-) with (external_location='${external_data_path}customer/',format='${external_data_format}');
+) with (external_location='${external_data_path}customer/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.customer_address;
 CREATE TABLE ${external_catalog}.${external_database}.customer_address(
@@ -286,7 +286,7 @@ CREATE TABLE ${external_catalog}.${external_database}.customer_address(
     ca_country                varchar(20)                   ,
     ca_gmt_offset             decimal(5,2)                  ,
     ca_location_type          varchar(20)                       
-) with (external_location='${external_data_path}customer_address/',format='${external_data_format}');
+) with (external_location='${external_data_path}customer_address/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.customer_demographics;
 CREATE TABLE ${external_catalog}.${external_database}.customer_demographics(
@@ -299,7 +299,7 @@ CREATE TABLE ${external_catalog}.${external_database}.customer_demographics(
     cd_dep_count              int                           ,
     cd_dep_employed_count     int                           ,
     cd_dep_college_count      int                            
-) with (external_location='${external_data_path}customer_demographics/',format='${external_data_format}');
+) with (external_location='${external_data_path}customer_demographics/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.date_dim;
 CREATE TABLE ${external_catalog}.${external_database}.date_dim(
@@ -331,7 +331,7 @@ CREATE TABLE ${external_catalog}.${external_database}.date_dim(
     d_current_month           varchar(1)                       ,
     d_current_quarter         varchar(1)                       ,
     d_current_year            varchar(1)                        
-) with (external_location='${external_data_path}date_dim/',format='${external_data_format}');
+) with (external_location='${external_data_path}date_dim/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.household_demographics;
 CREATE TABLE ${external_catalog}.${external_database}.household_demographics(
@@ -340,14 +340,14 @@ CREATE TABLE ${external_catalog}.${external_database}.household_demographics(
     hd_buy_potential          varchar(15)                      ,
     hd_dep_count              int                           ,
     hd_vehicle_count          int                            
-) with (external_location='${external_data_path}household_demographics/',format='${external_data_format}');
+) with (external_location='${external_data_path}household_demographics/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.income_band;
 CREATE TABLE ${external_catalog}.${external_database}.income_band(
     ib_income_band_sk         int                           ,
     ib_lower_bound            int                           ,
     ib_upper_bound            int       
-) with (external_location='${external_data_path}income_band/',format='${external_data_format}');
+) with (external_location='${external_data_path}income_band/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.item;
 CREATE TABLE ${external_catalog}.${external_database}.item(
@@ -373,7 +373,7 @@ CREATE TABLE ${external_catalog}.${external_database}.item(
     i_container               varchar(10)                      ,
     i_manager_id              int                           ,
     i_product_name            varchar(50)                       
-) with (external_location='${external_data_path}item/',format='${external_data_format}');
+) with (external_location='${external_data_path}item/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.promotion;
 CREATE TABLE ${external_catalog}.${external_database}.promotion(
@@ -396,14 +396,14 @@ CREATE TABLE ${external_catalog}.${external_database}.promotion(
     p_channel_details         varchar(100)                  ,
     p_purpose                 varchar(15)                      ,
     p_discount_active         varchar(1)                        
-) with (external_location='${external_data_path}promotion/',format='${external_data_format}');
+) with (external_location='${external_data_path}promotion/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.reason;
 CREATE TABLE ${external_catalog}.${external_database}.reason(
     r_reason_sk               int                           ,
     r_reason_id               varchar(16)                      ,
     r_reason_desc             varchar(100)    
-) with (external_location='${external_data_path}reason/',format='${external_data_format}');
+) with (external_location='${external_data_path}reason/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.ship_mode;
 CREATE TABLE ${external_catalog}.${external_database}.ship_mode(
@@ -413,7 +413,7 @@ CREATE TABLE ${external_catalog}.${external_database}.ship_mode(
     sm_code                   varchar(10)                      ,
     sm_carrier                varchar(20)                      ,
     sm_contract               varchar(20)                       
-) with (external_location='${external_data_path}ship_mode/',format='${external_data_format}');
+) with (external_location='${external_data_path}ship_mode/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.store;
 CREATE TABLE ${external_catalog}.${external_database}.store(
@@ -446,7 +446,7 @@ CREATE TABLE ${external_catalog}.${external_database}.store(
     s_country                 varchar(20)                   ,
     s_gmt_offset              decimal(5,2)                  ,
     s_tax_precentage          decimal(5,2)                   
-) with (external_location='${external_data_path}store/',format='${external_data_format}');
+) with (external_location='${external_data_path}store/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.time_dim;
 CREATE TABLE ${external_catalog}.${external_database}.time_dim(
@@ -460,7 +460,7 @@ CREATE TABLE ${external_catalog}.${external_database}.time_dim(
     t_shift                   varchar(20)                      ,
     t_sub_shift               varchar(20)                      ,
     t_meal_time               varchar(20)                       
-) with (external_location='${external_data_path}time_dim/',format='${external_data_format}');
+) with (external_location='${external_data_path}time_dim/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.warehouse;
 CREATE TABLE ${external_catalog}.${external_database}.warehouse(
@@ -478,7 +478,7 @@ CREATE TABLE ${external_catalog}.${external_database}.warehouse(
     w_zip                     varchar(10)                      ,
     w_country                 varchar(20)                   ,
     w_gmt_offset              decimal(5,2)                   
-) with (external_location='${external_data_path}warehouse/',format='${external_data_format}');
+) with (external_location='${external_data_path}warehouse/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.web_page;
 CREATE TABLE ${external_catalog}.${external_database}.web_page(
@@ -496,7 +496,7 @@ CREATE TABLE ${external_catalog}.${external_database}.web_page(
     wp_link_count             int                           ,
     wp_image_count            int                           ,
     wp_max_ad_count           int                            
-) with (external_location='${external_data_path}web_page/',format='${external_data_format}');
+) with (external_location='${external_data_path}web_page/',format='${external_table_format}' ${external_tblproperties_suffix});
 
 DROP TABLE IF EXISTS ${external_catalog}.${external_database}.web_site;
 CREATE TABLE ${external_catalog}.${external_database}.web_site(
@@ -526,4 +526,4 @@ CREATE TABLE ${external_catalog}.${external_database}.web_site(
     web_country               varchar(20)                   ,
     web_gmt_offset            decimal(5,2)                  ,
     web_tax_percentage        decimal(5,2)                   
-) with (external_location='${external_data_path}web_site/',format='${external_data_format}');
+) with (external_location='${external_data_path}web_site/',format='${external_table_format}' ${external_tblproperties_suffix});

@@ -15,10 +15,10 @@ metadata:
 parameter_values:
   external_catalog: hive
   external_database: external_tpcds
-  external_table_format: csv
+  external_table_format: textfile
   external_data_path: 'abfss://mycontainer@myaccount.dfs.core.windows.net/sf_10/'
   external_options_suffix: ''
-  external_tblproperties_suffix: ''
+  external_tblproperties_suffix: ", textfile_field_separator=',', null_format='', skip_header_line_count=1"
   catalog: delta
   database: delta_tpcds
   table_format: delta
