@@ -41,8 +41,8 @@ class DegradationAnalysisHelperTest(unittest.TestCase):
         # test data
         operator_ids = ['p1', 'r1', 'p2', 'r2', 'p3']
         metric_names = ['latency', 'api']
-        metric_values = [10, 1_000, 15, 1_500, 
-                         12, 10_000, 35, 35_000, 
+        metric_values = [10, 1_000, 15, 1_500,
+                         12, 10_000, 35, 35_000,
                          16, 100_000]
 
         data = []

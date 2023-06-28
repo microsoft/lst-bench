@@ -63,7 +63,6 @@ class DegradationAnalysisHelper:
         metric_values['operator_index'] = metric_values['operator_id'].apply(lambda x: operators.index(x))
         metric_values = metric_values.sort_values(by='operator_index')
         metric_values = metric_values['metric_value'].tolist()
-        print(metric_values)
 
         # Evaluate the degradation
         return self.evaluator.evaluate(metric_values)
