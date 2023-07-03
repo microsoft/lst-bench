@@ -15,8 +15,6 @@
  */
 package com.microsoft.lst_bench;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.common.BenchmarkConfig;
 import com.microsoft.lst_bench.common.BenchmarkRunnable;
@@ -30,7 +28,7 @@ import com.microsoft.lst_bench.input.config.ExperimentConfig;
 import com.microsoft.lst_bench.input.config.TelemetryConfig;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.telemetry.TelemetryHook;
-import java.io.File;
+import com.microsoft.lst_bench.util.FileParser;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -106,16 +104,15 @@ public class Driver {
     Validate.notNull(inputTelemetryConfigFile, "Telemetry config file is required.");
 
     // Create Java objects from input files
-    final ObjectMapper mapper = new YAMLMapper();
     final TaskLibrary taskLibrary =
-        mapper.readValue(new File(inputTaskLibraryFile), TaskLibrary.class);
-    final Workload workload = mapper.readValue(new File(inputWorkloadFile), Workload.class);
+        FileParser.createObject(inputTaskLibraryFile, TaskLibrary.class);
+    final Workload workload = FileParser.createObject(inputWorkloadFile, Workload.class);
     final ConnectionsConfig connectionsConfig =
-        mapper.readValue(new File(inputConnectionsConfigFile), ConnectionsConfig.class);
+        FileParser.createObject(inputConnectionsConfigFile, ConnectionsConfig.class);
     final ExperimentConfig experimentConfig =
-        mapper.readValue(new File(inputExperimentConfigFile), ExperimentConfig.class);
+        FileParser.createObject(inputExperimentConfigFile, ExperimentConfig.class);
     final TelemetryConfig telemetryConfig =
-        mapper.readValue(new File(inputTelemetryConfigFile), TelemetryConfig.class);
+        FileParser.createObject(inputTelemetryConfigFile, TelemetryConfig.class);
 
     run(taskLibrary, workload, connectionsConfig, experimentConfig, telemetryConfig);
   }

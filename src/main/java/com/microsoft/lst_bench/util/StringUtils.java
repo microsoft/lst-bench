@@ -19,9 +19,13 @@ import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.ImmutableFileExec;
 import com.microsoft.lst_bench.exec.ImmutableStatementExec;
 import com.microsoft.lst_bench.exec.StatementExec;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.text.StringSubstitutor;
 
 /** Utility class for string operations. */
@@ -74,5 +78,15 @@ public class StringUtils {
                     ImmutableStatementExec.of(
                         s.getId(), pattern.matcher(s.getStatement()).replaceAll(replacement)))
             .collect(Collectors.toList()));
+  }
+
+  public static String replaceEnvVars(File sourceFile) throws IOException {
+    if (sourceFile == null || !sourceFile.isFile()) {
+      // Nothing to do.
+      return null;
+    }
+    StringSubstitutor envSub = new StringSubstitutor(System.getenv());
+    envSub.setValueDelimiter(":");
+    return envSub.replace(FileUtils.readFileToString(sourceFile, StandardCharsets.UTF_8));
   }
 }
