@@ -103,6 +103,10 @@ public class FileParser {
     return values;
   }
 
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Creates and returns an
+   * object of `objectType` class.
+   */
   public static <T> T createObject(String filePath, Class<T> objectType) throws IOException {
     return yamlMapper.readValue(StringUtils.replaceEnvVars(new File(filePath)), objectType);
   }

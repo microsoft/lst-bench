@@ -27,6 +27,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
+import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 /** Tests for YAML parser into POJO representation. */
 @DisabledIfSystemProperty(named = "lst-bench.test.db", matches = ".*")
@@ -83,6 +84,7 @@ public class ParserTest {
   }
 
   @Test
+  @SetEnvironmentVariable(key = "DATABASE_PASSWORD", value = "p@ssw0rd0")
   public void testParseConnectionConfig() throws IOException {
     ConnectionsConfig connectionsConfig =
         FileParser.createObject(

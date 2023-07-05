@@ -27,9 +27,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.text.StringSubstitutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Utility class for string operations. */
 public class StringUtils {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(StringUtils.class);
 
   private StringUtils() {
     // Defeat instantiation
@@ -80,9 +84,15 @@ public class StringUtils {
             .collect(Collectors.toList()));
   }
 
+  /**
+   * Reads the contents of the `sourceFile` and replaces any environment variables if present. If
+   * the environment variable is not set, the default value is used if specified. All other
+   * parameters are ignored.
+   */
   public static String replaceEnvVars(File sourceFile) throws IOException {
     if (sourceFile == null || !sourceFile.isFile()) {
       // Nothing to do.
+      LOGGER.debug("replaceEnvVars received a null or missing file.");
       return null;
     }
     StringSubstitutor envSub = new StringSubstitutor(System.getenv());
