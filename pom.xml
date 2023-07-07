@@ -183,7 +183,7 @@
                 <dependency>
                     <groupId>io.trino</groupId>
                     <artifactId>trino-jdbc</artifactId>
-                    <version>420</version>
+                    <version>421</version>
                 </dependency>
             </dependencies>
         </profile>
