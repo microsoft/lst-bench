@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.microsoft.lst_bench.input.config.ConnectionsConfig;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
 import com.microsoft.lst_bench.input.config.TelemetryConfig;
+import com.microsoft.lst_bench.util.FileParser;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
@@ -96,7 +97,7 @@ public class ValidationTest {
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     ExperimentConfig experimentConfig =
-        mapper.readValue(new File(experimentConfigFilePath), ExperimentConfig.class);
+        FileParser.createObject(experimentConfigFilePath, ExperimentConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(experimentConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -144,7 +145,7 @@ public class ValidationTest {
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     ConnectionsConfig connectionsConfig =
-        mapper.readValue(new File(configFilePath), ConnectionsConfig.class);
+        FileParser.createObject(configFilePath, ConnectionsConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(connectionsConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -185,9 +186,8 @@ public class ValidationTest {
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     TaskLibrary taskLibrary =
-        mapper.readValue(
-            new File(configPath + "tpcds" + File.separator + "task_library.yaml"),
-            TaskLibrary.class);
+        FileParser.createObject(
+            configPath + "tpcds" + File.separator + "task_library.yaml", TaskLibrary.class);
     JsonNode jsonNodeObject = mapper.convertValue(taskLibrary, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -251,7 +251,7 @@ public class ValidationTest {
     Assertions.assertEquals(
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
-    Workload workload = mapper.readValue(new File(workloadFilePath), Workload.class);
+    Workload workload = FileParser.createObject(workloadFilePath, Workload.class);
     JsonNode jsonNodeObject = mapper.convertValue(workload, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -291,8 +291,7 @@ public class ValidationTest {
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
     TelemetryConfig telemetryConfig =
-        mapper.readValue(
-            new File(configPath + "sample_telemetry_config.yaml"), TelemetryConfig.class);
+        FileParser.createObject(configPath + "sample_telemetry_config.yaml", TelemetryConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(telemetryConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(

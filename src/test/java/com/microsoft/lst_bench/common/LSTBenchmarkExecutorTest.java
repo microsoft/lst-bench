@@ -15,8 +15,6 @@
  */
 package com.microsoft.lst_bench.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.client.ConnectionManager;
@@ -30,6 +28,7 @@ import com.microsoft.lst_bench.input.config.ImmutableExperimentConfig;
 import com.microsoft.lst_bench.input.config.ImmutableJDBCConnectionConfig;
 import com.microsoft.lst_bench.input.config.TelemetryConfig;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
+import com.microsoft.lst_bench.util.FileParser;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -94,7 +93,6 @@ class LSTBenchmarkExecutorTest {
    */
   @Test
   void testExperimentTimelineTelemetry() throws Exception {
-    ObjectMapper mapper = new YAMLMapper();
 
     Connection mockConnection = Mockito.mock(Connection.class);
     ConnectionManager mockConnectionManager = Mockito.mock(ConnectionManager.class);
@@ -111,12 +109,12 @@ class LSTBenchmarkExecutorTest {
     URL taskLibFile =
         getClass().getClassLoader().getResource("./config/samples/task_library_0.yaml");
     Assertions.assertNotNull(taskLibFile);
-    TaskLibrary taskLibrary = mapper.readValue(new File(taskLibFile.getFile()), TaskLibrary.class);
+    TaskLibrary taskLibrary = FileParser.createObject(taskLibFile.getFile(), TaskLibrary.class);
 
     URL workloadFile =
         getClass().getClassLoader().getResource("./config/spark/w_all_tpcds-delta.yaml");
     Assertions.assertNotNull(workloadFile);
-    Workload workload = mapper.readValue(new File(workloadFile.getFile()), Workload.class);
+    Workload workload = FileParser.createObject(workloadFile.getFile(), Workload.class);
 
     var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
 
@@ -144,9 +142,8 @@ class LSTBenchmarkExecutorTest {
     URL telemetryConfigFile =
         getClass().getClassLoader().getResource("./config/spark/telemetry_config.yaml");
     Assertions.assertNotNull(telemetryConfigFile);
-    ObjectMapper mapper = new YAMLMapper();
     TelemetryConfig telemetryConfig =
-        mapper.readValue(new File(telemetryConfigFile.getFile()), TelemetryConfig.class);
+        FileParser.createObject(telemetryConfigFile.getFile(), TelemetryConfig.class);
 
     var uniqueTelemetryDbName =
         ImmutableJDBCConnectionConfig.builder()

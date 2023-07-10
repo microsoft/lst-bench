@@ -15,6 +15,8 @@
  */
 package com.microsoft.lst_bench.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +31,8 @@ import java.util.StringTokenizer;
 
 /** Utility class with methods to parse auxiliary files for the benchmark. */
 public class FileParser {
+
+  private static final ObjectMapper yamlMapper = new YAMLMapper();
 
   private FileParser() {
     // Defeat instantiation
@@ -97,5 +101,13 @@ public class FileParser {
       throw new RuntimeException("Cannot read parameter values file: " + file.getAbsolutePath(), e);
     }
     return values;
+  }
+
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Creates and returns an
+   * object of `objectType` class.
+   */
+  public static <T> T createObject(String filePath, Class<T> objectType) throws IOException {
+    return yamlMapper.readValue(StringUtils.replaceEnvVars(new File(filePath)), objectType);
   }
 }

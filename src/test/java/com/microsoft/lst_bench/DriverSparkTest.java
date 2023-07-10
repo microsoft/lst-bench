@@ -15,14 +15,13 @@
  */
 package com.microsoft.lst_bench;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.microsoft.lst_bench.input.TaskLibrary;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ConnectionsConfig;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
 import com.microsoft.lst_bench.input.config.ImmutableExperimentConfig;
 import com.microsoft.lst_bench.input.config.TelemetryConfig;
+import com.microsoft.lst_bench.util.FileParser;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -158,12 +157,11 @@ public class DriverSparkTest {
       String arg0, String arg1, String arg2, String arg3, String arg4, Path tempDir)
       throws Exception {
     // Create Java objects from input files
-    final ObjectMapper mapper = new YAMLMapper();
-    TaskLibrary taskLibrary = mapper.readValue(new File(arg0), TaskLibrary.class);
-    Workload workload = mapper.readValue(new File(arg1), Workload.class);
-    ConnectionsConfig connectionsConfig = mapper.readValue(new File(arg2), ConnectionsConfig.class);
-    ExperimentConfig experimentConfig = mapper.readValue(new File(arg3), ExperimentConfig.class);
-    TelemetryConfig telemetryConfig = mapper.readValue(new File(arg4), TelemetryConfig.class);
+    TaskLibrary taskLibrary = FileParser.createObject(arg0, TaskLibrary.class);
+    Workload workload = FileParser.createObject(arg1, Workload.class);
+    ConnectionsConfig connectionsConfig = FileParser.createObject(arg2, ConnectionsConfig.class);
+    ExperimentConfig experimentConfig = FileParser.createObject(arg3, ExperimentConfig.class);
+    TelemetryConfig telemetryConfig = FileParser.createObject(arg4, TelemetryConfig.class);
 
     // Setup path
     experimentConfig = ingestTempDir(experimentConfig, tempDir);
