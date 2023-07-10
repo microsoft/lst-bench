@@ -96,7 +96,6 @@ public class StringUtils {
       return null;
     }
     StringSubstitutor envSub = new StringSubstitutor(System.getenv());
-    envSub.setValueDelimiter(":");
     return envSub.replace(FileUtils.readFileToString(sourceFile, StandardCharsets.UTF_8));
   }
 }
