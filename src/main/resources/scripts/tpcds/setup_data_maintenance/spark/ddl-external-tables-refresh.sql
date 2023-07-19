@@ -8,27 +8,19 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_catalog_page_${stream_num}(
-            cpag_catalog_number INTEGER,
-            cpag_catalog_page_number INTEGER,
-            cpag_department CHAR(20),
-            cpag_id CHAR(16),
-            cpag_start_date CHAR(10),
-            cpag_end_date CHAR(10),
-            cpag_description VARCHAR(100),
-            cpag_type VARCHAR(100)
+            cpag_catalog_number INT,
+            cpag_catalog_page_number INT,
+            cpag_department STRING,
+            cpag_id STRING,
+            cpag_start_date STRING,
+            cpag_end_date STRING,
+            cpag_description STRING,
+            cpag_type STRING
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_catalog_page/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -38,21 +30,13 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_zip_to_gmt_${stream_num}(
-            zipg_zip CHAR(5),
-            zipg_gmt_offset INTEGER
+            zipg_zip STRING,
+            zipg_gmt_offset INT
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_zip_to_gmt/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -62,10 +46,10 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_purchase_lineitem_${stream_num}(
-            plin_purchase_id INTEGER,
-            plin_line_number INTEGER,
-            plin_item_id CHAR(16),
-            plin_promotion_id CHAR(16),
+            plin_purchase_id INT,
+            plin_line_number INT,
+            plin_item_id STRING,
+            plin_promotion_id STRING,
             plin_quantity BIGINT,
             plin_sale_price DECIMAL(
                 7,
@@ -75,20 +59,12 @@ CREATE
                 7,
                 2
             ),
-            plin_comment VARCHAR(100)
+            plin_comment STRING
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_purchase_lineitem/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -98,41 +74,41 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_customer_${stream_num}(
-            cust_customer_id CHAR(16),
-            cust_salutation CHAR(10),
-            cust_last_name CHAR(20),
-            cust_first_name CHAR(20),
-            cust_preffered_flag CHAR(1),
-            cust_birth_date CHAR(10),
-            cust_birth_country CHAR(20),
-            cust_login_id CHAR(13),
-            cust_email_address CHAR(50),
-            cust_last_login_chg_date CHAR(10),
-            cust_first_shipto_date CHAR(10),
-            cust_first_purchase_date CHAR(10),
-            cust_last_review_date CHAR(10),
-            cust_primary_machine_id CHAR(15),
-            cust_secondary_machine_id CHAR(15),
+            cust_customer_id STRING,
+            cust_salutation STRING,
+            cust_last_name STRING,
+            cust_first_name STRING,
+            cust_preffered_flag STRING,
+            cust_birth_date STRING,
+            cust_birth_country STRING,
+            cust_login_id STRING,
+            cust_email_address STRING,
+            cust_last_login_chg_date STRING,
+            cust_first_shipto_date STRING,
+            cust_first_purchase_date STRING,
+            cust_last_review_date STRING,
+            cust_primary_machine_id STRING,
+            cust_secondary_machine_id STRING,
             cust_street_number SMALLINT,
-            cust_suite_number CHAR(10),
-            cust_street_name1 CHAR(30),
-            cust_street_name2 CHAR(30),
-            cust_street_type CHAR(15),
-            cust_city CHAR(60),
-            cust_zip CHAR(10),
-            cust_county CHAR(30),
-            cust_state CHAR(2),
-            cust_country CHAR(20),
-            cust_loc_type CHAR(20),
-            cust_gender CHAR(1),
-            cust_marital_status CHAR(1),
-            cust_educ_status CHAR(20),
-            cust_credit_rating CHAR(10),
+            cust_suite_number STRING,
+            cust_street_name1 STRING,
+            cust_street_name2 STRING,
+            cust_street_type STRING,
+            cust_city STRING,
+            cust_zip STRING,
+            cust_county STRING,
+            cust_state STRING,
+            cust_country STRING,
+            cust_loc_type STRING,
+            cust_gender STRING,
+            cust_marital_status STRING,
+            cust_educ_status STRING,
+            cust_credit_rating STRING,
             cust_purch_est DECIMAL(
                 7,
                 2
             ),
-            cust_buy_potential CHAR(15),
+            cust_buy_potential STRING,
             cust_depend_cnt SMALLINT,
             cust_depend_emp_cnt SMALLINT,
             cust_depend_college_cnt SMALLINT,
@@ -145,15 +121,7 @@ CREATE
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_customer/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -163,30 +131,22 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_customer_address_${stream_num}(
-            cadr_address_id CHAR(16),
-            cadr_street_number INTEGER,
-            cadr_street_name1 CHAR(25),
-            cadr_street_name2 CHAR(25),
-            cadr_street_type CHAR(15),
-            cadr_suitdecimal CHAR(10),
-            cadr_city CHAR(60),
-            cadr_county CHAR(30),
-            cadr_state CHAR(2),
-            cadr_zip CHAR(10),
-            cadr_country CHAR(20)
+            cadr_address_id STRING,
+            cadr_street_number INT,
+            cadr_street_name1 STRING,
+            cadr_street_name2 STRING,
+            cadr_street_type STRING,
+            cadr_suitdecimal STRING,
+            cadr_city STRING,
+            cadr_county STRING,
+            cadr_state STRING,
+            cadr_zip STRING,
+            cadr_country STRING
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_customer_address/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -196,27 +156,19 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_purchase_${stream_num}(
-            purc_purchase_id INTEGER,
-            purc_store_id CHAR(16),
-            purc_customer_id CHAR(16),
-            purc_purchase_date CHAR(10),
-            purc_purchase_time INTEGER,
-            purc_register_id INTEGER,
-            purc_clerk_id INTEGER,
-            purc_comment CHAR(100)
+            purc_purchase_id INT,
+            purc_store_id STRING,
+            purc_customer_id STRING,
+            purc_purchase_date STRING,
+            purc_purchase_time INT,
+            purc_register_id INT,
+            purc_clerk_id INT,
+            purc_comment STRING
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_purchase/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -226,27 +178,19 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_catalog_order_${stream_num}(
-            cord_order_id INTEGER,
-            cord_bill_customer_id CHAR(16),
-            cord_ship_customer_id CHAR(16),
-            cord_order_date CHAR(10),
-            cord_order_time INTEGER,
-            cord_ship_mode_id CHAR(16),
-            cord_call_center_id CHAR(16),
-            cord_order_comments VARCHAR(100)
+            cord_order_id INT,
+            cord_bill_customer_id STRING,
+            cord_ship_customer_id STRING,
+            cord_order_date STRING,
+            cord_order_time INT,
+            cord_ship_mode_id STRING,
+            cord_call_center_id STRING,
+            cord_order_comments STRING
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_catalog_order/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -256,27 +200,19 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_web_order_${stream_num}(
-            word_order_id INTEGER,
-            word_bill_customer_id CHAR(16),
-            word_ship_customer_id CHAR(16),
-            word_order_date CHAR(10),
-            word_order_time INTEGER,
-            word_ship_mode_id CHAR(16),
-            word_web_site_id CHAR(16),
-            word_order_comments CHAR(100)
+            word_order_id INT,
+            word_bill_customer_id STRING,
+            word_ship_customer_id STRING,
+            word_order_date STRING,
+            word_order_time INT,
+            word_ship_mode_id STRING,
+            word_web_site_id STRING,
+            word_order_comments STRING
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_web_order/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -286,8 +222,8 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_item_${stream_num}(
-            item_item_id CHAR(16),
-            item_item_description CHAR(200),
+            item_item_id STRING,
+            item_item_description STRING,
             item_list_price DECIMAL(
                 7,
                 2
@@ -296,25 +232,17 @@ CREATE
                 7,
                 2
             ),
-            item_size CHAR(20),
-            item_formulation CHAR(20),
-            item_color CHAR(20),
-            item_units CHAR(10),
-            item_container CHAR(10),
-            item_manager_id INTEGER
+            item_size STRING,
+            item_formulation STRING,
+            item_color STRING,
+            item_units STRING,
+            item_container STRING,
+            item_manager_id INT
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_item/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -324,10 +252,10 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_catalog_order_lineitem_${stream_num}(
-            clin_order_id INTEGER,
-            clin_line_number INTEGER,
-            clin_item_id CHAR(16),
-            clin_promotion_id CHAR(16),
+            clin_order_id INT,
+            clin_line_number INT,
+            clin_item_id STRING,
+            clin_promotion_id STRING,
             clin_quantity BIGINT,
             clin_sales_price DECIMAL(
                 7,
@@ -337,10 +265,10 @@ CREATE
                 7,
                 2
             ),
-            clin_warehouse_id CHAR(16),
-            clin_ship_date CHAR(10),
-            clin_catalog_number INTEGER,
-            clin_catalog_page_number INTEGER,
+            clin_warehouse_id STRING,
+            clin_ship_date STRING,
+            clin_catalog_number INT,
+            clin_catalog_page_number INT,
             clin_ship_cost DECIMAL(
                 7,
                 2
@@ -349,15 +277,7 @@ CREATE
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_catalog_order_lineitem/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -367,10 +287,10 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_web_order_lineitem_${stream_num}(
-            wlin_order_id INTEGER,
-            wlin_line_number INTEGER,
-            wlin_item_id CHAR(16),
-            wlin_promotion_id CHAR(16),
+            wlin_order_id INT,
+            wlin_line_number INT,
+            wlin_item_id STRING,
+            wlin_promotion_id STRING,
             wlin_quantity BIGINT,
             wlin_sales_price DECIMAL(
                 7,
@@ -380,26 +300,18 @@ CREATE
                 7,
                 2
             ),
-            wlin_warehouse_id CHAR(16),
-            wlin_ship_date CHAR(10),
+            wlin_warehouse_id STRING,
+            wlin_ship_date STRING,
             wlin_ship_cost DECIMAL(
                 7,
                 2
             ),
-            wlin_web_page_id CHAR(16)
+            wlin_web_page_id STRING
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_web_order_lineitem/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -409,16 +321,16 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_store_${stream_num}(
-            stor_store_id CHAR(16),
-            stor_closed_date CHAR(10),
-            stor_name CHAR(50),
-            stor_employees INTEGER,
-            stor_floor_space INTEGER,
-            stor_hours CHAR(20),
-            stor_store_manager CHAR(40),
-            stor_market_id INTEGER,
-            stor_geography_class CHAR(100),
-            stor_market_manager CHAR(40),
+            stor_store_id STRING,
+            stor_closed_date STRING,
+            stor_name STRING,
+            stor_employees INT,
+            stor_floor_space INT,
+            stor_hours STRING,
+            stor_store_manager STRING,
+            stor_market_id INT,
+            stor_geography_class STRING,
+            stor_market_manager STRING,
             stor_tax_percentage DECIMAL(
                 5,
                 2
@@ -427,15 +339,7 @@ CREATE
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_store/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -445,15 +349,15 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_call_center_${stream_num}(
-            call_center_id CHAR(16),
-            call_open_date CHAR(10),
-            call_closed_date CHAR(10),
-            call_center_name CHAR(50),
-            call_center_class CHAR(50),
-            call_center_employees INTEGER,
-            call_center_sq_ft INTEGER,
-            call_center_hours CHAR(20),
-            call_center_manager CHAR(40),
+            call_center_id STRING,
+            call_open_date STRING,
+            call_closed_date STRING,
+            call_center_name STRING,
+            call_center_class STRING,
+            call_center_employees INT,
+            call_center_sq_ft INT,
+            call_center_hours STRING,
+            call_center_manager STRING,
             call_center_tax_percentage DECIMAL(
                 7,
                 2
@@ -462,15 +366,7 @@ CREATE
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_call_center/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -480,12 +376,12 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_web_site_${stream_num}(
-            wsit_web_site_id CHAR(16),
-            wsit_open_date CHAR(10),
-            wsit_closed_date CHAR(10),
-            wsit_site_name CHAR(50),
-            wsit_site_class CHAR(50),
-            wsit_site_manager CHAR(40),
+            wsit_web_site_id STRING,
+            wsit_open_date STRING,
+            wsit_closed_date STRING,
+            wsit_site_name STRING,
+            wsit_site_class STRING,
+            wsit_site_manager STRING,
             wsit_tax_percentage DECIMAL(
                 5,
                 2
@@ -494,15 +390,7 @@ CREATE
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_web_site/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -512,22 +400,14 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_warehouse_${stream_num}(
-            wrhs_warehouse_id CHAR(16),
-            wrhs_warehouse_desc CHAR(200),
-            wrhs_warehouse_sq_ft INTEGER
+            wrhs_warehouse_id STRING,
+            wrhs_warehouse_desc STRING,
+            wrhs_warehouse_sq_ft INT
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_warehouse/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -537,29 +417,21 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_web_page_${stream_num}(
-            wpag_web_page_id CHAR(16),
-            wpag_create_date CHAR(10),
-            wpag_access_date CHAR(10),
-            wpag_autogen_flag CHAR(1),
-            wpag_url CHAR(100),
-            wpag_type CHAR(50),
-            wpag_char_cnt INTEGER,
-            wpag_link_cnt INTEGER,
-            wpag_image_cnt INTEGER,
-            wpag_max_ad_cnt INTEGER
+            wpag_web_page_id STRING,
+            wpag_create_date STRING,
+            wpag_access_date STRING,
+            wpag_autogen_flag STRING,
+            wpag_url STRING,
+            wpag_type STRING,
+            wpag_char_cnt INT,
+            wpag_link_cnt INT,
+            wpag_image_cnt INT,
+            wpag_max_ad_cnt INT
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_web_page/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -569,26 +441,26 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_promotion_${stream_num}(
-            prom_promotion_id CHAR(16),
-            prom_promotion_name CHAR(30),
-            prom_start_date CHAR(10),
-            prom_end_date CHAR(10),
+            prom_promotion_id STRING,
+            prom_promotion_name STRING,
+            prom_start_date STRING,
+            prom_end_date STRING,
             prom_cost DECIMAL(
                 7,
                 2
             ),
-            prom_response_target CHAR(1),
-            prom_channel_dmail CHAR(1),
-            prom_channel_email CHAR(1),
-            prom_channel_catalog CHAR(1),
-            prom_channel_tv CHAR(1),
-            prom_channel_radio CHAR(1),
-            prom_channel_press CHAR(1),
-            prom_channel_event CHAR(1),
-            prom_channel_demo CHAR(1),
-            prom_channel_details CHAR(100),
-            prom_purpose CHAR(15),
-            prom_discount_active CHAR(1),
+            prom_response_target STRING,
+            prom_channel_dmail STRING,
+            prom_channel_email STRING,
+            prom_channel_catalog STRING,
+            prom_channel_tv STRING,
+            prom_channel_radio STRING,
+            prom_channel_press STRING,
+            prom_channel_event STRING,
+            prom_channel_demo STRING,
+            prom_channel_details STRING,
+            prom_purpose STRING,
+            prom_discount_active STRING,
             prom_discount_pct DECIMAL(
                 5,
                 2
@@ -597,15 +469,7 @@ CREATE
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_promotion/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -615,15 +479,15 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_store_returns_${stream_num}(
-            sret_store_id CHAR(16),
-            sret_purchase_id CHAR(16),
-            sret_line_number INTEGER,
-            sret_item_id CHAR(16),
-            sret_customer_id CHAR(16),
-            sret_return_date CHAR(10),
-            sret_return_time CHAR(10),
-            sret_ticket_number CHAR(20),
-            sret_return_qty INTEGER,
+            sret_store_id STRING,
+            sret_purchase_id STRING,
+            sret_line_number INT,
+            sret_item_id STRING,
+            sret_customer_id STRING,
+            sret_return_date STRING,
+            sret_return_time STRING,
+            sret_ticket_number STRING,
+            sret_return_qty INT,
             sret_return_amt DECIMAL(
                 7,
                 2
@@ -652,20 +516,12 @@ CREATE
                 7,
                 2
             ),
-            sret_reason_id CHAR(16)
+            sret_reason_id STRING
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_store_returns/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -675,15 +531,15 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_catalog_returns_${stream_num}(
-            cret_call_center_id CHAR(16),
-            cret_order_id INTEGER,
-            cret_line_number INTEGER,
-            cret_item_id CHAR(16),
-            cret_return_customer_id CHAR(16),
-            cret_refund_customer_id CHAR(16),
-            cret_return_date CHAR(10),
-            cret_return_time CHAR(10),
-            cret_return_qty INTEGER,
+            cret_call_center_id STRING,
+            cret_order_id INT,
+            cret_line_number INT,
+            cret_item_id STRING,
+            cret_return_customer_id STRING,
+            cret_refund_customer_id STRING,
+            cret_return_date STRING,
+            cret_return_time STRING,
+            cret_return_qty INT,
             cret_return_amt DECIMAL(
                 7,
                 2
@@ -712,23 +568,15 @@ CREATE
                 7,
                 2
             ),
-            cret_reason_id CHAR(16),
-            cret_shipmode_id CHAR(16),
-            cret_catalog_page_id CHAR(16),
-            cret_warehouse_id CHAR(16)
+            cret_reason_id STRING,
+            cret_shipmode_id STRING,
+            cret_catalog_page_id STRING,
+            cret_warehouse_id STRING
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_catalog_returns/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -738,15 +586,15 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_web_returns_${stream_num}(
-            wret_web_site_id CHAR(16),
-            wret_order_id INTEGER,
-            wret_line_number INTEGER,
-            wret_item_id CHAR(16),
-            wret_return_customer_id CHAR(16),
-            wret_refund_customer_id CHAR(16),
-            wret_return_date CHAR(10),
-            wret_return_time CHAR(10),
-            wret_return_qty INTEGER,
+            wret_web_site_id STRING,
+            wret_order_id INT,
+            wret_line_number INT,
+            wret_item_id STRING,
+            wret_return_customer_id STRING,
+            wret_refund_customer_id STRING,
+            wret_return_date STRING,
+            wret_return_time STRING,
+            wret_return_qty INT,
             wret_return_amt DECIMAL(
                 7,
                 2
@@ -775,20 +623,12 @@ CREATE
                 7,
                 2
             ),
-            wret_reason_id CHAR(16)
+            wret_reason_id STRING
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_web_returns/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
 
 DROP
@@ -798,21 +638,13 @@ DROP
 CREATE
     TABLE
         ${external_catalog}.${external_database}.s_inventory_${stream_num}(
-            invn_warehouse_id CHAR(16),
-            invn_item_id CHAR(16),
-            invn_date CHAR(10),
-            invn_qty_on_hand INTEGER
+            invn_warehouse_id STRING,
+            invn_item_id STRING,
+            invn_date STRING,
+            invn_qty_on_hand INT
         )
             USING csv OPTIONS(
             PATH = "${external_data_path}${stream_num}/s_inventory/",
             sep = "|",
-            header = "false",
-            emptyValue = "",
-            charset = "iso-8859-1",
-            dateFormat = "yyyy-MM-dd",
-            timestampFormat = "yyyy-MM-dd HH:mm:ss[.SSS]",
-            mode = "PERMISSIVE",
-            multiLine = "false",
-            locale = "en-US",
-            lineSep = "\n"
+            emptyValue = ""
         );
