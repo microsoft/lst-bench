@@ -83,6 +83,11 @@ The configuration files used in LST-Bench are YAML files.
 You can find their schema, which describes the expected structure and properties, [here](src/main/resources/schemas).
 
 Additionally, you can find sample configurations that can serve as guidelines for creating your configurations [here](src/main/resources/config).
+The YAML file can also contain references to environment variable along with default values. The parser will handle the same appropriately. 
+Example:
+```bash
+    parameter_name: ${ENVIRONMENT_VARIABLE:-default_value}
+```
 
 ## Architecture
 
