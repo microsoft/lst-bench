@@ -39,33 +39,23 @@ public class TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutor.class);
 
-  private final Connection connection;
   private final SQLTelemetryRegistry telemetryRegistry;
-  private final Map<String, Object> runtimeParameterValues;
-  private final TaskExec task;
   private String experimentStartTime;
 
-  public TaskExecutor(
-      Connection connection,
-      SQLTelemetryRegistry telemetryRegistry,
-      TaskExec task,
-      Map<String, Object> runtimeParameterValues) {
-    this.connection = connection;
+  public TaskExecutor(SQLTelemetryRegistry telemetryRegistry, String experimentStartTime) {
+    this.experimentStartTime = experimentStartTime;
     this.telemetryRegistry = telemetryRegistry;
-    this.task = task;
-    this.runtimeParameterValues = runtimeParameterValues;
   }
 
-  public void execute() throws ClientException {
+  public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
+      throws ClientException {
     for (FileExec file : task.getFiles()) {
       Instant fileStartTime = Instant.now();
       try {
         for (StatementExec statement : file.getStatements()) {
           Instant statementStartTime = Instant.now();
           try {
-            connection.execute(
-                StringUtils.replaceParameters(statement, this.runtimeParameterValues)
-                    .getStatement());
+            connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
           } catch (Exception e) {
             LOGGER.error("Exception executing statement: " + statement.getId());
             writeStatementEvent(statementStartTime, statement.getId(), Status.FAILURE);

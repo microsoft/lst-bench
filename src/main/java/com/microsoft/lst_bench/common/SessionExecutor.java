@@ -72,10 +72,10 @@ public class SessionExecutor implements Callable<Boolean> {
       for (TaskExec task : session.getTasks()) {
         Map<String, Object> values = updateRuntimeParameterValues(task);
         TaskExecutor taskExecutor =
-            new TaskExecutor(connection, this.telemetryRegistry, task, values);
+            new TaskExecutor(this.telemetryRegistry, this.experimentStartTime);
         Instant taskStartTime = Instant.now();
         try {
-          taskExecutor.execute();
+          taskExecutor.executeTask(connection, task, values);
         } catch (Exception e) {
           LOGGER.error("Exception executing task: " + task.getId());
           writeTaskEvent(taskStartTime, task.getId(), Status.FAILURE);
@@ -92,13 +92,6 @@ public class SessionExecutor implements Callable<Boolean> {
     return true;
   }
 
-  /**
-   * Update runtime parameters to contain time travel information if present in the task
-   * description.
-   *
-   * @param task
-   * @return Updated parameter mapping.
-   */
   private Map<String, Object> updateRuntimeParameterValues(TaskExec task) {
     Map<String, Object> values = new HashMap<>(this.runtimeParameterValues);
     if (task.getTimeTravelPhaseId() != null) {
