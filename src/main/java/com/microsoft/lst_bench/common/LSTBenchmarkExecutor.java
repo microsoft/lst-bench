@@ -100,12 +100,12 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             for (SessionExec session : phase.getSessions()) {
               threads.add(
                   new SessionExecutor(
-                    connectionManagers.get(session.getTargetEndpoint()),
-                    this.telemetryRegistry,
-                    session,
-                    runtimeParameterValues,
-                    phaseIdToEndTime,
-                    this.experimentStartTime));
+                      connectionManagers.get(session.getTargetEndpoint()),
+                      this.telemetryRegistry,
+                      session,
+                      runtimeParameterValues,
+                      phaseIdToEndTime,
+                      this.experimentStartTime));
             }
             checkResults(executor.invokeAll(threads));
             eventInfo = writePhaseEvent(phaseStartTime, phase.getId(), Status.SUCCESS);
@@ -180,5 +180,4 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
   }
-  
 }
