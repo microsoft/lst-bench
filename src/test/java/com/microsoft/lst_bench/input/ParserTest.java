@@ -119,7 +119,7 @@ public class ParserTest {
         FileParser.createObject(
             CONFIG_PATH + "tpcds" + File.separator + "task_library.yaml", TaskLibrary.class);
     Assertions.assertEquals(1, taskLibrary.getVersion());
-    Assertions.assertEquals(12, taskLibrary.getTaskTemplates().size());
+    Assertions.assertEquals(13, taskLibrary.getTaskTemplates().size());
     for (TaskTemplate taskTemplate : taskLibrary.getTaskTemplates()) {
       switch (taskTemplate.getId()) {
         case "setup":
