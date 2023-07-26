@@ -71,8 +71,7 @@ public class SessionExecutor implements Callable<Boolean> {
     try (Connection connection = connectionManager.createConnection()) {
       for (TaskExec task : session.getTasks()) {
         Map<String, Object> values = updateRuntimeParameterValues(task);
-        TaskExecutor taskExecutor =
-            new TaskExecutor(this.telemetryRegistry, this.experimentStartTime);
+        TaskExecutor taskExecutor = getTaskExecutor(task);
         Instant taskStartTime = Instant.now();
         try {
           taskExecutor.executeTask(connection, task, values);
@@ -110,6 +109,18 @@ public class SessionExecutor implements Callable<Boolean> {
       values.put("asof", "");
     }
     return values;
+  }
+
+  private TaskExecutor getTaskExecutor(TaskExec task) {
+    if (task.getCustomTaskExecutor() == null) {
+      return new TaskExecutor(this.telemetryRegistry, this.experimentStartTime);
+    }
+    switch (task.getCustomTaskExecutor()) {
+      case "DependentTaskExecutor":
+        return new DependentTaskExecutor(this.telemetryRegistry, this.experimentStartTime);
+      default:
+        return new TaskExecutor(this.telemetryRegistry, this.experimentStartTime);
+    }
   }
 
   private EventInfo writeSessionEvent(Instant startTime, String id, Status status) {

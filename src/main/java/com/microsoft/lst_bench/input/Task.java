@@ -39,6 +39,9 @@ public interface Task {
   @JsonProperty("time_travel_phase_id")
   @Nullable String getTimeTravelPhaseId();
 
+  @JsonProperty("custom_task_executor")
+  @Nullable String getCustomTaskExecutor();
+
   @JsonProperty("replace_regex")
   @Nullable List<ReplaceRegex> getReplaceRegex();
 

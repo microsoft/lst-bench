@@ -30,4 +30,7 @@ public interface TaskExec {
 
   @Value.Parameter(false)
   @Nullable String getTimeTravelPhaseId();
+
+  @Value.Parameter(false)
+  @Nullable String getCustomTaskExecutor();
 }

@@ -44,6 +44,19 @@ public class JDBCConnection implements Connection {
   }
 
   @Override
+  public Object executeQuery(String sqlText) throws ClientException {
+    try (Statement s = connection.createStatement()) {
+      boolean hasResults = s.execute(sqlText);
+      if (hasResults) {
+        return s.getResultSet();
+      }
+    } catch (Exception e) {
+      throw new ClientException(e);
+    }
+    return null;
+  }
+
+  @Override
   public void close() throws ClientException {
     try {
       connection.close();

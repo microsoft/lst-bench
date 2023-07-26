@@ -37,6 +37,11 @@ public class SparkConnection implements Connection {
   }
 
   @Override
+  public Object executeQuery(String sqlText) throws ClientException {
+    return session.sql(sqlText).collectAsList();
+  }
+
+  @Override
   public void close() {
     session.close();
   }

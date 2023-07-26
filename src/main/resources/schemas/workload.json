@@ -55,6 +55,11 @@
                         "title": "Time travel phase identifier",
                         "description": "If the task template supports time travel, this property can be used to specify the version of the data that will be queried by this task"
                       },
+                      "custom_task_executor": {
+                        "type": "string",
+                        "title": "Identifier for a custom task executor",
+                        "description": "If the task template should be executed with a custom task executor, this property can be used to specify which executor to use"
+                      },
                       "replace_regex": {
                         "type": "array",
                         "title": "List of regex to match and replace",

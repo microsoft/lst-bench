@@ -20,31 +20,28 @@ import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
-import com.microsoft.lst_bench.telemetry.EventInfo;
-import com.microsoft.lst_bench.telemetry.EventInfo.EventType;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
-import com.microsoft.lst_bench.telemetry.ImmutableEventInfo;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Default executor for tasks. Iterates over all files and all the statements contained in those
- * files and executes them sequentially.
+ * Custom task executor implementation that allows users to execute dependent tasks. We call a
+ * dependent task a task that iteratively executes a) a statement that is expected to return a
+ * result; and b) a statement that is expected to use that result.
  */
-public class TaskExecutor {
+public class DependentTaskExecutor extends TaskExecutor {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutor.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DependentTaskExecutor.class);
 
-  protected final SQLTelemetryRegistry telemetryRegistry;
-  protected String experimentStartTime;
-
-  public TaskExecutor(SQLTelemetryRegistry telemetryRegistry, String experimentStartTime) {
-    this.experimentStartTime = experimentStartTime;
-    this.telemetryRegistry = telemetryRegistry;
+  public DependentTaskExecutor(SQLTelemetryRegistry telemetryRegistry, String experimentStartTime) {
+    super(telemetryRegistry, experimentStartTime);
   }
 
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
@@ -52,16 +49,36 @@ public class TaskExecutor {
     for (FileExec file : task.getFiles()) {
       Instant fileStartTime = Instant.now();
       try {
-        for (StatementExec statement : file.getStatements()) {
+        Map<String, Object> local_values;
+        for (int i = 0; i < file.getStatements().size(); i += 2) {
+          StatementExec statement = file.getStatements().get(i);
           Instant statementStartTime = Instant.now();
           try {
-            connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
+            ResultSet rs =
+                (ResultSet)
+                    connection.executeQuery(
+                        StringUtils.replaceParameters(statement, values).getStatement());
+            writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+
+            if (rs != null) {
+              ResultSetMetaData metaData = rs.getMetaData();
+              while (rs.next()) {
+                local_values = new HashMap<>(values);
+                for (int j = 1; j <= metaData.getColumnCount(); j++) {
+                  local_values.put(metaData.getColumnName(j), rs.getObject(j));
+                }
+                statementStartTime = Instant.now();
+                connection.execute(
+                    StringUtils.replaceParameters(statement, local_values).getStatement());
+                writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+              }
+            }
           } catch (Exception e) {
             LOGGER.error("Exception executing statement: " + statement.getId());
             writeStatementEvent(statementStartTime, statement.getId(), Status.FAILURE);
-            throw e;
+            // TODO: Figure out whether there's a better way to avoid SQLExceptions.
+            throw new ClientException(e.getMessage());
           }
-          writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
         }
       } catch (Exception e) {
         LOGGER.error("Exception executing file: " + file.getId());
@@ -70,21 +87,5 @@ public class TaskExecutor {
       }
       writeFileEvent(fileStartTime, file.getId(), Status.SUCCESS);
     }
-  }
-
-  protected EventInfo writeFileEvent(Instant startTime, String id, Status status) {
-    EventInfo eventInfo =
-        ImmutableEventInfo.of(
-            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_FILE, status);
-    telemetryRegistry.writeEvent(eventInfo);
-    return eventInfo;
-  }
-
-  protected EventInfo writeStatementEvent(Instant startTime, String id, Status status) {
-    EventInfo eventInfo =
-        ImmutableEventInfo.of(
-            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_STATEMENT, status);
-    telemetryRegistry.writeEvent(eventInfo);
-    return eventInfo;
   }
 }

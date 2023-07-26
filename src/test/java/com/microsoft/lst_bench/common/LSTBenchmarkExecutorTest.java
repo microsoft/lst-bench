@@ -138,6 +138,58 @@ class LSTBenchmarkExecutorTest {
     }
   }
 
+  /**
+   * This test runs a sample benchmark workload with a mock connection manager. The mock connection
+   * manager does not execute any sql. This test focuses on evaluating whether dependent task
+   * execution works as expected.
+   */
+  @Test
+  void testExperimentDependentExecution() throws Exception {
+
+    Connection mockConnection = Mockito.mock(Connection.class);
+    ConnectionManager mockConnectionManager = Mockito.mock(ConnectionManager.class);
+    Mockito.when(mockConnectionManager.createConnection()).thenReturn(mockConnection);
+
+    // Current workload relies on 2 connection managers
+    var connectionManagers = new ArrayList<ConnectionManager>();
+    connectionManagers.add(mockConnectionManager);
+    connectionManagers.add(mockConnectionManager);
+
+    ExperimentConfig experimentConfig =
+        ImmutableExperimentConfig.builder().id("telemetryTest").version(1).repetitions(1).build();
+
+    URL taskLibFile =
+        getClass().getClassLoader().getResource("./config/samples/task_library_0.yaml");
+    Assertions.assertNotNull(taskLibFile);
+    TaskLibrary taskLibrary = FileParser.createObject(taskLibFile.getFile(), TaskLibrary.class);
+
+    URL workloadFile =
+        getClass().getClassLoader().getResource("./config/spark/w_all_tpcds-iterative-delta.yaml");
+    Assertions.assertNotNull(workloadFile);
+    Workload workload = FileParser.createObject(workloadFile.getFile(), Workload.class);
+
+    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
+
+    SQLTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
+
+    LSTBenchmarkExecutor benchmark =
+        new LSTBenchmarkExecutor(connectionManagers, config, telemetryRegistry);
+    benchmark.run();
+
+    try (var validationConnection =
+        DriverManager.getConnection("jdbc:duckdb:./" + telemetryDbFileName)) {
+      ResultSet resultset =
+          validationConnection.createStatement().executeQuery("SELECT * FROM experiment_telemetry");
+      int totalEvents = 0;
+      while (resultset.next()) {
+        totalEvents++;
+      }
+      Assertions.assertEquals(163, totalEvents);
+
+      // TODO improve event validation
+    }
+  }
+
   private SQLTelemetryRegistry getTelemetryRegistry() throws ClientException, IOException {
     URL telemetryConfigFile =
         getClass().getClassLoader().getResource("./config/spark/telemetry_config.yaml");
