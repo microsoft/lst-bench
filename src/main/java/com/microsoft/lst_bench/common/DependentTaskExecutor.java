@@ -55,6 +55,7 @@ public class DependentTaskExecutor extends TaskExecutor {
           StatementExec statement = file.getStatements().get(i);
           Instant statementStartTime = Instant.now();
           try {
+            LOGGER.info(StringUtils.replaceParameters(statement, values).getStatement());
             ResultSet rs =
                 (ResultSet)
                     connection.executeQuery(
@@ -73,10 +74,13 @@ public class DependentTaskExecutor extends TaskExecutor {
                 }
                 value_list.add(local_values);
               }
+              LOGGER.info(value_list.toString());
             }
 
             // Iterate over results and issue available queries.
+            statement = file.getStatements().get(i+1);
             for (int j = 0; j < value_list.size(); j++) {
+              LOGGER.info(StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
               statementStartTime = Instant.now();
               connection.execute(
                   StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
