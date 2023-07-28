@@ -66,8 +66,6 @@ public class JDBCConnection implements Connection {
         }
         value_list.add(local_values);
       }
-
-      LOGGER.info(value_list.toString());
       return value_list;
     } catch (Exception e) {
       throw new ClientException(e);

@@ -51,7 +51,6 @@ public class DependentTaskExecutor extends TaskExecutor {
           StatementExec statement = file.getStatements().get(i);
           Instant statementStartTime = Instant.now();
           try {
-            LOGGER.info(StringUtils.replaceParameters(statement, values).getStatement());
             // This is a bit hacky, bear with me...
             List<Map<String, Object>> value_list =
                 (List<Map<String, Object>>)
@@ -62,8 +61,6 @@ public class DependentTaskExecutor extends TaskExecutor {
             // Iterate over results and issue available queries.
             statement = file.getStatements().get(i + 1);
             for (int j = 0; j < value_list.size(); j++) {
-              LOGGER.info(
-                  StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
               Map<String, Object> local_values = value_list.get(j);
               local_values.putAll(values);
               statementStartTime = Instant.now();
