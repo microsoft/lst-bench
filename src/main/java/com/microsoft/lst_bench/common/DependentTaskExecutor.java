@@ -23,11 +23,7 @@ import com.microsoft.lst_bench.exec.TaskExec;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -56,32 +52,23 @@ public class DependentTaskExecutor extends TaskExecutor {
           Instant statementStartTime = Instant.now();
           try {
             LOGGER.info(StringUtils.replaceParameters(statement, values).getStatement());
-            ResultSet rs =
-                (ResultSet)
+            // This is a bit hacky, bear with me...
+            List<Map<String, Object>> value_list =
+                (List<Map<String, Object>>)
                     connection.executeQuery(
                         StringUtils.replaceParameters(statement, values).getStatement());
             writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-
-            List<Map<String, Object>> value_list = new ArrayList<>();
-            ResultSetMetaData metaData = rs.getMetaData();
-            // Store result set values in an intermediate structure to avoid ResultSet.closed error.
-            while (rs.next()) {
-              Map<String, Object> local_values = new HashMap<>(values);
-              for (int j = 1; j <= metaData.getColumnCount(); j++) {
-                local_values.put(metaData.getColumnName(j), rs.getObject(j));
-              }
-              value_list.add(local_values);
-            }
-            LOGGER.info(value_list.toString());
 
             // Iterate over results and issue available queries.
             statement = file.getStatements().get(i + 1);
             for (int j = 0; j < value_list.size(); j++) {
               LOGGER.info(
                   StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
+              Map<String, Object> local_values = value_list.get(j);
+              local_values.putAll(values);
               statementStartTime = Instant.now();
               connection.execute(
-                  StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
+                  StringUtils.replaceParameters(statement, local_values).getStatement());
               writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
             }
           } catch (Exception e) {
