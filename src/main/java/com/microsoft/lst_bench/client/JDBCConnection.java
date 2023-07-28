@@ -51,8 +51,11 @@ public class JDBCConnection implements Connection {
   public Object executeQuery(String sqlText) throws ClientException {
     try (Statement s = connection.createStatement()) {
       LOGGER.info("created statement");
-      return s.executeQuery(sqlText);
+      ResultSet rs = s.executeQuery(sqlText);
+      LOGGER.info("result set is null: " + (rs == null));
+      return rs;
     } catch (Exception e) {
+      LOGGER.info(e.getMessage() + e.getStackTrace());
       throw new ClientException(e);
     }
   }

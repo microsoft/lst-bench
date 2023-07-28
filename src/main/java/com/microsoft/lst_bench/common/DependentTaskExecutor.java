@@ -63,19 +63,16 @@ public class DependentTaskExecutor extends TaskExecutor {
             writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
 
             List<Map<String, Object>> value_list = new ArrayList<>();
-            if (rs != null) {
-              ResultSetMetaData metaData = rs.getMetaData();
-              // Store result set values in an intermediate structure to avoid ResultSet.closed
-              // error.
-              while (rs.next()) {
-                Map<String, Object> local_values = new HashMap<>(values);
-                for (int j = 1; j <= metaData.getColumnCount(); j++) {
-                  local_values.put(metaData.getColumnName(j), rs.getObject(j));
-                }
-                value_list.add(local_values);
+            ResultSetMetaData metaData = rs.getMetaData();
+            // Store result set values in an intermediate structure to avoid ResultSet.closed error.
+            while (rs.next()) {
+              Map<String, Object> local_values = new HashMap<>(values);
+              for (int j = 1; j <= metaData.getColumnCount(); j++) {
+                local_values.put(metaData.getColumnName(j), rs.getObject(j));
               }
-              LOGGER.info(value_list.toString());
+              value_list.add(local_values);
             }
+            LOGGER.info(value_list.toString());
 
             // Iterate over results and issue available queries.
             statement = file.getStatements().get(i + 1);
