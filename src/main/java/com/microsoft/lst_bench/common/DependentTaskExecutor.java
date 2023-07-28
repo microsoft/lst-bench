@@ -51,7 +51,6 @@ public class DependentTaskExecutor extends TaskExecutor {
     for (FileExec file : task.getFiles()) {
       Instant fileStartTime = Instant.now();
       try {
-        List<Map<String, Object>> value_list;
         for (int i = 0; i < file.getStatements().size(); i += 2) {
           StatementExec statement = file.getStatements().get(i);
           Instant statementStartTime = Instant.now();
@@ -62,11 +61,11 @@ public class DependentTaskExecutor extends TaskExecutor {
                         StringUtils.replaceParameters(statement, values).getStatement());
             writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
 
+            List<Map<String, Object>> value_list = new ArrayList<>();
             if (rs != null) {
               ResultSetMetaData metaData = rs.getMetaData();
               // Store result set values in an intermediate structure to avoid ResultSet.closed
               // error.
-              value_list = new ArrayList<>();
               while (rs.next()) {
                 Map<String, Object> local_values = new HashMap<>(values);
                 for (int j = 1; j <= metaData.getColumnCount(); j++) {
@@ -74,13 +73,14 @@ public class DependentTaskExecutor extends TaskExecutor {
                 }
                 value_list.add(local_values);
               }
-              // Iterate over results and issue available queries.
-              for (int j = 0; j < value_list.size(); j++) {
-                statementStartTime = Instant.now();
-                connection.execute(
-                    StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
-                writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-              }
+            }
+
+            // Iterate over results and issue available queries.
+            for (int j = 0; j < value_list.size(); j++) {
+              statementStartTime = Instant.now();
+              connection.execute(
+                  StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
+              writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
             }
           } catch (Exception e) {
             LOGGER.error("Exception executing statement: " + statement.getId());
