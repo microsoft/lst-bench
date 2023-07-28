@@ -18,9 +18,13 @@ package com.microsoft.lst_bench.client;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A JDBC connection. */
 public class JDBCConnection implements Connection {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(Connection.class);
 
   private final java.sql.Connection connection;
 
@@ -46,14 +50,11 @@ public class JDBCConnection implements Connection {
   @Override
   public Object executeQuery(String sqlText) throws ClientException {
     try (Statement s = connection.createStatement()) {
-      boolean hasResults = s.execute(sqlText);
-      if (hasResults) {
-        return s.getResultSet();
-      }
+      LOGGER.info("created statement");
+      return s.executeQuery(sqlText);
     } catch (Exception e) {
       throw new ClientException(e);
     }
-    return null;
   }
 
   @Override
