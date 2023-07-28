@@ -26,7 +26,9 @@ import com.microsoft.lst_bench.util.StringUtils;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,7 @@ public class DependentTaskExecutor extends TaskExecutor {
     for (FileExec file : task.getFiles()) {
       Instant fileStartTime = Instant.now();
       try {
-        Map<String, Object> local_values;
+        List<Map<String, Object>> value_list;
         for (int i = 0; i < file.getStatements().size(); i += 2) {
           StatementExec statement = file.getStatements().get(i);
           Instant statementStartTime = Instant.now();
@@ -62,14 +64,20 @@ public class DependentTaskExecutor extends TaskExecutor {
 
             if (rs != null) {
               ResultSetMetaData metaData = rs.getMetaData();
+              // Store result set values in an intermediate structure to avoid ResultSet.closed error.
+              value_list = new ArrayList<>();
               while (rs.next()) {
-                local_values = new HashMap<>(values);
+                Map<String, Object> local_values = new HashMap<>(values);
                 for (int j = 1; j <= metaData.getColumnCount(); j++) {
                   local_values.put(metaData.getColumnName(j), rs.getObject(j));
                 }
+                value_list.add(local_values);
+              }
+              // Iterate over results and issue available queries.
+              for (int j=0; j<value_list.size(); j++) {
                 statementStartTime = Instant.now();
                 connection.execute(
-                    StringUtils.replaceParameters(statement, local_values).getStatement());
+                    StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
                 writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
               }
             }
