@@ -64,7 +64,8 @@ public class DependentTaskExecutor extends TaskExecutor {
 
             if (rs != null) {
               ResultSetMetaData metaData = rs.getMetaData();
-              // Store result set values in an intermediate structure to avoid ResultSet.closed error.
+              // Store result set values in an intermediate structure to avoid ResultSet.closed
+              // error.
               value_list = new ArrayList<>();
               while (rs.next()) {
                 Map<String, Object> local_values = new HashMap<>(values);
@@ -74,7 +75,7 @@ public class DependentTaskExecutor extends TaskExecutor {
                 value_list.add(local_values);
               }
               // Iterate over results and issue available queries.
-              for (int j=0; j<value_list.size(); j++) {
+              for (int j = 0; j < value_list.size(); j++) {
                 statementStartTime = Instant.now();
                 connection.execute(
                     StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
