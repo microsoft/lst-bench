@@ -25,11 +25,8 @@ import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.sql.RowSetMetaData;
-import javax.sql.rowset.CachedRowSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,19 +59,23 @@ public class DependentTaskExecutor extends TaskExecutor {
             writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
             LOGGER.info("Successfully executed first statement.");
 
-            List<Map<String, Object>> value_list = createValueList(iterableObject, values);
-            // Iterate over results and issue the dependent queries.
-            statement = file.getStatements().get(i + 1);
-            for (int j = 0; j < value_list.size(); j++) {
-              statementStartTime = Instant.now();
-              connection.execute(
-                  StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
-              writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+            if (iterableObject instanceof ArrayList) {
+              List<Map<String, Object>> value_list = (List<Map<String, Object>>) iterableObject;
+              LOGGER.info("value_list contains " + value_list.size() + " parameters.");
+              // Iterate over results and issue the dependent queries.
+              statement = file.getStatements().get(i + 1);
+              for (int j = 0; j < value_list.size(); j++) {
+                statementStartTime = Instant.now();
+                connection.execute(
+                    StringUtils.replaceParameters(statement, value_list.get(j)).getStatement());
+                writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
 
-              if ((j + 1) % 1000 == 0) {
-                LOGGER.info("Executed " + j + " queries.");
+                if ((j + 1) % 1000 == 0) {
+                  LOGGER.info("Executed " + j + " queries.");
+                }
               }
             }
+
           } catch (Exception e) {
             LOGGER.error("Exception executing statement: " + statement.getId());
             writeStatementEvent(statementStartTime, statement.getId(), Status.FAILURE);
@@ -89,30 +90,5 @@ public class DependentTaskExecutor extends TaskExecutor {
       }
       writeFileEvent(fileStartTime, file.getId(), Status.SUCCESS);
     }
-  }
-
-  private List<Map<String, Object>> createValueList(
-      Object iterableObject, Map<String, Object> values) throws Exception {
-    List<Map<String, Object>> value_list = new ArrayList<>();
-    try {
-      if (iterableObject instanceof CachedRowSet) {
-        CachedRowSet crs = (CachedRowSet) iterableObject;
-        RowSetMetaData rsmd = (RowSetMetaData) crs.getMetaData();
-        LOGGER.info("Retrieved metadata.");
-        while (crs.next()) {
-          Map<String, Object> local_values = new HashMap<>(values);
-          for (int j = 1; j <= rsmd.getColumnCount(); j++) {
-            local_values.put(rsmd.getColumnName(j), crs.getObject(j));
-          }
-          value_list.add(local_values);
-        }
-        LOGGER.info("Found " + value_list.size() + " rows.");
-      }
-    } catch (Exception e) {
-      LOGGER.error("Exception when creating value list.");
-      throw e;
-    }
-
-    return value_list;
   }
 }
