@@ -16,9 +16,13 @@
 package com.microsoft.lst_bench.client;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.sql.rowset.CachedRowSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.sql.rowset.RowSetProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +55,19 @@ public class JDBCConnection implements Connection {
 
   @Override
   public Object executeQuery(String sqlText) throws ClientException {
-    ResultSet rs;
-    CachedRowSet crs;
+    List<Map<String, Object>> value_list = new ArrayList<>();
     try (Statement s = connection.createStatement()) {
       LOGGER.info("Created crs.");
-      rs = s.executeQuery(sqlText);
+      ResultSet rs = s.executeQuery(sqlText);
+      ResultSetMetaData rsmd = rs.getMetaData();
+
+      while (rs.next()) {
+        Map<String, Object> local_values = new HashMap<>();
+        for (int j = 1; j <= rsmd.getColumnCount(); j++) {
+          local_values.put(rsmd.getColumnName(j), crs.getObject(j));
+        }
+        value_list.add(local_values);
+      }
 
       crs = RowSetProvider.newFactory().createCachedRowSet();
       LOGGER.info("Created rs.");
