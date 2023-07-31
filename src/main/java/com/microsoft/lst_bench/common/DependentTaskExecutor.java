@@ -60,6 +60,7 @@ public class DependentTaskExecutor extends TaskExecutor {
                 connection.executeQuery(
                     StringUtils.replaceParameters(statement, values).getStatement());
             writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+            LOGGER.info("Successfully executed first statement.");
 
             List<Map<String, Object>> value_list = createValueList(iterableObject, values);
             // Iterate over results and issue the dependent queries.
@@ -97,6 +98,7 @@ public class DependentTaskExecutor extends TaskExecutor {
       if (iterableObject instanceof CachedRowSet) {
         CachedRowSet crs = (CachedRowSet) iterableObject;
         RowSetMetaData rsmd = (RowSetMetaData) crs.getMetaData();
+        LOGGER.info("Retrieved metadata.");
         while (crs.next()) {
           Map<String, Object> local_values = new HashMap<>(values);
           for (int j = 1; j <= rsmd.getColumnCount(); j++) {
