@@ -64,19 +64,15 @@ public class JDBCConnection implements Connection {
       while (rs.next()) {
         Map<String, Object> local_values = new HashMap<>();
         for (int j = 1; j <= rsmd.getColumnCount(); j++) {
-          local_values.put(rsmd.getColumnName(j), crs.getObject(j));
+          local_values.put(rsmd.getColumnName(j), rs.getObject(j));
         }
         value_list.add(local_values);
       }
 
-      crs = RowSetProvider.newFactory().createCachedRowSet();
-      LOGGER.info("Created rs.");
-      crs.populate(rs);
-      LOGGER.info("Populated crs.");
+      return value_list;
     } catch (Exception e) {
       throw new ClientException(e);
     }
-    return crs;
   }
 
   @Override
