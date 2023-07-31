@@ -21,8 +21,13 @@ import java.sql.Statement;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /** A JDBC connection. */
 public class JDBCConnection implements Connection {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(JDBCConnection.class);
 
   private final java.sql.Connection connection;
 
@@ -47,14 +52,18 @@ public class JDBCConnection implements Connection {
 
   @Override
   public Object executeQuery(String sqlText) throws ClientException {
-    CachedRowSet crs;
     try (Statement s = connection.createStatement()) {
-      crs = RowSetProvider.newFactory().createCachedRowSet();
-      crs.populate(s.executeQuery(sqlText));
+      CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+      LOGGER.info("Created crs.");
+      ResultSet rs = s.executeQuery(sqlText);
+      LOGGER.info("Created rs.");
+      crs.populate(rs);
+      LOGGER.info("Populated crs.");
+
+      return crs;
     } catch (Exception e) {
       throw new ClientException(e);
     }
-    return crs;
   }
 
   @Override
