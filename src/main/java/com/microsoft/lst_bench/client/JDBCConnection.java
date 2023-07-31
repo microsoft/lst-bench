@@ -20,7 +20,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
