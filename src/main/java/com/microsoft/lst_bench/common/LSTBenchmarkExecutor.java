@@ -16,14 +16,9 @@
 package com.microsoft.lst_bench.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microsoft.lst_bench.client.ClientException;
-import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.client.ConnectionManager;
-import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.PhaseExec;
 import com.microsoft.lst_bench.exec.SessionExec;
-import com.microsoft.lst_bench.exec.StatementExec;
-import com.microsoft.lst_bench.exec.TaskExec;
 import com.microsoft.lst_bench.exec.WorkloadExec;
 import com.microsoft.lst_bench.telemetry.EventInfo;
 import com.microsoft.lst_bench.telemetry.EventInfo.EventType;
@@ -31,7 +26,6 @@ import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.ImmutableEventInfo;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.DateTimeFormatter;
-import com.microsoft.lst_bench.util.StringUtils;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -39,7 +33,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -103,14 +96,16 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
           final Instant phaseStartTime = Instant.now();
           EventInfo eventInfo;
           try {
-            final List<Worker> threads = new ArrayList<>();
+            final List<SessionExecutor> threads = new ArrayList<>();
             for (SessionExec session : phase.getSessions()) {
               threads.add(
-                  new Worker(
+                  new SessionExecutor(
                       connectionManagers.get(session.getTargetEndpoint()),
+                      this.telemetryRegistry,
                       session,
                       runtimeParameterValues,
-                      phaseIdToEndTime));
+                      phaseIdToEndTime,
+                      this.experimentStartTime));
             }
             checkResults(executor.invokeAll(threads));
             eventInfo = writePhaseEvent(phaseStartTime, phase.getId(), Status.SUCCESS);
@@ -184,126 +179,5 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_PHASE, status);
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
-  }
-
-  private EventInfo writeSessionEvent(Instant startTime, String id, Status status) {
-    EventInfo eventInfo =
-        ImmutableEventInfo.of(
-            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_SESSION, status);
-    telemetryRegistry.writeEvent(eventInfo);
-    return eventInfo;
-  }
-
-  private EventInfo writeTaskEvent(Instant startTime, String id, Status status) {
-    EventInfo eventInfo =
-        ImmutableEventInfo.of(
-            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_TASK, status);
-    telemetryRegistry.writeEvent(eventInfo);
-    return eventInfo;
-  }
-
-  private EventInfo writeFileEvent(Instant startTime, String id, Status status) {
-    EventInfo eventInfo =
-        ImmutableEventInfo.of(
-            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_FILE, status);
-    telemetryRegistry.writeEvent(eventInfo);
-    return eventInfo;
-  }
-
-  private EventInfo writeStatementEvent(Instant startTime, String id, Status status) {
-    EventInfo eventInfo =
-        ImmutableEventInfo.of(
-            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_STATEMENT, status);
-    telemetryRegistry.writeEvent(eventInfo);
-    return eventInfo;
-  }
-
-  public class Worker implements Callable<Boolean> {
-
-    private final ConnectionManager connectionManager;
-    private final SessionExec session;
-    private final Map<String, Object> runtimeParameterValues;
-    private final Map<String, Instant> phaseIdToEndTime;
-
-    public Worker(
-        ConnectionManager connectionManager,
-        SessionExec session,
-        Map<String, Object> runtimeParameterValues,
-        Map<String, Instant> phaseIdToEndTime) {
-      this.connectionManager = connectionManager;
-      this.session = session;
-      this.runtimeParameterValues = runtimeParameterValues;
-      this.phaseIdToEndTime = phaseIdToEndTime;
-    }
-
-    @Override
-    public Boolean call() throws ClientException {
-      Instant sessionStartTime = Instant.now();
-      try (Connection connection = connectionManager.createConnection()) {
-        for (TaskExec task : session.getTasks()) {
-          Instant taskStartTime = Instant.now();
-          try {
-            Map<String, Object> values = getRuntimeParameterValues(task);
-            executeTask(connection, task, values);
-          } catch (Exception e) {
-            LOGGER.error("Exception executing task: " + task.getId());
-            writeTaskEvent(taskStartTime, task.getId(), Status.FAILURE);
-            throw e;
-          }
-          writeTaskEvent(taskStartTime, task.getId(), Status.SUCCESS);
-        }
-      } catch (Exception e) {
-        LOGGER.error("Exception executing session: " + session.getId());
-        writeSessionEvent(sessionStartTime, session.getId(), Status.FAILURE);
-        throw e;
-      }
-      writeSessionEvent(sessionStartTime, session.getId(), Status.SUCCESS);
-      return true;
-    }
-
-    private void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
-        throws ClientException {
-      for (FileExec file : task.getFiles()) {
-        Instant fileStartTime = Instant.now();
-        try {
-          for (StatementExec statement : file.getStatements()) {
-            Instant statementStartTime = Instant.now();
-            try {
-              connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
-            } catch (Exception e) {
-              LOGGER.error("Exception executing statement: " + statement.getId());
-              writeStatementEvent(statementStartTime, statement.getId(), Status.FAILURE);
-              throw e;
-            }
-            writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-          }
-        } catch (Exception e) {
-          LOGGER.error("Exception executing file: " + file.getId());
-          writeFileEvent(fileStartTime, file.getId(), Status.FAILURE);
-          throw e;
-        }
-        writeFileEvent(fileStartTime, file.getId(), Status.SUCCESS);
-      }
-    }
-
-    private Map<String, Object> getRuntimeParameterValues(TaskExec task) {
-      Map<String, Object> values = new HashMap<>(this.runtimeParameterValues);
-      if (task.getTimeTravelPhaseId() != null) {
-        Instant ttPhaseEndTime = phaseIdToEndTime.get(task.getTimeTravelPhaseId());
-        if (ttPhaseEndTime == null) {
-          throw new RuntimeException(
-              "Time travel phase identifier not found: " + task.getTimeTravelPhaseId());
-        }
-        // We round to the next second to make sure we are capturing the changes in case
-        // are consecutive phases
-        String timeTravelValue =
-            DateTimeFormatter.AS_OF_FORMATTER.format(
-                ttPhaseEndTime.truncatedTo(ChronoUnit.SECONDS).plusSeconds(1));
-        values.put("asof", "TIMESTAMP AS OF " + StringUtils.quote(timeTravelValue));
-      } else {
-        values.put("asof", "");
-      }
-      return values;
-    }
   }
 }
