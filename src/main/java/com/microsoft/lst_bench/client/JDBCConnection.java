@@ -16,20 +16,13 @@
 package com.microsoft.lst_bench.client;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 
 /** A JDBC connection. */
 public class JDBCConnection implements Connection {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(Connection.class);
 
   private final java.sql.Connection connection;
 
@@ -54,22 +47,14 @@ public class JDBCConnection implements Connection {
 
   @Override
   public Object executeQuery(String sqlText) throws ClientException {
-    List<Map<String, Object>> value_list = new ArrayList<>();
+    CachedRowSet crs;
     try (Statement s = connection.createStatement()) {
-      ResultSet rs = s.executeQuery(sqlText);
-
-      ResultSetMetaData metaData = rs.getMetaData();
-      while (rs.next()) {
-        Map<String, Object> local_values = new HashMap<>();
-        for (int j = 1; j <= metaData.getColumnCount(); j++) {
-          local_values.put(metaData.getColumnName(j), rs.getObject(j));
-        }
-        value_list.add(local_values);
-      }
-      return value_list;
+      crs = RowSetProvider.newFactory().createCachedRowSet();
+      crs.populate(s.executeQuery(sqlText));
     } catch (Exception e) {
       throw new ClientException(e);
     }
+    return crs;
   }
 
   @Override
