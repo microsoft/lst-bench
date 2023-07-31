@@ -51,18 +51,24 @@ public class JDBCConnection implements Connection {
 
   @Override
   public Object executeQuery(String sqlText) throws ClientException {
+    ResultSet rs;
     try (Statement s = connection.createStatement()) {
-      CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
       LOGGER.info("Created crs.");
-      ResultSet rs = s.executeQuery(sqlText);
-      LOGGER.info("Created rs.");
-      crs.populate(rs);
-      LOGGER.info("Populated crs.");
-
-      return crs;
+      rs = s.executeQuery(sqlText);
     } catch (Exception e) {
       throw new ClientException(e);
     }
+
+    CachedRowSet crs;
+    try {
+      crs = RowSetProvider.newFactory().createCachedRowSet();
+      LOGGER.info("Created rs.");
+      crs.populate(rs);
+      LOGGER.info("Populated crs.");
+    } catch (SQLException e) {
+      throw new ClientException(e);
+    }
+    return crs;
   }
 
   @Override
