@@ -23,10 +23,10 @@ phases:
   sessions:
   - tasks:
     - template_id: single_user
-- id: data_maintenance_delta_iterative
+- id: data_maintenance_delta_dependent
   sessions:
   - tasks:
-    - template_id: data_maintenance_delta_iterative
+    - template_id: data_maintenance_delta_dependent
       custom_task_executor: DependentTaskExecutor
 - id: optimize
   sessions:
