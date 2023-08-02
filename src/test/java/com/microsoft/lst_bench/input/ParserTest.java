@@ -152,6 +152,7 @@ public class ParserTest {
           Assertions.assertNull(taskTemplate.supportsTimeTravel());
           break;
         case "data_maintenance_delta":
+        case "data_maintenance_delta_dependent":
         case "data_maintenance_hudi":
         case "data_maintenance_iceberg":
           Assertions.assertNotNull(taskTemplate.getParameterValuesFile());
