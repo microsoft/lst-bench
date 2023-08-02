@@ -65,7 +65,7 @@ public class DependentTaskExecutor extends TaskExecutor {
           if (connection instanceof JDBCConnection) {
             List<Map<String, Object>> value_list = (List<Map<String, Object>>) iterableObject;
             statement = file.getStatements().get(i + 1);
-            
+
             // Execute second query repeatedly with the parameters extracted from the first query.
             for (int j = 0; j < value_list.size(); j++) {
               Map<String, Object> local_values = new HashMap<>(values);
