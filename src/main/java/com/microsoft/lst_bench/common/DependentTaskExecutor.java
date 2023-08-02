@@ -76,8 +76,7 @@ public class DependentTaskExecutor extends TaskExecutor {
               writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
             }
           } else {
-            throw new ClientException(
-                "Handling of iterable object not supported for this type of connection yet.");
+            LOGGER.warn("Connection type not known, execution of second statement omitted.");
           }
         }
       } catch (Exception e) {

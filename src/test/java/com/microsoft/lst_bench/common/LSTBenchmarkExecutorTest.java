@@ -164,7 +164,7 @@ class LSTBenchmarkExecutorTest {
     TaskLibrary taskLibrary = FileParser.createObject(taskLibFile.getFile(), TaskLibrary.class);
 
     URL workloadFile =
-        getClass().getClassLoader().getResource("./config/spark/w_all_tpcds-iterative-delta.yaml");
+        getClass().getClassLoader().getResource("./config/spark/w_all_tpcds-dependent-delta.yaml");
     Assertions.assertNotNull(workloadFile);
     Workload workload = FileParser.createObject(workloadFile.getFile(), Workload.class);
 
