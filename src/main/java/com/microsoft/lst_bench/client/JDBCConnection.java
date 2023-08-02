@@ -56,7 +56,6 @@ public class JDBCConnection implements Connection {
   public Object executeQuery(String sqlText) throws ClientException {
     List<Map<String, Object>> value_list = new ArrayList<>();
     try (Statement s = connection.createStatement()) {
-      LOGGER.info("Created crs.");
       ResultSet rs = s.executeQuery(sqlText);
       ResultSetMetaData rsmd = rs.getMetaData();
 
