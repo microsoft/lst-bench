@@ -40,7 +40,7 @@ public class TaskExecutor {
   private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutor.class);
 
   protected final SQLTelemetryRegistry telemetryRegistry;
-  protected String experimentStartTime;
+  protected final String experimentStartTime;
 
   public TaskExecutor(SQLTelemetryRegistry telemetryRegistry, String experimentStartTime) {
     this.experimentStartTime = experimentStartTime;
