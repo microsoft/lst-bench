@@ -40,8 +40,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.mockito.Mockito;
 
+@DisabledIfSystemProperty(named = "lst-bench.test.db", matches = ".*")
 class LSTBenchmarkExecutorTest {
 
   private UUID telemetryDbFileName;

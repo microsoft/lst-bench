@@ -72,7 +72,7 @@ public class TaskExecutor {
     }
   }
 
-  protected EventInfo writeFileEvent(Instant startTime, String id, Status status) {
+  protected final EventInfo writeFileEvent(Instant startTime, String id, Status status) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
             experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_FILE, status);
@@ -80,7 +80,7 @@ public class TaskExecutor {
     return eventInfo;
   }
 
-  protected EventInfo writeStatementEvent(Instant startTime, String id, Status status) {
+  protected final EventInfo writeStatementEvent(Instant startTime, String id, Status status) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
             experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_STATEMENT, status);
