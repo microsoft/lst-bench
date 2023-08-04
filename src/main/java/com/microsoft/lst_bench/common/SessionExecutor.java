@@ -117,7 +117,8 @@ public class SessionExecutor implements Callable<Boolean> {
     }
     switch (task.getCustomTaskExecutor()) {
       case "DependentTaskExecutor":
-        return new DependentTaskExecutor(this.telemetryRegistry, this.experimentStartTime);
+        return new DependentTaskExecutor(
+            this.telemetryRegistry, this.experimentStartTime, task.getDependentBatchSize());
       default:
         return new TaskExecutor(this.telemetryRegistry, this.experimentStartTime);
     }

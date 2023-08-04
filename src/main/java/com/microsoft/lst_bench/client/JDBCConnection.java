@@ -54,20 +54,22 @@ public class JDBCConnection implements Connection {
 
   @Override
   public Object executeQuery(String sqlText) throws ClientException {
-    List<Map<String, Object>> value_list = new ArrayList<>();
+    Map<String, List<Object>> valueList = new HashMap<>();
     try (Statement s = connection.createStatement()) {
       ResultSet rs = s.executeQuery(sqlText);
       ResultSetMetaData rsmd = rs.getMetaData();
 
-      while (rs.next()) {
-        Map<String, Object> local_values = new HashMap<>();
-        for (int j = 1; j <= rsmd.getColumnCount(); j++) {
-          local_values.put(rsmd.getColumnName(j), rs.getObject(j));
-        }
-        value_list.add(local_values);
+      for (int j = 1; j <= rsmd.getColumnCount(); j++) {
+        valueList.put(rsmd.getColumnName(j), new ArrayList<>());
       }
 
-      return value_list;
+      while (rs.next()) {
+        for (int j = 1; j <= rsmd.getColumnCount(); j++) {
+          valueList.get(rsmd.getColumnName(j)).add(rs.getObject(j));
+        }
+      }
+
+      return valueList;
     } catch (Exception e) {
       throw new ClientException(e);
     }

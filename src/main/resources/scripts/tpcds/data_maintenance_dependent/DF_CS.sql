@@ -8,4 +8,4 @@ WHERE
     AND d_date BETWEEN '${param1}' AND '${param2}';
 
 DELETE FROM ${catalog}.${database}.catalog_returns
-WHERE cr_order_number = '${cs_order_number}';
+WHERE cr_order_number IN (${cs_order_number});

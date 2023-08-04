@@ -28,6 +28,8 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +45,19 @@ public class DependentTaskExecutor extends TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DependentTaskExecutor.class);
 
-  public DependentTaskExecutor(SQLTelemetryRegistry telemetryRegistry, String experimentStartTime) {
+  private final Integer dependentBatchSize;
+
+  public DependentTaskExecutor(
+      SQLTelemetryRegistry telemetryRegistry,
+      String experimentStartTime,
+      Integer dependentBatchSize) {
     super(telemetryRegistry, experimentStartTime);
+    // Set to a default of '1' if not otherwise specified.
+    if (dependentBatchSize == null) {
+      this.dependentBatchSize = 1;
+    } else {
+      this.dependentBatchSize = dependentBatchSize;
+    }
   }
 
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
@@ -63,16 +76,33 @@ public class DependentTaskExecutor extends TaskExecutor {
           writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
 
           if (connection instanceof JDBCConnection) {
-            List<Map<String, Object>> value_list = (List<Map<String, Object>>) iterableObject;
+            Map<String, List<Object>> valueList = (Map<String, List<Object>>) iterableObject;
             statement = file.getStatements().get(i + 1);
 
+            // Determine the number of batchable values.
+            int size = 0;
+            for (Entry<String, List<Object>> pair : valueList.entrySet()) {
+              size = pair.getValue().size();
+              break;
+            }
+
             // Execute second query repeatedly with the parameters extracted from the first query.
-            for (int j = 0; j < value_list.size(); j++) {
-              Map<String, Object> local_values = new HashMap<>(values);
-              local_values.putAll(value_list.get(j));
+            for (int j = 0; j < size; j += this.dependentBatchSize) {
+              int localMax =
+                  (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
+              Map<String, Object> localValues = new HashMap<>(values);
+
+              // TODO: Currently insensitive to types, can only do strings.
+              for (String columnName : valueList.keySet()) {
+                List<String> subList =
+                    valueList.get(columnName).subList(j, localMax).stream()
+                        .map(val -> val.toString())
+                        .collect(Collectors.toList());
+                localValues.put(columnName, "'" + String.join("','", subList) + "'");
+              }
               statementStartTime = Instant.now();
               connection.execute(
-                  StringUtils.replaceParameters(statement, local_values).getStatement());
+                  StringUtils.replaceParameters(statement, localValues).getStatement());
               writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
             }
           } else {

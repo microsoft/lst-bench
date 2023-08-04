@@ -60,6 +60,11 @@
                         "title": "Identifier for a custom task executor",
                         "description": "If the task template should be executed with a custom task executor, this property can be used to specify which executor to use"
                       },
+                      "dependent_batch_size": {
+                        "type": "integer",
+                        "title": "Batch size to be used with DependentTaskExecutor",
+                        "description": "Determines how to batch the second statement in the DependentTaskExecutor"
+                      },
                       "replace_regex": {
                         "type": "array",
                         "title": "List of regex to match and replace",
