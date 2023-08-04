@@ -19,6 +19,15 @@ docker exec -i -u root $SPARK_CONTAINER_ID /bin/bash -c '/bin/bash -s' <<EOF
   wget -q https://repo1.maven.org/maven2/org/apache/hudi/hudi-spark3.3-bundle_2.12/0.12.2/hudi-spark3.3-bundle_2.12-0.12.2.jar -P /opt/spark/jars/
   # Install Apache Iceberg
   wget -q https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-3.3_2.12/1.1.0/iceberg-spark-runtime-3.3_2.12-1.1.0.jar -P /opt/spark/jars/
+  # TPC-H (TODO: generate data)
+  mkdir -p ${external_data_path}customer
+  mkdir -p ${external_data_path}lineitem
+  mkdir -p ${external_data_path}nation
+  mkdir -p ${external_data_path}orders
+  mkdir -p ${external_data_path}part
+  mkdir -p ${external_data_path}partsupp
+  mkdir -p ${external_data_path}region
+  mkdir -p ${external_data_path}supplier
   # TPC-DS (TODO: generate data)
   mkdir -p ${external_data_path}call_center
   mkdir -p ${external_data_path}catalog_page

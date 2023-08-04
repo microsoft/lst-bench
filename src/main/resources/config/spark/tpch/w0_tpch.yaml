@@ -1,0 +1,21 @@
+# Description: W0: Original TPC-H sequence (TODO: incomplete, does not include refresh or throughput yet)
+---
+version: 1
+id: w0_tpch
+phases:
+- id: setup
+  sessions:
+  - tasks:
+    - template_id: setup
+- id: init
+  sessions:
+  - tasks:
+    - template_id: init
+- id: build
+  sessions:
+  - tasks:
+    - template_id: build
+- id: single_user
+  sessions:
+  - tasks:
+    - template_id: single_user

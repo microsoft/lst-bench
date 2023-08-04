@@ -1,0 +1,21 @@
+# Description: Workload for test: All task types, TPC-H
+---
+version: 1
+id: w_all_tpch
+phases:
+- id: setup
+  sessions:
+  - tasks:
+    - template_id: setup
+- id: init
+  sessions:
+  - tasks:
+    - template_id: init
+- id: build
+  sessions:
+  - tasks:
+    - template_id: build
+- id: single_user
+  sessions:
+  - tasks:
+    - template_id: single_user
