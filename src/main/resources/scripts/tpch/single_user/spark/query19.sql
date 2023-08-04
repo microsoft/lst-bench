@@ -1,6 +1,6 @@
 SELECT
     sum(l_extendedprice * (1 - l_discount) ) as revenue
-FROM lineitem, part
+FROM ${catalog}.${database}.lineitem, ${catalog}.${database}.part
 WHERE
     p_partkey = l_partkey
     and (

@@ -6,15 +6,15 @@ select
     o_totalprice,
     sum(l_quantity)
 from
-    customer,
-    orders,
-    lineitem
+    ${catalog}.${database}.customer,
+    ${catalog}.${database}.orders,
+    ${catalog}.${database}.lineitem
 where
     o_orderkey in (
         select
             l_orderkey
         from
-            lineitem
+            ${catalog}.${database}.lineitem
         group by
             l_orderkey having
                 sum(l_quantity) > 300

@@ -2,20 +2,20 @@ select
     s_name,
     s_address
 from
-    supplier,
-    nation
+    ${catalog}.${database}.supplier,
+    ${catalog}.${database}.nation
 where
     s_suppkey in (
         select
             ps_suppkey
         from
-            partsupp
+            ${catalog}.${database}.partsupp
         where
             ps_partkey in (
                 select
                     p_partkey
                 from
-                    part
+                    ${catalog}.${database}.part
                 where
                     p_name like 'forest%'
             )
@@ -23,7 +23,7 @@ where
                 select
                     0.5 * sum(l_quantity)
                 from
-                    lineitem
+                    ${catalog}.${database}.lineitem
                 where
                     l_partkey = ps_partkey
                     and l_suppkey = ps_suppkey

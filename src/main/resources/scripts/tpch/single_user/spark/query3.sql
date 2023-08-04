@@ -1,9 +1,9 @@
 SELECT
     l_orderkey, sum(l_extendedprice*(1-l_discount)) as revenue, o_orderdate, o_shippriority
 FROM
-    customer,
-    orders,
-    lineitem
+    ${catalog}.${database}.customer,
+    ${catalog}.${database}.orders,
+    ${catalog}.${database}.lineitem
 WHERE
     c_mktsegment = 'BUILDING'
     and c_custkey = o_custkey

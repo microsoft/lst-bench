@@ -4,7 +4,7 @@ create temporary view revenue
         l_suppkey,
         sum(l_extendedprice * (1 - l_discount))
     from
-        lineitem
+        ${catalog}.${database}.lineitem
     where
         l_shipdate >= date '1996-01-01'
         and l_shipdate < date '1996-01-01' + interval '3' month
@@ -18,15 +18,15 @@ select
     s_phone,
     total_revenue
 from
-    supplier,
-    revenue
+    ${catalog}.${database}.supplier,
+    ${catalog}.${database}.revenue
 where
     s_suppkey = supplier_no
     and total_revenue = (
         select
             max(total_revenue)
         from
-            revenue
+            ${catalog}.${database}.revenue
     )
 order by
     s_suppkey;

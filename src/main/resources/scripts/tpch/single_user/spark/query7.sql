@@ -10,12 +10,12 @@ FROM (
         extract(year from l_shipdate) as l_year,
         l_extendedprice * (1 - l_discount) as volume
     FROM
-        supplier,
-        lineitem,
-        orders,
-        customer,
-        nation n1,
-        nation n2
+        ${catalog}.${database}.supplier,
+        ${catalog}.${database}.lineitem,
+        ${catalog}.${database}.orders,
+        ${catalog}.${database}.customer,
+        ${catalog}.${database}.nation n1,
+        ${catalog}.${database}.nation n2
     WHERE
         s_suppkey = l_suppkey
         and o_orderkey = l_orderkey
