@@ -94,7 +94,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/experiment_config-hudi.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
         "src/main/resources/config/spark/tpch/task_library.yaml",
-        "src/test/resources/config/spark/w_all_tpch.yaml");
+        "src/test/resources/config/spark/w_all_tpch-hudi.yaml");
   }
 
   @Test
