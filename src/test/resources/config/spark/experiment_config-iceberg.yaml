@@ -26,3 +26,4 @@ parameter_values:
   data_path: '/iceberg/sf_001/'
   options_suffix: ''
   tblproperties_suffix: ', "format-version"="2", "write.delete.mode"="copy-on-write", "write.update.mode"="copy-on-write", "write.merge.mode"="copy-on-write"'
+  scale_factor: 0.01

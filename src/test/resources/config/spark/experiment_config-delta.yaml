@@ -26,3 +26,4 @@ parameter_values:
   data_path: '/delta/sf_001/'
   options_suffix: ''
   tblproperties_suffix: ''
+  scale_factor: 0.01

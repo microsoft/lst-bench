@@ -12,7 +12,7 @@ group by
 having
     sum(ps_supplycost * ps_availqty) > (
         select
-            sum(ps_supplycost * ps_availqty) *  0.0001 / {SF}
+            sum(ps_supplycost * ps_availqty) *  0.0001 / ${scale_factor}
         from
             ${catalog}.${database}.partsupp,
             ${catalog}.${database}.supplier,
