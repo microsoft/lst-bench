@@ -19,14 +19,14 @@ select
     total_revenue
 from
     ${catalog}.${database}.supplier,
-    ${catalog}.${database}.revenue
+    revenue
 where
     s_suppkey = supplier_no
     and total_revenue = (
         select
             max(total_revenue)
         from
-            ${catalog}.${database}.revenue
+            revenue
     )
 order by
     s_suppkey;
