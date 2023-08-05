@@ -28,6 +28,11 @@ docker exec -i -u root $SPARK_CONTAINER_ID /bin/bash -c '/bin/bash -s' <<EOF
   mkdir -p ${external_data_path}partsupp
   mkdir -p ${external_data_path}region
   mkdir -p ${external_data_path}supplier
+  for stream_num in {1..8} ; do
+    mkdir -p ${external_data_path}${stream_num}/s_orders/
+    mkdir -p ${external_data_path}${stream_num}/s_lineitem/
+    mkdir -p ${external_data_path}${stream_num}/s_delete/
+  done
   # TPC-DS (TODO: generate data)
   mkdir -p ${external_data_path}call_center
   mkdir -p ${external_data_path}catalog_page
