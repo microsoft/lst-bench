@@ -1,4 +1,4 @@
-# Description: Workload for test: All task types, TPC-H, Hudi
+# Description: Workload for test: All task types, TPC-H, Delta
 ---
 version: 1
 id: w_all_tpch
@@ -19,9 +19,6 @@ phases:
   sessions:
   - tasks:
     - template_id: build
-      replace_regex:
-        - pattern: '(?i)varchar\(.*\)|char\(.*\)'
-          replacement: 'string'
 - id: single_user
   sessions:
   - tasks:
@@ -33,4 +30,4 @@ phases:
 - id: data_maintenance_2
   sessions:
   - tasks:
-    - template_id: data_maintenance_2_delete
+    - template_id: data_maintenance_2_merge

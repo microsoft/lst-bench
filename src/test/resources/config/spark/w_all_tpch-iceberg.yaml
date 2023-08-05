@@ -1,4 +1,4 @@
-# Description: Workload for test: All task types, TPC-H
+# Description: Workload for test: All task types, TPC-H, Iceberg
 ---
 version: 1
 id: w_all_tpch
@@ -30,4 +30,4 @@ phases:
 - id: data_maintenance_2
   sessions:
   - tasks:
-    - template_id: data_maintenance_2
+    - template_id: data_maintenance_2_delete

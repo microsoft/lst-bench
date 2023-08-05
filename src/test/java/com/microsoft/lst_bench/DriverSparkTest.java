@@ -82,7 +82,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/experiment_config-delta.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
         "src/main/resources/config/spark/tpch/task_library.yaml",
-        "src/test/resources/config/spark/w_all_tpch.yaml");
+        "src/test/resources/config/spark/w_all_tpch-delta.yaml");
   }
 
   @Test
@@ -106,7 +106,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/experiment_config-iceberg.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
         "src/main/resources/config/spark/tpch/task_library.yaml",
-        "src/test/resources/config/spark/w_all_tpch.yaml");
+        "src/test/resources/config/spark/w_all_tpch-iceberg.yaml");
   }
 
   @Test

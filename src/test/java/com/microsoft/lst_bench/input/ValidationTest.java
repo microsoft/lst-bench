@@ -214,8 +214,9 @@ public class ValidationTest {
         "src/main/resources/config/trino/tpcds/wp1_longevity.yaml",
         "src/main/resources/config/trino/tpcds/wp2_resilience.yaml",
         "src/main/resources/config/trino/tpcds/wp3_rw_concurrency.yaml",
-        "src/main/resources/config/spark/tpch/w0_tpch.yaml",
-        "src/main/resources/config/spark/tpch/w0_tpch-hudi.yaml"
+        "src/main/resources/config/spark/tpch/w0_tpch-delta.yaml",
+        "src/main/resources/config/spark/tpch/w0_tpch-hudi.yaml",
+        "src/main/resources/config/spark/tpch/w0_tpch-iceberg.yaml"
       })
   public void testValidationWorkloadUnix(String workloadFilePath) throws IOException {
     testValidationWorkload(workloadFilePath);
@@ -237,8 +238,9 @@ public class ValidationTest {
         "src\\main\\resources\\config\\trino\\tpcds\\wp1_longevity.yaml",
         "src\\main\\resources\\config\\trino\\tpcds\\wp2_resilience.yaml",
         "src\\main\\resources\\config\\trino\\tpcds\\wp3_rw_concurrency.yaml",
-        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch.yaml",
-        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch-hudi.yaml"
+        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch-delta.yaml",
+        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch-hudi.yaml",
+        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch-iceberg.yaml"
       })
   public void testValidationWorkloadWin(String workloadFilePath) throws IOException {
     testValidationWorkload(workloadFilePath);

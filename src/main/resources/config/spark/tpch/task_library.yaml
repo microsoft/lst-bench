@@ -70,13 +70,18 @@ task_templates:
   - src/main/resources/scripts/tpch/single_user/spark/query20.sql
   - src/main/resources/scripts/tpch/single_user/spark/query21.sql
   - src/main/resources/scripts/tpch/single_user/spark/query22.sql
-# Execution of TPC-H data maintenance queries (RF1)
+# Execution of RF1 TPC-H data maintenance queries
 - id: data_maintenance_1
   files:
   - src/main/resources/scripts/tpch/data_maintenance/spark/RF1.sql
   parameter_values_file: src/main/resources/auxiliary/tpch/data_maintenance/parameter_values.dat
-# Execution of TPC-H data maintenance queries (RF2)
-- id: data_maintenance_2
+# Execution of RF2 TPC-H data maintenance queries (using MERGE)
+- id: data_maintenance_2_merge
+  files:
+  - src/main/resources/scripts/tpch/data_maintenance/spark/RF2-merge.sql
+  parameter_values_file: src/main/resources/auxiliary/tpch/data_maintenance/parameter_values.dat
+# Execution of RF2 TPC-H data maintenance queries (using DELETE)
+- id: data_maintenance_2_delete
   files:
   - src/main/resources/scripts/tpch/data_maintenance/spark/RF2.sql
   parameter_values_file: src/main/resources/auxiliary/tpch/data_maintenance/parameter_values.dat
