@@ -15,6 +15,9 @@ phases:
   sessions:
   - tasks:
     - template_id: build
+      replace_regex:
+      - pattern: '(?i)varchar\(.*\)|char\(.*\)'
+        replacement: 'string'
 - id: power
   sessions:
   - tasks:

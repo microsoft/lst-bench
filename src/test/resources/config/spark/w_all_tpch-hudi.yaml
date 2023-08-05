@@ -7,6 +7,10 @@ phases:
   sessions:
   - tasks:
     - template_id: setup
+- id: setup_data_maintenance
+  sessions:
+  - tasks:
+    - template_id: setup_data_maintenance
 - id: init
   sessions:
   - tasks:
@@ -22,3 +26,11 @@ phases:
   sessions:
   - tasks:
     - template_id: single_user
+- id: data_maintenance_1
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_1
+- id: data_maintenance_2
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_2
