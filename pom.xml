@@ -142,6 +142,21 @@
             </dependencies>
         </profile>
         <profile>
+            <id>microsoft-fabric-jdbc</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.microsoft.sqlserver</groupId>
+                    <artifactId>mssql-jdbc</artifactId>
+                    <version>9.4.0.jre11</version>
+                </dependency> 
+                <dependency>
+                    <groupId>com.microsoft.azure</groupId> 
+                    <artifactId>msal4j</artifactId> 
+                    <version>1.14.1-beta</version> 
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>spark-jdbc</id>
             <dependencies>
                 <dependency>
