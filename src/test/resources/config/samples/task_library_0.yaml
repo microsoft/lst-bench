@@ -33,7 +33,7 @@ task_templates:
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_CS.sql
 - id: data_maintenance_delta_dependent
   files:
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/DF_CS.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_1.sql
 - id: optimize_delta
   files:
   - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-delta.sql

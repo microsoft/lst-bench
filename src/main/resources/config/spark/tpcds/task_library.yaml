@@ -326,5 +326,16 @@ task_templates:
 # Execution of dependent TPC-DS data maintenance queries (Delta)
 - id: data_maintenance_delta_dependent
   files:
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/DF_CS.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_1.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_delete.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_1.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_delete.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_2.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_delete.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_2.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_delete.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_3.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_delete.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_3.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_delete.sql
   parameter_values_file: src/main/resources/auxiliary/tpcds/data_maintenance/parameter_values.dat
