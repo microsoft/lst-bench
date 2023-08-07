@@ -16,13 +16,8 @@
 package com.microsoft.lst_bench.client;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,23 +48,14 @@ public class JDBCConnection implements Connection {
   }
 
   @Override
-  public Object executeQuery(String sqlText) throws ClientException {
-    Map<String, List<Object>> valueList = new HashMap<>();
+  public QueryResult executeQuery(String sqlText) throws ClientException {
+    QueryResult qr = new QueryResult();
+
     try (Statement s = connection.createStatement()) {
       ResultSet rs = s.executeQuery(sqlText);
-      ResultSetMetaData rsmd = rs.getMetaData();
+      qr.populate(rs);
 
-      for (int j = 1; j <= rsmd.getColumnCount(); j++) {
-        valueList.put(rsmd.getColumnName(j), new ArrayList<>());
-      }
-
-      while (rs.next()) {
-        for (int j = 1; j <= rsmd.getColumnCount(); j++) {
-          valueList.get(rsmd.getColumnName(j)).add(rs.getObject(j));
-        }
-      }
-
-      return valueList;
+      return qr;
     } catch (Exception e) {
       throw new ClientException(e);
     }
