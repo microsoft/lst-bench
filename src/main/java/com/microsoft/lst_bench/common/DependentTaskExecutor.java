@@ -94,7 +94,8 @@ public class DependentTaskExecutor extends TaskExecutor {
               int localMax =
                   (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
               Map<String, Object> localValues = new HashMap<>(values);
-              localValues.put(DEFAULT_REPLACEMENT_MARKER, this.createReplacementString(valueList, j, localMax));
+              localValues.put(
+                  DEFAULT_REPLACEMENT_MARKER, this.createReplacementString(valueList, j, localMax));
 
               statementStartTime = Instant.now();
               connection.execute(
@@ -114,17 +115,18 @@ public class DependentTaskExecutor extends TaskExecutor {
     }
   }
 
-  private String createReplacementString(Map<String, List<Object>> valueList, int listMin, int listMax) {
+  private String createReplacementString(
+      Map<String, List<Object>> valueList, int listMin, int listMax) {
     // TODO: Currently insensitive to types, can only do strings.
     List<String> replacementTuples = new ArrayList<>();
-    for (int i = listMin; i<listMax; i++) {
+    for (int i = listMin; i < listMax; i++) {
       List<String> rowValues = new ArrayList<>();
       for (String columnName : valueList.keySet()) {
         rowValues.add(valueList.get(columnName).get(i).toString());
       }
       replacementTuples.add("'" + String.join("','", rowValues) + "'");
     }
-    
+
     return "(" + String.join("),(", replacementTuples) + ")";
   }
 }
