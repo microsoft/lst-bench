@@ -17,7 +17,7 @@ package com.microsoft.lst_bench.common;
 
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
-import com.microsoft.lst_bench.client.JDBCConnection;
+import com.microsoft.lst_bench.client.QueryResult;
 import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
@@ -76,8 +76,8 @@ public class DependentTaskExecutor extends TaskExecutor {
                   StringUtils.replaceParameters(statement, values).getStatement());
           writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
 
-          if (connection instanceof JDBCConnection) {
-            Map<String, List<Object>> valueList = (Map<String, List<Object>>) iterableObject;
+          if (iterableObject instanceof QueryResult) {
+            Map<String, List<Object>> valueList = ((QueryResult) iterableObject).getValueList();
             statement = file.getStatements().get(i + 1);
 
             // Determine the number of batchable values.

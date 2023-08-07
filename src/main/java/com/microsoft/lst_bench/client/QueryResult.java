@@ -48,4 +48,8 @@ public class QueryResult {
       }
     }
   }
+
+  public Map<String, List<Object>> getValueList() {
+    return this.valueList;
+  }
 }
