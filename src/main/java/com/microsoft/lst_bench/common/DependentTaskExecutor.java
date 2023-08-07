@@ -25,11 +25,11 @@ import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
 public class DependentTaskExecutor extends TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DependentTaskExecutor.class);
+  // TODO: Add functionality to use custom replacement markers.
+  private static final String DEFAULT_REPLACEMENT_MARKER = "dependent_replace";
 
   private final Integer dependentBatchSize;
 
@@ -92,15 +94,8 @@ public class DependentTaskExecutor extends TaskExecutor {
               int localMax =
                   (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
               Map<String, Object> localValues = new HashMap<>(values);
+              localValues.put(DEFAULT_REPLACEMENT_MARKER, this.createReplacementString(valueList, j, localMax));
 
-              // TODO: Currently insensitive to types, can only do strings.
-              for (String columnName : valueList.keySet()) {
-                List<String> subList =
-                    valueList.get(columnName).subList(j, localMax).stream()
-                        .map(val -> val.toString())
-                        .collect(Collectors.toList());
-                localValues.put(columnName, "'" + String.join("','", subList) + "'");
-              }
               statementStartTime = Instant.now();
               connection.execute(
                   StringUtils.replaceParameters(statement, localValues).getStatement());
@@ -117,5 +112,19 @@ public class DependentTaskExecutor extends TaskExecutor {
       }
       writeFileEvent(fileStartTime, file.getId(), Status.SUCCESS);
     }
+  }
+
+  private String createReplacementString(Map<String, List<Object>> valueList, int listMin, int listMax) {
+    // TODO: Currently insensitive to types, can only do strings.
+    List<String> replacementTuples = new ArrayList<>();
+    for (int i = listMin; i<listMax; i++) {
+      List<String> rowValues = new ArrayList<>();
+      for (String columnName : valueList.keySet()) {
+        rowValues.add(valueList.get(columnName).get(i).toString());
+      }
+      replacementTuples.add("'" + String.join("','", rowValues) + "'");
+    }
+    
+    return "(" + String.join("),(", replacementTuples) + ")";
   }
 }
