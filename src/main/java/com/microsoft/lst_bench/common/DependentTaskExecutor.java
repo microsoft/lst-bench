@@ -78,19 +78,24 @@ public class DependentTaskExecutor extends TaskExecutor {
           writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
 
           // Execute second query repeatedly with the parameters extracted from the first query.
-          int size = queryResult.getValueListSize();
-          statement = file.getStatements().get(i + 1);
-          for (int j = 0; j < size; j += this.dependentBatchSize) {
-            int localMax =
-                (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
-            Map<String, Object> localValues = new HashMap<>(values);
-            localValues.put(
-                DEFAULT_REPLACEMENT_MARKER, this.createReplacementString(queryResult, j, localMax));
+          if (queryResult != null) {
+            int size = queryResult.getValueListSize();
+            statement = file.getStatements().get(i + 1);
+            for (int j = 0; j < size; j += this.dependentBatchSize) {
+              int localMax =
+                  (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
+              Map<String, Object> localValues = new HashMap<>(values);
+              localValues.put(
+                  DEFAULT_REPLACEMENT_MARKER,
+                  this.createReplacementString(queryResult, j, localMax));
 
-            statementStartTime = Instant.now();
-            connection.execute(
-                StringUtils.replaceParameters(statement, localValues).getStatement());
-            writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+              statementStartTime = Instant.now();
+              connection.execute(
+                  StringUtils.replaceParameters(statement, localValues).getStatement());
+              writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+            }
+          } else {
+            LOGGER.warn("QueryResult returned by first statement was empty, continuing execution.");
           }
         }
       } catch (Exception e) {
