@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,37 +72,25 @@ public class DependentTaskExecutor extends TaskExecutor {
 
           // Execute first query that retrieves the iterable input for the second query.
           Instant statementStartTime = Instant.now();
-          Object iterableObject =
+          QueryResult queryResult =
               connection.executeQuery(
                   StringUtils.replaceParameters(statement, values).getStatement());
           writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
 
-          if (iterableObject instanceof QueryResult) {
-            Map<String, List<Object>> valueList = ((QueryResult) iterableObject).getValueList();
-            statement = file.getStatements().get(i + 1);
+          // Execute second query repeatedly with the parameters extracted from the first query.
+          int size = queryResult.getValueListSize();
+          statement = file.getStatements().get(i + 1);
+          for (int j = 0; j < size; j += this.dependentBatchSize) {
+            int localMax =
+                (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
+            Map<String, Object> localValues = new HashMap<>(values);
+            localValues.put(
+                DEFAULT_REPLACEMENT_MARKER, this.createReplacementString(queryResult, j, localMax));
 
-            // Determine the number of batchable values.
-            int size = 0;
-            for (Entry<String, List<Object>> pair : valueList.entrySet()) {
-              size = pair.getValue().size();
-              break;
-            }
-
-            // Execute second query repeatedly with the parameters extracted from the first query.
-            for (int j = 0; j < size; j += this.dependentBatchSize) {
-              int localMax =
-                  (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
-              Map<String, Object> localValues = new HashMap<>(values);
-              localValues.put(
-                  DEFAULT_REPLACEMENT_MARKER, this.createReplacementString(valueList, j, localMax));
-
-              statementStartTime = Instant.now();
-              connection.execute(
-                  StringUtils.replaceParameters(statement, localValues).getStatement());
-              writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-            }
-          } else {
-            LOGGER.warn("Connection type not known, execution of second statement omitted.");
+            statementStartTime = Instant.now();
+            connection.execute(
+                StringUtils.replaceParameters(statement, localValues).getStatement());
+            writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
           }
         }
       } catch (Exception e) {
@@ -115,16 +102,11 @@ public class DependentTaskExecutor extends TaskExecutor {
     }
   }
 
-  private String createReplacementString(
-      Map<String, List<Object>> valueList, int listMin, int listMax) {
+  private String createReplacementString(QueryResult queryResult, int listMin, int listMax) {
     // TODO: Currently insensitive to types, can only do strings.
     List<String> replacementTuples = new ArrayList<>();
     for (int i = listMin; i < listMax; i++) {
-      List<String> rowValues = new ArrayList<>();
-      for (String columnName : valueList.keySet()) {
-        rowValues.add(valueList.get(columnName).get(i).toString());
-      }
-      replacementTuples.add("'" + String.join("','", rowValues) + "'");
+      replacementTuples.add(queryResult.getStringTuple(i));
     }
 
     return "(" + String.join("),(", replacementTuples) + ")";

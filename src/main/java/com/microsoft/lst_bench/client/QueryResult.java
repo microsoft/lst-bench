@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Represents the query result of a query issued against a source. Query result entries should be
@@ -35,6 +36,8 @@ public class QueryResult {
     this.valueList = new HashMap<>();
   }
 
+  // TODO: Determine whether this can be done lazily i.e., after the statement has finished
+  // executing and the query is not timed anymore.
   public void populate(ResultSet rs) throws SQLException {
     ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -51,5 +54,26 @@ public class QueryResult {
 
   public Map<String, List<Object>> getValueList() {
     return this.valueList;
+  }
+
+  public int getValueListSize() {
+    int size = 0;
+    for (Entry<String, List<Object>> pair : valueList.entrySet()) {
+      size = pair.getValue().size();
+      break;
+    }
+    return size;
+  }
+
+  public String getStringTuple(int pos) {
+    List<String> rowValues = new ArrayList<>();
+    for (String key : this.valueList.keySet()) {
+      rowValues.add(this.getStringValue(key, pos));
+    }
+    return "'" + String.join("','", rowValues) + "'";
+  }
+
+  private String getStringValue(String identifier, int pos) {
+    return this.valueList.get(identifier).get(pos).toString();
   }
 }
