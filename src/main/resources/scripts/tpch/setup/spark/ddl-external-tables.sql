@@ -19,7 +19,8 @@ CREATE
         )
         USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}customer/" ${external_options_suffix}
-        );
+        )
+        PARTITIONED BY(c_mktsegment);
 
 DROP
     TABLE
@@ -47,7 +48,8 @@ CREATE
         )
         USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}lineitem/" ${external_options_suffix}
-        );
+        )
+        PARTITIONED BY(l_shipdate);
 
 DROP
     TABLE
@@ -68,7 +70,8 @@ CREATE
         )
         USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}orders/" ${external_options_suffix}
-        );
+        )
+        PARTITIONED BY(o_orderdate);
 
 DROP
     TABLE
@@ -120,7 +123,8 @@ CREATE
         )
         USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}part/" ${external_options_suffix}
-        );
+        )
+        PARTITIONED BY(p_brand);
 
 DROP
     TABLE
