@@ -25,11 +25,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Represents the query result of a query issued against a source. Query result entries should be
  * mapped to column name -> list of column values.
  */
 public class QueryResult {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(QueryResult.class);
 
   private final Map<String, List<Object>> valueList;
 
@@ -65,10 +70,12 @@ public class QueryResult {
   public Map<String, Object> getStringMappings(int listMin, int listMax) {
     Map<String, Object> result = new HashMap<>();
     for (String key : this.valueList.keySet()) {
+      LOGGER.info("Looking for key: " + key);
       List<String> localList =
           this.valueList.get(key).subList(listMin, listMax).stream()
               .map(s -> s.toString())
               .collect(Collectors.toUnmodifiableList());
+      LOGGER.info("Found list: " + localList.toString());
       result.put(key, "'" + String.join("','", localList) + "'");
     }
     return result;
