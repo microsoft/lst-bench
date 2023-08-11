@@ -67,35 +67,39 @@ public class DependentTaskExecutor extends TaskExecutor {
     for (FileExec file : task.getFiles()) {
       Instant fileStartTime = Instant.now();
       try {
-        for (int i = 0; i < file.getStatements().size(); i += 2) {
-          StatementExec statement = file.getStatements().get(i);
+        QueryResult queryResult = null;
+        for (int i = 0; i < file.getStatements().size(); i++) {
+          if (i % 2 == 0) {
+            StatementExec statement = file.getStatements().get(i);
 
-          // Execute first query that retrieves the iterable input for the second query.
-          Instant statementStartTime = Instant.now();
-          QueryResult queryResult =
-              connection.executeQuery(
-                  StringUtils.replaceParameters(statement, values).getStatement());
-          writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-
-          // Execute second query repeatedly with the parameters extracted from the first query.
-          if (queryResult != null) {
-            int size = queryResult.getValueListSize();
-            statement = file.getStatements().get(i + 1);
-            for (int j = 0; j < size; j += this.dependentBatchSize) {
-              int localMax =
-                  (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
-              Map<String, Object> localValues = new HashMap<>(values);
-              localValues.put(
-                  DEFAULT_REPLACEMENT_MARKER,
-                  this.createReplacementString(queryResult, j, localMax));
-
-              statementStartTime = Instant.now();
-              connection.execute(
-                  StringUtils.replaceParameters(statement, localValues).getStatement());
-              writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-            }
+            // Execute first query that retrieves the iterable input for the second query.
+            Instant statementStartTime = Instant.now();
+            queryResult =
+                connection.executeQuery(
+                    StringUtils.replaceParameters(statement, values).getStatement());
+            writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
           } else {
-            LOGGER.warn("QueryResult returned by first statement was empty, continuing execution.");
+            // Execute second query repeatedly with the parameters extracted from the first query.
+            if (queryResult != null) {
+              int size = queryResult.getValueListSize();
+              StatementExec statement = file.getStatements().get(i + 1);
+              for (int j = 0; j < size; j += this.dependentBatchSize) {
+                int localMax =
+                    (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
+                Map<String, Object> localValues = new HashMap<>(values);
+                localValues.put(
+                    DEFAULT_REPLACEMENT_MARKER,
+                    this.createReplacementString(queryResult, j, localMax));
+
+                Instant statementStartTime = Instant.now();
+                connection.execute(
+                    StringUtils.replaceParameters(statement, localValues).getStatement());
+                writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+              }
+            } else {
+              LOGGER.warn(
+                  "QueryResult returned by previous statement was empty, continuing execution.");
+            }
           }
         }
       } catch (Exception e) {
