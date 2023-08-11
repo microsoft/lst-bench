@@ -1,5 +1,5 @@
 SELECT
-    cs_order_number
+    cs_order_number as cr_order_number
 FROM
     ${catalog}.${database}.catalog_sales,
     ${catalog}.${database}.date_dim

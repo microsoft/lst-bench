@@ -86,7 +86,6 @@ public class DependentTaskExecutor extends TaskExecutor {
                 (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
             Map<String, Object> localValues = new HashMap<>(values);
             localValues.putAll(queryResult.getStringMappings(j, localMax));
-            LOGGER.info("Local values: " + localValues.toString());
 
             Instant statementStartTime = Instant.now();
             connection.execute(

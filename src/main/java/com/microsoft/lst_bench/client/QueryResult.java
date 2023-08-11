@@ -69,12 +69,10 @@ public class QueryResult {
   public Map<String, Object> getStringMappings(int listMin, int listMax) {
     Map<String, Object> result = new HashMap<>();
     for (String key : this.valueList.keySet()) {
-      LOGGER.info("Looking for key: " + key);
       List<String> localList =
           this.valueList.get(key).subList(listMin, listMax).stream()
               .map(s -> s.toString())
               .collect(Collectors.toUnmodifiableList());
-      LOGGER.info("Found list: " + localList.toString());
       result.put(key, "'" + String.join("','", localList) + "'");
     }
     return result;
