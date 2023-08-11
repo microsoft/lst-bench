@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * Represents the query result of a query issued against a source. Query result entries should be
@@ -52,10 +53,6 @@ public class QueryResult {
     }
   }
 
-  public Map<String, List<Object>> getValueList() {
-    return this.valueList;
-  }
-
   public int getValueListSize() {
     int size = 0;
     for (Entry<String, List<Object>> pair : valueList.entrySet()) {
@@ -65,15 +62,15 @@ public class QueryResult {
     return size;
   }
 
-  public String getStringTuple(int pos) {
-    List<String> rowValues = new ArrayList<>();
+  public Map<String, Object> getStringTuples(int listMin, int listMax) {
+    Map<String, Object> result = new HashMap<>();
     for (String key : this.valueList.keySet()) {
-      rowValues.add(this.getStringValue(key, pos));
+      List<String> localList =
+          this.valueList.get(key).subList(listMin, listMax).stream()
+              .map(s -> s.toString())
+              .collect(Collectors.toUnmodifiableList());
+      result.put(key, "'" + String.join("','", localList) + "'");
     }
-    return "'" + String.join("','", rowValues) + "'";
-  }
-
-  private String getStringValue(String identifier, int pos) {
-    return this.valueList.get(identifier).get(pos).toString();
+    return result;
   }
 }
