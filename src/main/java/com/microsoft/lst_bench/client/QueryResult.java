@@ -62,7 +62,7 @@ public class QueryResult {
     return size;
   }
 
-  public Map<String, Object> getStringTuples(int listMin, int listMax) {
+  public Map<String, Object> getStringMappings(int listMin, int listMax) {
     Map<String, Object> result = new HashMap<>();
     for (String key : this.valueList.keySet()) {
       List<String> localList =
