@@ -487,34 +487,34 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.call_center(
             cc_call_center_sk INT,
-            cc_call_center_id string,
+            cc_call_center_id VARCHAR(16),
             cc_rec_start_date DATE,
             cc_rec_end_date DATE,
             cc_closed_date_sk INT,
             cc_open_date_sk INT,
-            cc_name string,
-            cc_class string,
+            cc_name VARCHAR(50),
+            cc_class VARCHAR(50),
             cc_employees INT,
             cc_sq_ft INT,
-            cc_hours string,
-            cc_manager string,
+            cc_hours VARCHAR(20),
+            cc_manager VARCHAR(40),
             cc_mkt_id INT,
-            cc_mkt_class string,
-            cc_mkt_desc string,
-            cc_market_manager string,
+            cc_mkt_class VARCHAR(50),
+            cc_mkt_desc VARCHAR(100),
+            cc_market_manager VARCHAR(40),
             cc_division INT,
-            cc_division_name string,
+            cc_division_name VARCHAR(50),
             cc_company INT,
-            cc_company_name string,
-            cc_street_number string,
-            cc_street_name string,
-            cc_street_type string,
-            cc_suite_number string,
-            cc_city string,
-            cc_county string,
-            cc_state string,
-            cc_zip string,
-            cc_country string,
+            cc_company_name VARCHAR(50),
+            cc_street_number VARCHAR(10),
+            cc_street_name VARCHAR(60),
+            cc_street_type VARCHAR(15),
+            cc_suite_number VARCHAR(10),
+            cc_city VARCHAR(60),
+            cc_county VARCHAR(30),
+            cc_state VARCHAR(2),
+            cc_zip VARCHAR(10),
+            cc_country VARCHAR(20),
             cc_gmt_offset DECIMAL(
                 5,
                 2
@@ -536,14 +536,14 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.catalog_page(
             cp_catalog_page_sk INT,
-            cp_catalog_page_id string,
+            cp_catalog_page_id VARCHAR(16),
             cp_start_date_sk INT,
             cp_end_date_sk INT,
-            cp_department string,
+            cp_department VARCHAR(50),
             cp_catalog_number INT,
             cp_catalog_page_number INT,
-            cp_description string,
-            cp_type string
+            cp_description VARCHAR(100),
+            cp_type VARCHAR(100)
         )
             USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}catalog_page/" ${external_options_suffix}
@@ -557,23 +557,23 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.customer(
             c_customer_sk INT,
-            c_customer_id string,
+            c_customer_id VARCHAR(16),
             c_current_cdemo_sk INT,
             c_current_hdemo_sk INT,
             c_current_addr_sk INT,
             c_first_shipto_date_sk INT,
             c_first_sales_date_sk INT,
-            c_salutation string,
-            c_first_name string,
-            c_last_name string,
-            c_preferred_cust_flag string,
+            c_salutation VARCHAR(10),
+            c_first_name VARCHAR(20),
+            c_last_name VARCHAR(30),
+            c_preferred_cust_flag VARCHAR(1),
             c_birth_day INT,
             c_birth_month INT,
             c_birth_year INT,
-            c_birth_country string,
-            c_login string,
-            c_email_address string,
-            c_last_review_date string
+            c_birth_country VARCHAR(20),
+            c_login VARCHAR(13),
+            c_email_address VARCHAR(50),
+            c_last_review_date_sk VARCHAR(10)
         )
             USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}customer/" ${external_options_suffix}
@@ -587,21 +587,21 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.customer_address(
             ca_address_sk INT,
-            ca_address_id string,
-            ca_street_number string,
-            ca_street_name string,
-            ca_street_type string,
-            ca_suite_number string,
-            ca_city string,
-            ca_county string,
-            ca_state string,
-            ca_zip string,
-            ca_country string,
+            ca_address_id VARCHAR(16),
+            ca_street_number VARCHAR(10),
+            ca_street_name VARCHAR(60),
+            ca_street_type VARCHAR(15),
+            ca_suite_number VARCHAR(10),
+            ca_city VARCHAR(60),
+            ca_county VARCHAR(30),
+            ca_state VARCHAR(2),
+            ca_zip VARCHAR(10),
+            ca_country VARCHAR(20),
             ca_gmt_offset DECIMAL(
                 5,
                 2
             ),
-            ca_location_type string
+            ca_location_type VARCHAR(20)
         )
             USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}customer_address/" ${external_options_suffix}
@@ -615,11 +615,11 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.customer_demographics(
             cd_demo_sk INT,
-            cd_gender string,
-            cd_marital_status string,
-            cd_education_status string,
+            cd_gender VARCHAR(1),
+            cd_marital_status VARCHAR(1),
+            cd_education_status VARCHAR(20),
             cd_purchase_estimate INT,
-            cd_credit_rating string,
+            cd_credit_rating VARCHAR(10),
             cd_dep_count INT,
             cd_dep_employed_count INT,
             cd_dep_college_count INT
@@ -636,7 +636,7 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.date_dim(
             d_date_sk INT,
-            d_date_id string,
+            d_date_id VARCHAR(16),
             d_date DATE,
             d_month_seq INT,
             d_week_seq INT,
@@ -649,20 +649,20 @@ CREATE
             d_fy_year INT,
             d_fy_quarter_seq INT,
             d_fy_week_seq INT,
-            d_day_name string,
-            d_quarter_name string,
-            d_holiday string,
-            d_weekend string,
-            d_following_holiday string,
+            d_day_name VARCHAR(9),
+            d_quarter_name VARCHAR(6),
+            d_holiday VARCHAR(1),
+            d_weekend VARCHAR(1),
+            d_following_holiday VARCHAR(1),
             d_first_dom INT,
             d_last_dom INT,
             d_same_day_ly INT,
             d_same_day_lq INT,
-            d_current_day string,
-            d_current_week string,
-            d_current_month string,
-            d_current_quarter string,
-            d_current_year string
+            d_current_day VARCHAR(1),
+            d_current_week VARCHAR(1),
+            d_current_month VARCHAR(1),
+            d_current_quarter VARCHAR(1),
+            d_current_year VARCHAR(1)
         )
             USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}date_dim/" ${external_options_suffix}
@@ -677,7 +677,7 @@ CREATE
         ${external_catalog}.${external_database}.household_demographics(
             hd_demo_sk INT,
             hd_income_band_sk INT,
-            hd_buy_potential string,
+            hd_buy_potential VARCHAR(15),
             hd_dep_count INT,
             hd_vehicle_count INT
         )
@@ -708,10 +708,10 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.item(
             i_item_sk INT,
-            i_item_id string,
+            i_item_id VARCHAR(16),
             i_rec_start_date DATE,
             i_rec_end_date DATE,
-            i_item_desc string,
+            i_item_desc VARCHAR(200),
             i_current_price DECIMAL(
                 7,
                 2
@@ -721,20 +721,20 @@ CREATE
                 2
             ),
             i_brand_id INT,
-            i_brand string,
+            i_brand VARCHAR(50),
             i_class_id INT,
-            i_class string,
+            i_class VARCHAR(50),
             i_category_id INT,
-            i_category string,
+            i_category VARCHAR(50),
             i_manufact_id INT,
-            i_manufact string,
-            i_size string,
-            i_formulation string,
-            i_color string,
-            i_units string,
-            i_container string,
+            i_manufact VARCHAR(50),
+            i_size VARCHAR(20),
+            i_formulation VARCHAR(20),
+            i_color VARCHAR(20),
+            i_units VARCHAR(10),
+            i_container VARCHAR(10),
             i_manager_id INT,
-            i_product_name string
+            i_product_name VARCHAR(50)
         )
             USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}item/" ${external_options_suffix}
@@ -748,7 +748,7 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.promotion(
             p_promo_sk INT,
-            p_promo_id string,
+            p_promo_id VARCHAR(16),
             p_start_date_sk INT,
             p_end_date_sk INT,
             p_item_sk INT,
@@ -757,18 +757,18 @@ CREATE
                 2
             ),
             p_response_target INT,
-            p_promo_name string,
-            p_channel_dmail string,
-            p_channel_email string,
-            p_channel_catalog string,
-            p_channel_tv string,
-            p_channel_radio string,
-            p_channel_press string,
-            p_channel_event string,
-            p_channel_demo string,
-            p_channel_details string,
-            p_purpose string,
-            p_discount_active string
+            p_promo_name VARCHAR(50),
+            p_channel_dmail VARCHAR(1),
+            p_channel_email VARCHAR(1),
+            p_channel_catalog VARCHAR(1),
+            p_channel_tv VARCHAR(1),
+            p_channel_radio VARCHAR(1),
+            p_channel_press VARCHAR(1),
+            p_channel_event VARCHAR(1),
+            p_channel_demo VARCHAR(1),
+            p_channel_details VARCHAR(100),
+            p_purpose VARCHAR(15),
+            p_discount_active VARCHAR(1)
         )
             USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}promotion/" ${external_options_suffix}
@@ -782,8 +782,8 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.reason(
             r_reason_sk INT,
-            r_reason_id string,
-            r_reason_desc string
+            r_reason_id VARCHAR(16),
+            r_reason_desc VARCHAR(100)
         )
             USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}reason/" ${external_options_suffix}
@@ -797,11 +797,11 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.ship_mode(
             sm_ship_mode_sk INT,
-            sm_ship_mode_id string,
-            sm_type string,
-            sm_code string,
-            sm_carrier string,
-            sm_contract string
+            sm_ship_mode_id VARCHAR(16),
+            sm_type VARCHAR(30),
+            sm_code VARCHAR(10),
+            sm_carrier VARCHAR(20),
+            sm_contract VARCHAR(20)
         )
             USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}ship_mode/" ${external_options_suffix}
@@ -815,32 +815,32 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.store(
             s_store_sk INT,
-            s_store_id string,
+            s_store_id VARCHAR(16),
             s_rec_start_date DATE,
             s_rec_end_date DATE,
             s_closed_date_sk INT,
-            s_store_name string,
+            s_store_name VARCHAR(50),
             s_number_employees INT,
             s_floor_space INT,
-            s_hours string,
-            s_manager string,
+            s_hours VARCHAR(20),
+            s_manager VARCHAR(40),
             s_market_id INT,
-            s_geography_class string,
-            s_market_desc string,
-            s_market_manager string,
+            s_geography_class VARCHAR(100),
+            s_market_desc VARCHAR(100),
+            s_market_manager VARCHAR(40),
             s_division_id INT,
-            s_division_name string,
+            s_division_name VARCHAR(50),
             s_company_id INT,
-            s_company_name string,
-            s_street_number string,
-            s_street_name string,
-            s_street_type string,
-            s_suite_number string,
-            s_city string,
-            s_county string,
-            s_state string,
-            s_zip string,
-            s_country string,
+            s_company_name VARCHAR(50),
+            s_street_number VARCHAR(10),
+            s_street_name VARCHAR(60),
+            s_street_type VARCHAR(15),
+            s_suite_number VARCHAR(10),
+            s_city VARCHAR(60),
+            s_county VARCHAR(30),
+            s_state VARCHAR(2),
+            s_zip VARCHAR(10),
+            s_country VARCHAR(20),
             s_gmt_offset DECIMAL(
                 5,
                 2
@@ -862,15 +862,15 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.time_dim(
             t_time_sk INT,
-            t_time_id string,
+            t_time_id VARCHAR(16),
             t_time INT,
             t_hour INT,
             t_minute INT,
             t_second INT,
-            t_am_pm string,
-            t_shift string,
-            t_sub_shift string,
-            t_meal_time string
+            t_am_pm VARCHAR(2),
+            t_shift VARCHAR(20),
+            t_sub_shift VARCHAR(20),
+            t_meal_time VARCHAR(20)
         )
             USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}time_dim/" ${external_options_suffix}
@@ -884,18 +884,18 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.warehouse(
             w_warehouse_sk INT,
-            w_warehouse_id string,
-            w_warehouse_name string,
+            w_warehouse_id VARCHAR(16),
+            w_warehouse_name VARCHAR(20),
             w_warehouse_sq_ft INT,
-            w_street_number string,
-            w_street_name string,
-            w_street_type string,
-            w_suite_number string,
-            w_city string,
-            w_county string,
-            w_state string,
-            w_zip string,
-            w_country string,
+            w_street_number VARCHAR(10),
+            w_street_name VARCHAR(60),
+            w_street_type VARCHAR(15),
+            w_suite_number VARCHAR(10),
+            w_city VARCHAR(60),
+            w_county VARCHAR(30),
+            w_state VARCHAR(2),
+            w_zip VARCHAR(10),
+            w_country VARCHAR(20),
             w_gmt_offset DECIMAL(
                 5,
                 2
@@ -913,15 +913,15 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.web_page(
             wp_web_page_sk INT,
-            wp_web_page_id string,
+            wp_web_page_id VARCHAR(16),
             wp_rec_start_date DATE,
             wp_rec_end_date DATE,
             wp_creation_date_sk INT,
             wp_access_date_sk INT,
-            wp_autogen_flag string,
+            wp_autogen_flag VARCHAR(1),
             wp_customer_sk INT,
-            wp_url string,
-            wp_type string,
+            wp_url VARCHAR(100),
+            wp_type VARCHAR(50),
             wp_char_count INT,
             wp_link_count INT,
             wp_image_count INT,
@@ -939,29 +939,29 @@ CREATE
     TABLE
         ${external_catalog}.${external_database}.web_site(
             web_site_sk INT,
-            web_site_id string,
+            web_site_id VARCHAR(16),
             web_rec_start_date DATE,
             web_rec_end_date DATE,
-            web_name string,
+            web_name VARCHAR(50),
             web_open_date_sk INT,
             web_close_date_sk INT,
-            web_class string,
-            web_manager string,
+            web_class VARCHAR(50),
+            web_manager VARCHAR(40),
             web_mkt_id INT,
-            web_mkt_class string,
-            web_mkt_desc string,
-            web_market_manager string,
+            web_mkt_class VARCHAR(50),
+            web_mkt_desc VARCHAR(100),
+            web_market_manager VARCHAR(40),
             web_company_id INT,
-            web_company_name string,
-            web_street_number string,
-            web_street_name string,
-            web_street_type string,
-            web_suite_number string,
-            web_city string,
-            web_county string,
-            web_state string,
-            web_zip string,
-            web_country string,
+            web_company_name VARCHAR(50),
+            web_street_number VARCHAR(10),
+            web_street_name VARCHAR(60),
+            web_street_type VARCHAR(15),
+            web_suite_number VARCHAR(10),
+            web_city VARCHAR(60),
+            web_county VARCHAR(30),
+            web_state VARCHAR(2),
+            web_zip VARCHAR(10),
+            web_country VARCHAR(20),
             web_gmt_offset DECIMAL(
                 5,
                 2
