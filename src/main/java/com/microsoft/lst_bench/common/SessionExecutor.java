@@ -47,6 +47,7 @@ public class SessionExecutor implements Callable<Boolean> {
   private final SQLTelemetryRegistry telemetryRegistry;
   private final SessionExec session;
   private final Map<String, Object> runtimeParameterValues;
+  private final Map<String, Object> runtimeArguments;
   private final Map<String, Instant> phaseIdToEndTime;
   private String experimentStartTime;
 
@@ -55,12 +56,14 @@ public class SessionExecutor implements Callable<Boolean> {
       SQLTelemetryRegistry telemetryRegistry,
       SessionExec session,
       Map<String, Object> runtimeParameterValues,
+      Map<String, Object> runtimeArguments,
       Map<String, Instant> phaseIdToEndTime,
       String experimentStartTime) {
     this.connectionManager = connectionManager;
     this.telemetryRegistry = telemetryRegistry;
     this.session = session;
     this.runtimeParameterValues = runtimeParameterValues;
+    this.runtimeArguments = runtimeArguments;
     this.phaseIdToEndTime = phaseIdToEndTime;
     this.experimentStartTime = experimentStartTime;
   }
@@ -118,7 +121,7 @@ public class SessionExecutor implements Callable<Boolean> {
     switch (task.getCustomTaskExecutor()) {
       case "DependentTaskExecutor":
         return new DependentTaskExecutor(
-            this.telemetryRegistry, this.experimentStartTime, task.getDependentBatchSize());
+            this.telemetryRegistry, this.experimentStartTime, this.runtimeArguments);
       default:
         throw new IllegalArgumentException(
             "Custom task executor not defined: " + task.getCustomTaskExecutor());

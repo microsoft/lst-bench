@@ -26,3 +26,5 @@ parameter_values:
   data_path: '/delta/sf_001/'
   options_suffix: ''
   tblproperties_suffix: ''
+arguments:
+  dependent_batch_size: 10

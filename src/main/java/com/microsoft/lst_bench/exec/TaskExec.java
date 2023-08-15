@@ -33,7 +33,4 @@ public interface TaskExec {
 
   @Value.Parameter(false)
   @Nullable String getCustomTaskExecutor();
-
-  @Value.Parameter(false)
-  @Nullable Integer getDependentBatchSize();
 }

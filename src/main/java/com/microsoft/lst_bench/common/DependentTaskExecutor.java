@@ -42,18 +42,21 @@ public class DependentTaskExecutor extends TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DependentTaskExecutor.class);
 
-  private final Integer dependentBatchSize;
+  private final int dependentBatchSize;
+  // Argument marker for batch size (defined in the experiment configuration).
+  private final String DEPENDENT_BATCH_SIZE = "dependent_batch_size";
 
   public DependentTaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
       String experimentStartTime,
-      Integer dependentBatchSize) {
+      Map<String, Object> runtimeArguments) {
     super(telemetryRegistry, experimentStartTime);
     // Set to a default of '1' if not otherwise specified.
-    if (dependentBatchSize == null) {
+    if (runtimeArguments.get(DEPENDENT_BATCH_SIZE) == null) {
       this.dependentBatchSize = 1;
     } else {
-      this.dependentBatchSize = dependentBatchSize;
+      this.dependentBatchSize =
+          Integer.parseInt(runtimeArguments.get(DEPENDENT_BATCH_SIZE).toString());
     }
   }
 

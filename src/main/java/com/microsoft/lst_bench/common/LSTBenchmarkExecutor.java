@@ -104,6 +104,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
                       this.telemetryRegistry,
                       session,
                       runtimeParameterValues,
+                      this.config.getArguments(),
                       phaseIdToEndTime,
                       this.experimentStartTime));
             }

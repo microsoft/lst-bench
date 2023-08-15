@@ -42,9 +42,6 @@ public interface Task {
   @JsonProperty("custom_task_executor")
   @Nullable String getCustomTaskExecutor();
 
-  @JsonProperty("dependent_batch_size")
-  @Nullable Integer getDependentBatchSize();
-
   @JsonProperty("replace_regex")
   @Nullable List<ReplaceRegex> getReplaceRegex();
 
