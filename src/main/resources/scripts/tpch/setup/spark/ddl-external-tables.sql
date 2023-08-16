@@ -22,6 +22,9 @@ CREATE
         )
         PARTITIONED BY(c_mktsegment);
 
+ALTER TABLE 
+    ${external_catalog}.${external_database}.customer RECOVER PARTITIONS;
+
 DROP
     TABLE
         IF EXISTS ${external_catalog}.${external_database}.lineitem;
@@ -51,6 +54,9 @@ CREATE
         )
         PARTITIONED BY(l_shipdate);
 
+ALTER TABLE 
+    ${external_catalog}.${external_database}.lineitem RECOVER PARTITIONS;
+
 DROP
     TABLE
         IF EXISTS ${external_catalog}.${external_database}.orders;
@@ -72,6 +78,9 @@ CREATE
             PATH = "${external_data_path}orders/" ${external_options_suffix}
         )
         PARTITIONED BY(o_orderdate);
+
+ALTER TABLE 
+    ${external_catalog}.${external_database}.orders RECOVER PARTITIONS;
 
 DROP
     TABLE
@@ -125,6 +134,9 @@ CREATE
             PATH = "${external_data_path}part/" ${external_options_suffix}
         )
         PARTITIONED BY(p_brand);
+
+ALTER TABLE 
+    ${external_catalog}.${external_database}.part RECOVER PARTITIONS;
 
 DROP
     TABLE
