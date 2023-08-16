@@ -1,7 +1,7 @@
 # Description: W0: Original TPC-H sequence (SF1000, S=7)
 ---
 version: 1
-id: w0_tpch
+id: w0_tpch_iceberg
 phases:
 - id: setup
   sessions:
