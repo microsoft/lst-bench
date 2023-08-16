@@ -328,44 +328,14 @@ task_templates:
   files:
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_1.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_1.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_delete.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_2.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_2.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_delete.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_3.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_3.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CS_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_I_1.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_I_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_I_2.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_I_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_I_3.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_I_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SR_1.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SR_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SS_1.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SS_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SR_2.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SR_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SS_2.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SS_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SR_3.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SR_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SS_3.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_SS_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WR_1.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WR_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WS_1.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WS_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WR_2.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WR_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WS_2.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WS_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WR_3.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WR_delete.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WS_3.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_WS_delete.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_1.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_delete.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_2.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_delete.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_3.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_delete.sql
   parameter_values_file: src/main/resources/auxiliary/tpcds/data_maintenance/parameter_values.dat
