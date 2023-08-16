@@ -1,4 +1,4 @@
-create temporary view revenue
+create or replace temporary view revenue
 (supplier_no, total_revenue) as
     select
         l_suppkey,
