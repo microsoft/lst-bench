@@ -82,7 +82,6 @@ public class DependentTaskExecutor extends TaskExecutor {
               connection.executeQuery(
                   StringUtils.replaceParameters(statement, values).getStatement());
           writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-          LOGGER.info(StringUtils.replaceParameters(statement, values).getStatement());
           LOGGER.info("Found " + queryResult.getValueListSize() + " values");
         } else {
           // Execute second query repeatedly with the parameters extracted from the first query.
@@ -97,7 +96,6 @@ public class DependentTaskExecutor extends TaskExecutor {
             connection.execute(
                 StringUtils.replaceParameters(statement, localValues).getStatement());
             writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-            LOGGER.info(StringUtils.replaceParameters(statement, localValues).getStatement());
           }
           // Reset query result.
           queryResult = null;
