@@ -24,16 +24,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Represents the query result of a query issued against a source. Query result entries should be
  * mapped to column name -> list of column values.
  */
 public class QueryResult {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(QueryResult.class);
 
   private final Map<String, List<Object>> valueList;
 
@@ -57,8 +53,8 @@ public class QueryResult {
     }
   }
 
-  public int getValueListSize() {
-    int size = 0;
+  public Integer getValueListSize() {
+    Integer size = null;
     for (Entry<String, List<Object>> pair : valueList.entrySet()) {
       size = pair.getValue().size();
       break;

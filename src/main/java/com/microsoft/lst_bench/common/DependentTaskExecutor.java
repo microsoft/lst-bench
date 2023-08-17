@@ -82,10 +82,20 @@ public class DependentTaskExecutor extends TaskExecutor {
               connection.executeQuery(
                   StringUtils.replaceParameters(statement, values).getStatement());
           writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-          LOGGER.info("Found " + queryResult.getValueListSize() + " values");
+          if (queryResult.getValueListSize() == null) {
+            LOGGER.info("resetting to null");
+            queryResult = null;
+          } else if (queryResult.getValueListSize() == 0
+              && queryResult.getStringMappings(0, 1).containsKey("Result")) {
+            LOGGER.info("resetting to null because of empty result");
+            queryResult = null;
+          }
+          if (queryResult != null) {
+            LOGGER.info("Found " + queryResult.getValueListSize() + " values");
+          }
         } else {
           // Execute second query repeatedly with the parameters extracted from the first query.
-          int size = queryResult.getValueListSize();
+          Integer size = queryResult.getValueListSize();
           for (int j = 0; j < size; j += this.dependentBatchSize) {
             int localMax =
                 (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
