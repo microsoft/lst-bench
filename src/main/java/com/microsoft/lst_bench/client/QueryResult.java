@@ -33,6 +33,8 @@ public class QueryResult {
 
   private final Map<String, List<Object>> valueList;
 
+  private static final String RESULT = "Result";
+
   public QueryResult() {
     this.valueList = new HashMap<>();
   }
@@ -60,6 +62,15 @@ public class QueryResult {
       break;
     }
     return size;
+  }
+
+  public boolean containsEmptyResultColumnOnly() {
+    if (valueList.keySet().size() == 1
+        && valueList.containsKey(RESULT)
+        && valueList.get(RESULT).size() == 0) {
+      return true;
+    }
+    return false;
   }
 
   public Map<String, Object> getStringMappings(int listMin, int listMax) {

@@ -85,12 +85,10 @@ public class DependentTaskExecutor extends TaskExecutor {
           if (queryResult.getValueListSize() == null) {
             LOGGER.info("resetting to null");
             queryResult = null;
-          } else if (queryResult.getValueListSize() == 0
-              && queryResult.getStringMappings(0, 1).containsKey("Result")) {
+          } else if (queryResult.containsEmptyResultColumnOnly()) {
             LOGGER.info("resetting to null because of empty result");
             queryResult = null;
-          }
-          if (queryResult != null) {
+          } else {
             LOGGER.info("Found " + queryResult.getValueListSize() + " values");
           }
         } else {
