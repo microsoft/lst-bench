@@ -27,7 +27,7 @@ CREATE VIEW ${external_catalog}.${external_database}.crv_${stream_num} AS
         cret_reversed_charge cr_reversed_charge,
         cret_merchant_credit cr_merchant_credit,
         cret_return_amt + cret_return_tax + cret_return_fee - cret_refunded_cash - cret_reversed_charge - cret_merchant_credit cr_net_loss,
-        row_number() over (order by cr_return_date_sk, cr_return_time_sk, cr_item_sk) row_number
+        row_number() over (order by d_date_sk, t_time_sk, i_item_sk) row_number
     FROM
         ${external_catalog}.${external_database}.s_catalog_returns_${stream_num}
     LEFT OUTER JOIN ${catalog}.${database}.date_dim ON
