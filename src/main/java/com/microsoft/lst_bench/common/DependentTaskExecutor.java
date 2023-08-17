@@ -73,6 +73,7 @@ public class DependentTaskExecutor extends TaskExecutor {
 
       Instant fileStartTime = Instant.now();
       StatementExec statement = file.getStatements().get(0);
+      LOGGER.info("Statement: " + statement.getStatement());
       try {
         if (queryResult == null) {
           // Execute first query that retrieves the iterable input for the second query.
@@ -82,6 +83,7 @@ public class DependentTaskExecutor extends TaskExecutor {
                   StringUtils.replaceParameters(statement, values).getStatement());
           writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
           LOGGER.info(StringUtils.replaceParameters(statement, values).getStatement());
+          LOGGER.info("Found " + queryResult.getValueListSize() + " values");
         } else {
           // Execute second query repeatedly with the parameters extracted from the first query.
           int size = queryResult.getValueListSize();
