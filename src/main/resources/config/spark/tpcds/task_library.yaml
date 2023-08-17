@@ -333,9 +333,9 @@ task_templates:
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_3.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_delete.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_1.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_delete.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_insert.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_2.sql
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_delete.sql
+  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_insert.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_3.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/LF_CR_insert.sql
   parameter_values_file: src/main/resources/auxiliary/tpcds/data_maintenance/parameter_values.dat
