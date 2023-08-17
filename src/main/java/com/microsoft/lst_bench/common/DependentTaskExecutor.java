@@ -73,10 +73,10 @@ public class DependentTaskExecutor extends TaskExecutor {
 
       Instant fileStartTime = Instant.now();
       StatementExec statement = file.getStatements().get(0);
-      LOGGER.info("Statement: " + statement.getStatement());
       try {
         if (queryResult == null) {
           // Execute first query that retrieves the iterable input for the second query.
+          LOGGER.info("Statement: " + statement.getStatement());
           Instant statementStartTime = Instant.now();
           queryResult =
               connection.executeQuery(
@@ -92,6 +92,7 @@ public class DependentTaskExecutor extends TaskExecutor {
             Map<String, Object> localValues = new HashMap<>(values);
             localValues.putAll(queryResult.getStringMappings(j, localMax));
 
+            LOGGER.info("Statement: " + statement.getStatement());
             Instant statementStartTime = Instant.now();
             connection.execute(
                 StringUtils.replaceParameters(statement, localValues).getStatement());
