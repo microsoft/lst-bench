@@ -76,20 +76,14 @@ public class DependentTaskExecutor extends TaskExecutor {
       try {
         if (queryResult == null) {
           // Execute first query that retrieves the iterable input for the second query.
-          LOGGER.info("Statement: " + statement.getStatement());
           Instant statementStartTime = Instant.now();
           queryResult =
               connection.executeQuery(
                   StringUtils.replaceParameters(statement, values).getStatement());
           writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-          if (queryResult.getValueListSize() == null) {
-            LOGGER.info("resetting to null");
+          if (queryResult.containsEmptyResultColumnOnly()) {
+            // Reset queryResult variable if result is (intentionally) empty.
             queryResult = null;
-          } else if (queryResult.containsEmptyResultColumnOnly()) {
-            LOGGER.info("resetting to null because of empty result");
-            queryResult = null;
-          } else {
-            LOGGER.info("Found " + queryResult.getValueListSize() + " values");
           }
         } else {
           // Execute second query repeatedly with the parameters extracted from the first query.
@@ -100,7 +94,6 @@ public class DependentTaskExecutor extends TaskExecutor {
             Map<String, Object> localValues = new HashMap<>(values);
             localValues.putAll(queryResult.getStringMappings(j, localMax));
 
-            LOGGER.info("Statement: " + statement.getStatement());
             Instant statementStartTime = Instant.now();
             connection.execute(
                 StringUtils.replaceParameters(statement, localValues).getStatement());
