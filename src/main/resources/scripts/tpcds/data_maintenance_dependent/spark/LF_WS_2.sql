@@ -58,7 +58,7 @@ CREATE
         )-(
             i_wholesale_cost * wlin_quantity
         ) WS_NET_PROFIT,
-        row_number() over (order by d1.d_date_sk, t_time_sk, d2.d_date_sk i_item_sk, c1.c_customer_sk) row_number
+        row_number() over (order by d1.d_date_sk, t_time_sk, d2.d_date_sk, i_item_sk, c1.c_customer_sk) row_number
     FROM
         ${external_catalog}.${external_database}.s_web_order_${stream_num}
     LEFT OUTER JOIN ${catalog}.${database}.date_dim d1 ON
