@@ -42,27 +42,25 @@ public class DependentTaskExecutor extends TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DependentTaskExecutor.class);
 
-  private final int dependentBatchSize;
-  // Argument marker for batch size (defined in the experiment configuration).
-  private final String DEPENDENT_BATCH_SIZE = "dependent_batch_size";
+  private final Map<String, Object> runtimeArguments;
+
+  private final int DEFAULT_BATCH_SIZE = 1;
 
   public DependentTaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
       String experimentStartTime,
       Map<String, Object> runtimeArguments) {
     super(telemetryRegistry, experimentStartTime);
-    // Set to a default of '1' if not otherwise specified.
-    if (runtimeArguments.get(DEPENDENT_BATCH_SIZE) == null) {
-      this.dependentBatchSize = 1;
-    } else {
-      this.dependentBatchSize =
-          Integer.parseInt(runtimeArguments.get(DEPENDENT_BATCH_SIZE).toString());
-    }
+    this.runtimeArguments = runtimeArguments;
   }
 
   @Override
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
       throws ClientException {
+    int batch_size =
+        runtimeArguments.containsKey(task.getId())
+            ? Integer.parseInt(runtimeArguments.get(task.getId()).toString())
+            : DEFAULT_BATCH_SIZE;
 
     QueryResult queryResult = null;
     for (FileExec file : task.getFiles()) {
@@ -88,9 +86,8 @@ public class DependentTaskExecutor extends TaskExecutor {
         } else {
           // Execute second query repeatedly with the parameters extracted from the first query.
           Integer size = queryResult.getValueListSize();
-          for (int j = 0; j < size; j += this.dependentBatchSize) {
-            int localMax =
-                (j + this.dependentBatchSize) > size ? size : (j + this.dependentBatchSize);
+          for (int j = 0; j < size; j += batch_size) {
+            int localMax = (j + batch_size) > size ? size : (j + batch_size);
             Map<String, Object> localValues = new HashMap<>(values);
             localValues.putAll(queryResult.getStringMappings(j, localMax));
 
