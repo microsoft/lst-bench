@@ -116,7 +116,7 @@ public class SessionExecutor implements Callable<Boolean> {
       return new TaskExecutor(this.telemetryRegistry, this.experimentStartTime);
     }
     switch (task.getCustomTaskExecutor()) {
-      case "DependentTaskExecutor":
+      case "com.microsoft.lst_bench.common.DependentTaskExecutor":
         return new DependentTaskExecutor(
             this.telemetryRegistry,
             this.experimentStartTime,
