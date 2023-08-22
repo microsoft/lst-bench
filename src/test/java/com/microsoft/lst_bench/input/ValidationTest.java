@@ -154,20 +154,29 @@ public class ValidationTest {
 
   @ParameterizedTest
   @EnabledOnOs({OS.LINUX, OS.MAC})
-  @ValueSource(strings = {"src/main/resources/config/spark/", "src/main/resources/config/trino/"})
-  public void testValidationTaskLibraryUnix(String configPath) throws IOException {
-    testValidationTaskLibrary(configPath);
+  @ValueSource(
+      strings = {
+        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "src/main/resources/config/trino/tpcds/task_library.yaml",
+        "src/main/resources/config/spark/tpch/task_library.yaml"
+      })
+  public void testValidationTaskLibraryUnix(String taskLibraryPath) throws IOException {
+    testValidationTaskLibrary(taskLibraryPath);
   }
 
   @ParameterizedTest
   @EnabledOnOs({OS.WINDOWS})
   @ValueSource(
-      strings = {"src\\main\\resources\\config\\spark\\", "src\\main\\resources\\config\\trino\\"})
-  public void testValidationTaskLibraryWin(String configPath) throws IOException {
-    testValidationTaskLibrary(configPath);
+      strings = {
+        "src\\main\\resources\\config\\spark\\tpcds\\task_library.yaml",
+        "src\\main\\resources\\config\\trino\\tpcds\\task_library.yaml",
+        "src\\main\\resources\\config\\spark\\tpch\\task_library.yaml"
+      })
+  public void testValidationTaskLibraryWin(String taskLibraryPath) throws IOException {
+    testValidationTaskLibrary(taskLibraryPath);
   }
 
-  private void testValidationTaskLibrary(String configPath) throws IOException {
+  private void testValidationTaskLibrary(String taskLibraryPath) throws IOException {
     ObjectMapper mapper = new YAMLMapper();
     // Read schema
     JsonSchemaFactory factory =
@@ -177,17 +186,12 @@ public class ValidationTest {
     JsonSchema schema =
         factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "task_library.json")));
     // Validate YAML file contents
-    JsonNode jsonNodeDirect =
-        mapper.readTree(
-            Files.newInputStream(
-                Paths.get(configPath + "tpcds" + File.separator + "task_library.yaml")));
+    JsonNode jsonNodeDirect = mapper.readTree(Files.newInputStream(Paths.get(taskLibraryPath)));
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     Assertions.assertEquals(
         0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
     // Validate YAML generated from POJO object
-    TaskLibrary taskLibrary =
-        FileParser.createObject(
-            configPath + "tpcds" + File.separator + "task_library.yaml", TaskLibrary.class);
+    TaskLibrary taskLibrary = FileParser.createObject(taskLibraryPath, TaskLibrary.class);
     JsonNode jsonNodeObject = mapper.convertValue(taskLibrary, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -209,7 +213,10 @@ public class ValidationTest {
         "src/main/resources/config/trino/tpcds/w0_tpcds.yaml",
         "src/main/resources/config/trino/tpcds/wp1_longevity.yaml",
         "src/main/resources/config/trino/tpcds/wp2_resilience.yaml",
-        "src/main/resources/config/trino/tpcds/wp3_rw_concurrency.yaml"
+        "src/main/resources/config/trino/tpcds/wp3_rw_concurrency.yaml",
+        "src/main/resources/config/spark/tpch/w0_tpch-delta.yaml",
+        "src/main/resources/config/spark/tpch/w0_tpch-hudi.yaml",
+        "src/main/resources/config/spark/tpch/w0_tpch-iceberg.yaml"
       })
   public void testValidationWorkloadUnix(String workloadFilePath) throws IOException {
     testValidationWorkload(workloadFilePath);
@@ -230,7 +237,10 @@ public class ValidationTest {
         "src\\main\\resources\\config\\trino\\tpcds\\w0_tpcds.yaml",
         "src\\main\\resources\\config\\trino\\tpcds\\wp1_longevity.yaml",
         "src\\main\\resources\\config\\trino\\tpcds\\wp2_resilience.yaml",
-        "src\\main\\resources\\config\\trino\\tpcds\\wp3_rw_concurrency.yaml"
+        "src\\main\\resources\\config\\trino\\tpcds\\wp3_rw_concurrency.yaml",
+        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch-delta.yaml",
+        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch-hudi.yaml",
+        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch-iceberg.yaml"
       })
   public void testValidationWorkloadWin(String workloadFilePath) throws IOException {
     testValidationWorkload(workloadFilePath);
