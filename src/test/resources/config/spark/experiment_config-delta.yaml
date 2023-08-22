@@ -26,5 +26,3 @@ parameter_values:
   data_path: '/delta/sf_001/'
   options_suffix: ''
   tblproperties_suffix: ''
-arguments:
-  data_maintenance_delta_dependent: 10

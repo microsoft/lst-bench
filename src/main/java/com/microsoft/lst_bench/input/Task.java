@@ -42,6 +42,17 @@ public interface Task {
   @JsonProperty("custom_task_executor")
   @Nullable String getCustomTaskExecutor();
 
+  @JsonProperty("custom_task_executor_arguments")
+  @Nullable CustomTaskExecutorArguments getCustomTaskExecutorArguments();
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableCustomTaskExecutorArguments.class)
+  @JsonDeserialize(as = ImmutableCustomTaskExecutorArguments.class)
+  interface CustomTaskExecutorArguments {
+    @JsonProperty("dependent_task_batch_size")
+    @Nullable Integer getDependentTaskBatchSize();
+  }
+
   @JsonProperty("replace_regex")
   @Nullable List<ReplaceRegex> getReplaceRegex();
 

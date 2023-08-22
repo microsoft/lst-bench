@@ -21,6 +21,7 @@ import com.microsoft.lst_bench.client.QueryResult;
 import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
+import com.microsoft.lst_bench.input.Task.CustomTaskExecutorArguments;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
@@ -42,25 +43,27 @@ public class DependentTaskExecutor extends TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DependentTaskExecutor.class);
 
-  private final Map<String, Object> runtimeArguments;
+  private final CustomTaskExecutorArguments arguments;
 
   private final int DEFAULT_BATCH_SIZE = 1;
 
   public DependentTaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
       String experimentStartTime,
-      Map<String, Object> runtimeArguments) {
+      CustomTaskExecutorArguments arguments) {
     super(telemetryRegistry, experimentStartTime);
-    this.runtimeArguments = runtimeArguments;
+    this.arguments = arguments;
   }
 
   @Override
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
       throws ClientException {
-    int batch_size =
-        runtimeArguments.containsKey(task.getId())
-            ? Integer.parseInt(runtimeArguments.get(task.getId()).toString())
-            : DEFAULT_BATCH_SIZE;
+    int batch_size;
+    if (this.arguments == null || this.arguments.getDependentTaskBatchSize() == null) {
+      batch_size = DEFAULT_BATCH_SIZE;
+    } else {
+      batch_size = this.arguments.getDependentTaskBatchSize().intValue();
+    }
 
     QueryResult queryResult = null;
     for (FileExec file : task.getFiles()) {
@@ -79,7 +82,7 @@ public class DependentTaskExecutor extends TaskExecutor {
               connection.executeQuery(
                   StringUtils.replaceParameters(statement, values).getStatement());
           writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
-          if (queryResult.containsEmptyResultColumnOnly()) {
+          if (queryResult == null || queryResult.containsEmptyResultColumnOnly()) {
             // Reset queryResult variable if result is (intentionally) empty.
             queryResult = null;
           }
