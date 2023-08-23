@@ -122,6 +122,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
               ChronoUnit.SECONDS.between(phaseStartTime, eventInfo.getEndTime()));
           phaseIdToEndTime.put(phase.getId(), eventInfo.getEndTime());
         }
+        executor.shutdown();
         Validate.isTrue(executor.awaitTermination(1, TimeUnit.MINUTES));
 
         // Log end-to-end execution of experiment.
@@ -139,7 +140,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             new ObjectMapper().writeValueAsString(experimentMetadata));
         throw e;
       } finally {
-        executor.shutdown();
+        executor.shutdownNow();
         telemetryRegistry.flush();
       }
       LOGGER.info("Finished repetition {}", i);
