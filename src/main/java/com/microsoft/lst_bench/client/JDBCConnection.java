@@ -23,23 +23,37 @@ import java.sql.Statement;
 public class JDBCConnection implements Connection {
 
   private final java.sql.Connection connection;
+  private final int max_num_retries;
 
-  public JDBCConnection(java.sql.Connection connection) {
+  public JDBCConnection(java.sql.Connection connection, int max_num_retries) {
     this.connection = connection;
+    this.max_num_retries = max_num_retries;
   }
 
   @Override
   public void execute(String sqlText) throws ClientException {
-    try (Statement s = connection.createStatement()) {
-      boolean hasResults = s.execute(sqlText);
-      if (hasResults) {
-        ResultSet rs = s.getResultSet();
-        while (rs.next()) {
-          // do nothing
+    Exception last_error = null;
+    int error_count = 0;
+
+    while (error_count < this.max_num_retries) {
+      try (Statement s = connection.createStatement()) {
+        boolean hasResults = s.execute(sqlText);
+        if (hasResults) {
+          ResultSet rs = s.getResultSet();
+          while (rs.next()) {
+            // do nothing
+          }
         }
+        return;
+
+      } catch (Exception e) {
+        last_error = e;
+        error_count++;
       }
-    } catch (Exception e) {
-      throw new ClientException(e);
+    }
+
+    if (last_error != null) {
+      throw new ClientException(last_error);
     }
   }
 

@@ -73,7 +73,10 @@ public class BenchmarkObjectFactory {
           "Unable to load driver class: " + connectionConfig.getDriver(), e);
     }
     return new JDBCConnectionManager(
-        connectionConfig.getUrl(), connectionConfig.getUsername(), connectionConfig.getPassword());
+        connectionConfig.getUrl(),
+        connectionConfig.getMaxNumRetries(),
+        connectionConfig.getUsername(),
+        connectionConfig.getPassword());
   }
 
   private static SparkConnectionManager sparkConnectionManager(

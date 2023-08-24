@@ -16,6 +16,7 @@
 package com.microsoft.lst_bench.input.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.annotation.Nullable;
@@ -29,6 +30,12 @@ import org.immutables.value.Value;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface JDBCConnectionConfig extends ConnectionConfig {
   String getDriver();
+
+  @JsonProperty("max_num_retries")
+  @Value.Default
+  default int getMaxNumRetries() {
+    return 1;
+  }
 
   @Nullable String getUsername();
 
