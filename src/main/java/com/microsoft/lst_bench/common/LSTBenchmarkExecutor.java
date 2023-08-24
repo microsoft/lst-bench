@@ -77,7 +77,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
         maxConcurrentSessions = phase.getSessions().size();
       }
     }
-    
+
     ExecutorService executor = null;
     for (int i = 0; i < config.getRepetitions(); i++) {
       LOGGER.info("Starting repetition: {}", i);
