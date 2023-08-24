@@ -1,0 +1,54 @@
+# Description: W0: Original TPC-H sequence (SF1000, S=7)
+---
+version: 1
+id: w0_tpch_iceberg
+phases:
+- id: setup
+  sessions:
+  - tasks:
+    - template_id: setup
+- id: init
+  sessions:
+  - tasks:
+    - template_id: init
+- id: build
+  sessions:
+  - tasks:
+    - template_id: build
+- id: power
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_1
+    - template_id: single_user
+    - template_id: data_maintenance_2_delete
+- id: throughput
+  sessions:
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: data_maintenance_1
+    - template_id: data_maintenance_2_delete
+    - template_id: data_maintenance_1
+    - template_id: data_maintenance_2_delete
+    - template_id: data_maintenance_1
+    - template_id: data_maintenance_2_delete
+    - template_id: data_maintenance_1
+    - template_id: data_maintenance_2_delete
+    - template_id: data_maintenance_1
+    - template_id: data_maintenance_2_delete
+    - template_id: data_maintenance_1
+    - template_id: data_maintenance_2_delete
+    - template_id: data_maintenance_1
+    - template_id: data_maintenance_2_delete

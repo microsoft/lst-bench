@@ -170,7 +170,7 @@ public class ParserTest {
         FileParser.createObject(
             CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-delta.yaml", Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
-    Assertions.assertEquals("w0_tpcds", workload.getId());
+    Assertions.assertEquals("w0_tpcds_delta", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
     for (Phase phase : workload.getPhases()) {
       switch (phase.getId()) {
@@ -232,7 +232,7 @@ public class ParserTest {
         FileParser.createObject(
             CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-hudi.yaml", Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
-    Assertions.assertEquals("w0_tpcds", workload.getId());
+    Assertions.assertEquals("w0_tpcds_hudi", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
     for (Phase phase : workload.getPhases()) {
       switch (phase.getId()) {
@@ -309,7 +309,7 @@ public class ParserTest {
         FileParser.createObject(
             CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-iceberg.yaml", Workload.class);
     Assertions.assertEquals(1, workload.getVersion());
-    Assertions.assertEquals("w0_tpcds", workload.getId());
+    Assertions.assertEquals("w0_tpcds_iceberg", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
     for (Phase phase : workload.getPhases()) {
       switch (phase.getId()) {

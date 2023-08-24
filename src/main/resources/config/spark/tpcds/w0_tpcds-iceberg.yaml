@@ -1,7 +1,7 @@
 # Description: W0: Original TPC-DS sequence
 ---
 version: 1
-id: w0_tpcds
+id: w0_tpcds_iceberg
 phases:
 - id: setup
   sessions:
