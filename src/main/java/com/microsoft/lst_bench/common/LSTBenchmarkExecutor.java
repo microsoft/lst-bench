@@ -77,13 +77,15 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
         maxConcurrentSessions = phase.getSessions().size();
       }
     }
-    final ExecutorService executor = Executors.newFixedThreadPool(maxConcurrentSessions);
-
+    
+    ExecutorService executor = null;
     for (int i = 0; i < config.getRepetitions(); i++) {
       LOGGER.info("Starting repetition: {}", i);
       final Instant repetitionStartTime = Instant.now();
       Map<String, Object> experimentMetadata = new HashMap<>(config.getMetadata());
       try {
+        executor = Executors.newFixedThreadPool(maxConcurrentSessions);
+
         // Fill in specific runtime parameter values
         Map<String, Object> runtimeParameterValues = new HashMap<>();
         runtimeParameterValues.put("repetition", i);
@@ -122,8 +124,6 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
               ChronoUnit.SECONDS.between(phaseStartTime, eventInfo.getEndTime()));
           phaseIdToEndTime.put(phase.getId(), eventInfo.getEndTime());
         }
-        executor.shutdown();
-        Validate.isTrue(executor.awaitTermination(1, TimeUnit.MINUTES));
 
         // Log end-to-end execution of experiment.
         writeExperimentEvent(
@@ -140,7 +140,10 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             new ObjectMapper().writeValueAsString(experimentMetadata));
         throw e;
       } finally {
-        executor.shutdownNow();
+        if (executor != null) {
+          executor.shutdown();
+          Validate.isTrue(executor.awaitTermination(1, TimeUnit.MINUTES));
+        }
         telemetryRegistry.flush();
       }
       LOGGER.info("Finished repetition {}", i);
