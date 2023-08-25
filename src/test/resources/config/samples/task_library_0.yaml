@@ -31,7 +31,7 @@ task_templates:
 - id: data_maintenance_delta
   files:
   - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_CS.sql
-- id: data_maintenance_delta_dependent
+- id: data_maintenance_dependent
   files:
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_1.sql
 - id: optimize_delta
