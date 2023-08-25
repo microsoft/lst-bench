@@ -7,8 +7,8 @@ CREATE
             c_nationkey BIGINT,
             c_phone CHAR(15),
             c_acctbal DECIMAL,
-            c_mktsegment CHAR(10),
-            c_comment VARCHAR(117)
+            c_comment VARCHAR(117),
+            c_mktsegment CHAR(10)
         )
         USING ${table_format} OPTIONS(
             PATH '${data_path}${experiment_start_time}/${repetition}/customer/'
