@@ -87,9 +87,7 @@ public class TaskExecutor {
 
   private EventInfo writeStatementEvent(
       Instant startTime, String id, Status status, String payload) {
-    EventInfo eventInfo =
-        ImmutableEventInfo.of(
-            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_EXPERIMENT, status);
+    EventInfo eventInfo = null;
     if (payload != null) {
       ImmutableEventInfo.of(
               experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_EXPERIMENT, status)
