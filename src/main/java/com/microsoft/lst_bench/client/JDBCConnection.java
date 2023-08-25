@@ -18,9 +18,13 @@ package com.microsoft.lst_bench.client;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A JDBC connection. */
 public class JDBCConnection implements Connection {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(JDBCConnection.class);
 
   private final java.sql.Connection connection;
   private final int max_num_retries;
@@ -53,6 +57,11 @@ public class JDBCConnection implements Connection {
     }
 
     if (last_error != null) {
+      LOGGER.warn(
+          "Query retries ("
+              + this.max_num_retries
+              + ") unsuccessful. Error occurred while executing the following query: "
+              + sqlText);
       throw new ClientException(last_error);
     }
   }
