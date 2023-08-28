@@ -12,4 +12,6 @@ phases:
     - template_id: build
     - template_id: single_user
     - template_id: data_maintenance_delta
+    - template_id: data_maintenance_dependent
+      custom_task_executor: com.microsoft.lst_bench.common.DependentTaskExecutor
     - template_id: optimize_delta
