@@ -39,8 +39,8 @@ public class TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutor.class);
 
-  private final SQLTelemetryRegistry telemetryRegistry;
-  private String experimentStartTime;
+  protected final SQLTelemetryRegistry telemetryRegistry;
+  protected final String experimentStartTime;
 
   public TaskExecutor(SQLTelemetryRegistry telemetryRegistry, String experimentStartTime) {
     this.experimentStartTime = experimentStartTime;
@@ -77,7 +77,7 @@ public class TaskExecutor {
     }
   }
 
-  private EventInfo writeFileEvent(Instant startTime, String id, Status status) {
+  protected final EventInfo writeFileEvent(Instant startTime, String id, Status status) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
             experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_FILE, status);
@@ -85,7 +85,7 @@ public class TaskExecutor {
     return eventInfo;
   }
 
-  private EventInfo writeStatementEvent(
+  protected final EventInfo writeStatementEvent(
       Instant startTime, String id, Status status, String payload) {
     EventInfo eventInfo = null;
     if (payload != null) {

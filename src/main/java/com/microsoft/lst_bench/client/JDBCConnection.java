@@ -71,6 +71,41 @@ public class JDBCConnection implements Connection {
   }
 
   @Override
+  public QueryResult executeQuery(String sqlText) throws ClientException {
+    QueryResult qr = new QueryResult();
+    Exception last_error = null;
+    int error_count = 0;
+
+    while (error_count < this.max_num_retries) {
+      try (Statement s = connection.createStatement()) {
+        ResultSet rs = s.executeQuery(sqlText);
+        qr.populate(rs);
+
+        return qr;
+      } catch (Exception e) {
+        last_error = e;
+        error_count++;
+      }
+    }
+
+    if (last_error != null) {
+      String last_error_msg =
+          "Query retries ("
+              + this.max_num_retries
+              + ") unsuccessful. Error occurred while executing the following query: "
+              + sqlText
+              + "; stack trace: "
+              + ExceptionUtils.getStackTrace(last_error);
+      LOGGER.warn(last_error_msg);
+      throw new ClientException(last_error_msg);
+    }
+
+    // This should never be reached because either the QueryResult is returned or an error is
+    // thrown.
+    return null;
+  }
+
+  @Override
   public void close() throws ClientException {
     try {
       connection.close();
