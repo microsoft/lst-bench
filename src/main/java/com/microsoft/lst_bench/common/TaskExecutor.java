@@ -58,10 +58,15 @@ public class TaskExecutor {
             connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
           } catch (Exception e) {
             LOGGER.error("Exception executing statement: " + statement.getId());
-            writeStatementEvent(statementStartTime, statement.getId(), Status.FAILURE);
+            writeStatementEvent(
+                statementStartTime,
+                statement.getId(),
+                Status.FAILURE,
+                e.getMessage() + "; " + e.getStackTrace());
             throw e;
           }
-          writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+          writeStatementEvent(
+              statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
         }
       } catch (Exception e) {
         LOGGER.error("Exception executing file: " + file.getId());
@@ -80,10 +85,24 @@ public class TaskExecutor {
     return eventInfo;
   }
 
-  protected final EventInfo writeStatementEvent(Instant startTime, String id, Status status) {
-    EventInfo eventInfo =
-        ImmutableEventInfo.of(
-            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_STATEMENT, status);
+  protected final EventInfo writeStatementEvent(
+      Instant startTime, String id, Status status, String payload) {
+    EventInfo eventInfo = null;
+    if (payload != null) {
+      eventInfo =
+          ImmutableEventInfo.of(
+                  experimentStartTime,
+                  startTime,
+                  Instant.now(),
+                  id,
+                  EventType.EXEC_STATEMENT,
+                  status)
+              .withPayload(payload);
+    } else {
+      eventInfo =
+          ImmutableEventInfo.of(
+              experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_STATEMENT, status);
+    }
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
   }
