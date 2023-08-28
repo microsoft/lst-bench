@@ -70,20 +70,22 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
     LOGGER.info("Running experiment: {}, start-time: {}", config.getId(), experimentStartTime);
 
     final WorkloadExec workload = config.getWorkload();
+    // Thread pool size to max number of concurrent sessions
+    int maxConcurrentSessions = 1;
+    for (PhaseExec phase : workload.getPhases()) {
+      if (phase.getSessions().size() > maxConcurrentSessions) {
+        maxConcurrentSessions = phase.getSessions().size();
+      }
+    }
 
+    ExecutorService executor = null;
     for (int i = 0; i < config.getRepetitions(); i++) {
       LOGGER.info("Starting repetition: {}", i);
       final Instant repetitionStartTime = Instant.now();
       Map<String, Object> experimentMetadata = new HashMap<>(config.getMetadata());
       try {
-        // Thread pool size to max number of concurrent sessions
-        int maxConcurrentSessions = 1;
-        for (PhaseExec phase : workload.getPhases()) {
-          if (phase.getSessions().size() > maxConcurrentSessions) {
-            maxConcurrentSessions = phase.getSessions().size();
-          }
-        }
-        final ExecutorService executor = Executors.newFixedThreadPool(maxConcurrentSessions);
+        executor = Executors.newFixedThreadPool(maxConcurrentSessions);
+
         // Fill in specific runtime parameter values
         Map<String, Object> runtimeParameterValues = new HashMap<>();
         runtimeParameterValues.put("repetition", i);
@@ -123,9 +125,6 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
           phaseIdToEndTime.put(phase.getId(), eventInfo.getEndTime());
         }
 
-        executor.shutdown();
-        Validate.isTrue(executor.awaitTermination(1, TimeUnit.MINUTES));
-
         // Log end-to-end execution of experiment.
         writeExperimentEvent(
             repetitionStartTime,
@@ -141,6 +140,10 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
             new ObjectMapper().writeValueAsString(experimentMetadata));
         throw e;
       } finally {
+        if (executor != null) {
+          executor.shutdown();
+          Validate.isTrue(executor.awaitTermination(1, TimeUnit.MINUTES));
+        }
         telemetryRegistry.flush();
       }
       LOGGER.info("Finished repetition {}", i);
