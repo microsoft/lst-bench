@@ -35,7 +35,7 @@
             },
             "max_num_retries": {
               "type": "integer",
-              "title": "The number of times a query can be retried  (default: 1)"
+              "title": "The number of times a query can be retried (default: 1)"
             },
             "username": {
               "type": "string",
