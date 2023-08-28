@@ -1,7 +1,7 @@
 # Description: Workload for test: All task types, TPC-DS, Iceberg
 ---
 version: 1
-id: w_all_tpcds_single_session
+id: w_all_tpcds_single_session_spark
 phases:
 - id: all
   sessions:
