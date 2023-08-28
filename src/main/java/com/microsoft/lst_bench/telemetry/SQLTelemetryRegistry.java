@@ -83,10 +83,6 @@ public class SQLTelemetryRegistry {
   public void flush() throws EventException {
     if (eventsStream.isEmpty()) return;
 
-    for (EventInfo info : eventsStream) {
-      LOGGER.info(info.toString());
-    }
-
     LOGGER.info("Flushing events to database...");
     try (Connection connection = connectionManager.createConnection()) {
       Map<String, Object> values = new HashMap<>();

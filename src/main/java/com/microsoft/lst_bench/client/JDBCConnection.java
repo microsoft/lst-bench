@@ -18,6 +18,7 @@ package com.microsoft.lst_bench.client;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,7 @@ public class JDBCConnection implements Connection {
               + ") unsuccessful. Error occurred while executing the following query: "
               + sqlText
               + "; stack trace: "
-              + last_error.getStackTrace();
+              + ExceptionUtils.getStackTrace(last_error);
       LOGGER.warn(last_error_msg);
       throw new ClientException(last_error_msg);
     }
