@@ -1,5 +1,5 @@
 CREATE
-    SCHEMA IF NOT EXISTS ${catalog}.${database};
+    SCHEMAS IF NOT EXISTS ${catalog}.${database};
 
 DROP
     TABLE
