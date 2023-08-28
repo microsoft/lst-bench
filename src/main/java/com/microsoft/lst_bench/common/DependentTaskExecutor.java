@@ -67,12 +67,14 @@ public class DependentTaskExecutor extends TaskExecutor {
 
     QueryResult queryResult = null;
     for (FileExec file : task.getFiles()) {
+      Instant fileStartTime = Instant.now();
+
       if (file.getStatements().size() != 1) {
+        writeFileEvent(fileStartTime, file.getId(), Status.FAILURE);
         throw new ClientException(
             "For dependent task execution, statements have to be in separate files.");
       }
 
-      Instant fileStartTime = Instant.now();
       StatementExec statement = file.getStatements().get(0);
       try {
         if (queryResult == null) {
@@ -81,7 +83,8 @@ public class DependentTaskExecutor extends TaskExecutor {
           queryResult =
               connection.executeQuery(
                   StringUtils.replaceParameters(statement, values).getStatement());
-          writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+          writeStatementEvent(
+              statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
           if (queryResult == null || queryResult.containsEmptyResultColumnOnly()) {
             // Reset queryResult variable if result is (intentionally) empty.
             queryResult = null;
@@ -97,14 +100,19 @@ public class DependentTaskExecutor extends TaskExecutor {
             Instant statementStartTime = Instant.now();
             connection.execute(
                 StringUtils.replaceParameters(statement, localValues).getStatement());
-            writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+            writeStatementEvent(
+                statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
           }
           // Reset query result.
           queryResult = null;
         }
       } catch (Exception e) {
         LOGGER.error("Exception executing file: " + file.getId());
-        writeFileEvent(fileStartTime, file.getId(), Status.FAILURE);
+        writeStatementEvent(
+            fileStartTime,
+            file.getId(),
+            Status.FAILURE,
+            /* payload= */ e.getMessage() + "; " + e.getStackTrace());
         throw e;
       }
       writeFileEvent(fileStartTime, file.getId(), Status.SUCCESS);
