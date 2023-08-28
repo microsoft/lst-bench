@@ -62,7 +62,7 @@ public class JDBCConnection implements Connection {
               + this.max_num_retries
               + ") unsuccessful. Error occurred while executing the following query: "
               + sqlText;
-      LOGGER.info(last_error_msg);
+      LOGGER.warn(last_error_msg);
       throw new ClientException(last_error_msg);
     }
   }
