@@ -90,7 +90,7 @@ public class TaskExecutor {
     EventInfo eventInfo = null;
     if (payload != null) {
       ImmutableEventInfo.of(
-              experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_EXPERIMENT, status)
+              experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_STATEMENT, status)
           .withPayload(payload);
     } else {
       eventInfo =

@@ -57,12 +57,13 @@ public class JDBCConnection implements Connection {
     }
 
     if (last_error != null) {
-      LOGGER.warn(
+      String last_error_msg =
           "Query retries ("
               + this.max_num_retries
               + ") unsuccessful. Error occurred while executing the following query: "
-              + sqlText);
-      throw new ClientException(last_error);
+              + sqlText;
+      LOGGER.warn(last_error_msg);
+      throw new ClientException(last_error_msg);
     }
   }
 
