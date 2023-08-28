@@ -24,13 +24,15 @@ import org.apache.commons.lang3.StringUtils;
 public class JDBCConnectionManager implements ConnectionManager {
 
   private final String url;
+  private final int max_num_retries;
 
   @Nullable private final String username;
 
   @Nullable private final String password;
 
-  public JDBCConnectionManager(String url, String username, String password) {
+  public JDBCConnectionManager(String url, int max_num_retries, String username, String password) {
     this.url = url;
+    this.max_num_retries = max_num_retries;
     this.username = username;
     this.password = password;
   }
@@ -39,9 +41,10 @@ public class JDBCConnectionManager implements ConnectionManager {
   public Connection createConnection() throws ClientException {
     try {
       if (StringUtils.isEmpty(username)) {
-        return new JDBCConnection(DriverManager.getConnection(url));
+        return new JDBCConnection(DriverManager.getConnection(url), this.max_num_retries);
       } else {
-        return new JDBCConnection(DriverManager.getConnection(url, username, password));
+        return new JDBCConnection(
+            DriverManager.getConnection(url, username, password), this.max_num_retries);
       }
     } catch (SQLException e) {
       throw new ClientException(e);
