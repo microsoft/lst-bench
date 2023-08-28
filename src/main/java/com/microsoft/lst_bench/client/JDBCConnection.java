@@ -61,7 +61,9 @@ public class JDBCConnection implements Connection {
           "Query retries ("
               + this.max_num_retries
               + ") unsuccessful. Error occurred while executing the following query: "
-              + sqlText + "; stack trace: " + last_error.getStackTrace();
+              + sqlText
+              + "; stack trace: "
+              + last_error.getStackTrace();
       LOGGER.warn(last_error_msg);
       throw new ClientException(last_error_msg);
     }
