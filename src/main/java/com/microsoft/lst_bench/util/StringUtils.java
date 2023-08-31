@@ -65,7 +65,7 @@ public class StringUtils {
       return statement;
     }
     return ImmutableStatementExec.of(
-        statement.getId(), replaceParameters(statement.getStatement(), parameterValues));
+        statement.getId(), StringUtils.format(statement.getStatement(), parameterValues));
   }
 
   public static FileExec replaceParameters(FileExec file, Map<String, Object> parameterValues) {
