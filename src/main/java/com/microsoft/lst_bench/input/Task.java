@@ -51,6 +51,18 @@ public interface Task {
   interface CustomTaskExecutorArguments {
     @JsonProperty("dependent_task_batch_size")
     @Nullable Integer getDependentTaskBatchSize();
+
+    @JsonProperty("concurrent_task_num_joins")
+    @Value.Default
+    default int getConcurrentTaskNumJoins() {
+      return 0;
+    }
+
+    @JsonProperty("concurrent_task_min_query_length")
+    @Value.Default
+    default int getConcurrentTaskMinQueryLength() {
+      return 0;
+    }
   }
 
   @JsonProperty("replace_regex")

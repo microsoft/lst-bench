@@ -15,10 +15,6 @@
  */
 package com.microsoft.lst_bench.sql;
 
-import com.microsoft.lst_bench.exec.FileExec;
-import com.microsoft.lst_bench.exec.ImmutableFileExec;
-import com.microsoft.lst_bench.exec.ImmutableStatementExec;
-import com.microsoft.lst_bench.exec.StatementExec;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -35,16 +31,15 @@ public class SQLParser {
     // Defeat instantiation
   }
 
-  public static FileExec getStatements(String filepath) {
+  public static List<String> getStatements(String filepath) {
     return getStatements(new File(filepath));
   }
 
-  public static FileExec getStatements(File file) {
-    final List<StatementExec> statements = new ArrayList<>();
+  public static List<String> getStatements(File file) {
+    final List<String> statements = new ArrayList<>();
     try (BufferedReader br =
         new BufferedReader(
             new InputStreamReader(Files.newInputStream(file.toPath()), StandardCharsets.UTF_8))) {
-      int i = 0;
       for (; ; ) {
         String statement;
         try {
@@ -55,12 +50,12 @@ public class SQLParser {
         if (statement == null) {
           break;
         }
-        statements.add(ImmutableStatementExec.of(file.getName() + "_" + i++, statement));
+        statements.add(statement);
       }
     } catch (IOException e) {
       throw new RuntimeException("Cannot read query in file: " + file, e);
     }
-    return ImmutableFileExec.of(file.getName(), statements);
+    return statements;
   }
 
   private static String nextStatement(BufferedReader reader) throws IOException {

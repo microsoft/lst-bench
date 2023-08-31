@@ -34,6 +34,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +86,11 @@ public class SessionExecutor implements Callable<Boolean> {
         writeTaskEvent(taskStartTime, task.getId(), Status.SUCCESS);
       }
     } catch (Exception e) {
-      LOGGER.error("Exception executing session: " + session.getId());
+      LOGGER.error(
+          "Exception executing session: "
+              + session.getId()
+              + ";"
+              + ExceptionUtils.getStackTrace(e));
       writeSessionEvent(sessionStartTime, session.getId(), Status.FAILURE);
       throw e;
     }

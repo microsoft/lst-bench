@@ -50,14 +50,18 @@ public class StringUtils {
     return "'" + str + "'";
   }
 
-  public static StatementExec replaceParameters(
-      StatementExec statement, Map<String, Object> parameterValues) {
+  public static String replaceParameters(String statement, Map<String, Object> parameterValues) {
     if (parameterValues == null || parameterValues.isEmpty()) {
       // Nothing to do
       return statement;
     }
+    return StringUtils.format(statement, parameterValues);
+  }
+
+  public static StatementExec replaceParameters(
+      StatementExec statement, Map<String, Object> parameterValues) {
     return ImmutableStatementExec.of(
-        statement.getId(), StringUtils.format(statement.getStatement(), parameterValues));
+        statement.getId(), replaceParameters(statement.getStatement(), parameterValues));
   }
 
   public static FileExec replaceParameters(FileExec file, Map<String, Object> parameterValues) {

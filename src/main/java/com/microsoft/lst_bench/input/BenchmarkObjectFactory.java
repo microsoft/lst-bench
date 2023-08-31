@@ -20,12 +20,15 @@ import com.microsoft.lst_bench.client.JDBCConnectionManager;
 import com.microsoft.lst_bench.client.SparkConnectionManager;
 import com.microsoft.lst_bench.common.BenchmarkConfig;
 import com.microsoft.lst_bench.exec.FileExec;
+import com.microsoft.lst_bench.exec.ImmutableFileExec;
 import com.microsoft.lst_bench.exec.ImmutablePhaseExec;
 import com.microsoft.lst_bench.exec.ImmutableSessionExec;
+import com.microsoft.lst_bench.exec.ImmutableStatementExec;
 import com.microsoft.lst_bench.exec.ImmutableTaskExec;
 import com.microsoft.lst_bench.exec.ImmutableWorkloadExec;
 import com.microsoft.lst_bench.exec.PhaseExec;
 import com.microsoft.lst_bench.exec.SessionExec;
+import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
 import com.microsoft.lst_bench.input.config.ConnectionConfig;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
@@ -43,6 +46,9 @@ import org.apache.commons.lang3.ObjectUtils;
 
 /** Factory class for creating benchmark objects from the input configuration. */
 public class BenchmarkObjectFactory {
+
+  public static final String DEFAULT_ID_SEPARATOR = ";";
+  public static final String DEFAULT_ID_CONNECTOR = "_";
 
   private BenchmarkObjectFactory() {
     // Defeat instantiation
@@ -159,19 +165,26 @@ public class BenchmarkObjectFactory {
       ExperimentConfig experimentConfig,
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
       Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
+    final String SESSION_PREFIX = "session";
     List<SessionExec> sessions = new ArrayList<>();
     for (int i = 0; i < phase.getSessions().size(); i++) {
       Session session = phase.getSessions().get(i);
-      String sessionId = String.valueOf(i);
-      SessionExec sessionExec =
-          createSessionExec(
-              sessionId,
-              session,
-              idToTaskTemplate,
-              experimentConfig,
-              taskTemplateIdToPermuteOrderCounter,
-              taskTemplateIdToParameterValuesCounter);
-      sessions.add(sessionExec);
+      for (int j = 0; j <= session.getDuplicateSession(); j++) {
+        String sessionId =
+            phase.getId() + DEFAULT_ID_SEPARATOR + SESSION_PREFIX + DEFAULT_ID_CONNECTOR + i;
+        if (j > 0) {
+          sessionId += DEFAULT_ID_CONNECTOR + j;
+        }
+        SessionExec sessionExec =
+            createSessionExec(
+                sessionId,
+                session,
+                idToTaskTemplate,
+                experimentConfig,
+                taskTemplateIdToPermuteOrderCounter,
+                taskTemplateIdToParameterValuesCounter);
+        sessions.add(sessionExec);
+      }
     }
     return ImmutablePhaseExec.of(phase.getId(), sessions);
   }
@@ -184,9 +197,10 @@ public class BenchmarkObjectFactory {
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
       Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
     List<TaskExec> tasks = new ArrayList<>();
-    for (int j = 0; j < session.getTasks().size(); j++) {
-      Task task = session.getTasks().get(j);
-      String taskId = task.getTemplateId() + "_" + j;
+    for (int i = 0; i < session.getTasks().size(); i++) {
+      Task task = session.getTasks().get(i);
+      String taskId =
+          sessionId + DEFAULT_ID_SEPARATOR + task.getTemplateId() + DEFAULT_ID_CONNECTOR + i;
       TaskExec taskExec =
           createTaskExec(
               taskId,
@@ -214,6 +228,7 @@ public class BenchmarkObjectFactory {
     }
     List<FileExec> files =
         createFileExecList(
+            taskId,
             taskTemplate,
             task,
             experimentConfig,
@@ -226,6 +241,7 @@ public class BenchmarkObjectFactory {
   }
 
   private static List<FileExec> createFileExecList(
+      String taskId,
       TaskTemplate taskTemplate,
       Task task,
       ExperimentConfig experimentConfig,
@@ -233,7 +249,10 @@ public class BenchmarkObjectFactory {
       Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
     List<FileExec> files = new ArrayList<>();
     for (String file : taskTemplate.getFiles()) {
-      files.add(SQLParser.getStatements(file));
+      final String fileId = taskId + DEFAULT_ID_SEPARATOR + file;
+      files.add(
+          ImmutableFileExec.of(
+              fileId, createStatementExecList(fileId, SQLParser.getStatements(file))));
     }
     files = applyPermutationOrder(taskTemplate, task, taskTemplateIdToPermuteOrderCounter, files);
     files = applyReplaceRegex(task, files);
@@ -241,6 +260,18 @@ public class BenchmarkObjectFactory {
         applyParameterValues(
             taskTemplate, experimentConfig, taskTemplateIdToParameterValuesCounter, files);
     return files;
+  }
+
+  private static List<StatementExec> createStatementExecList(
+      String fileId, List<String> statements) {
+    List<StatementExec> statement_execs = new ArrayList<>();
+    final String STATEMENT_PREFIX = "statement";
+    for (int i = 0; i < statements.size(); i++) {
+      String statementId =
+          fileId + DEFAULT_ID_SEPARATOR + STATEMENT_PREFIX + DEFAULT_ID_CONNECTOR + i;
+      statement_execs.add(ImmutableStatementExec.of(statementId, statements.get(i)));
+    }
+    return statement_execs;
   }
 
   private static List<FileExec> applyPermutationOrder(

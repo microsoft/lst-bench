@@ -39,11 +39,9 @@ import org.slf4j.LoggerFactory;
  * expected object for a JDBC connection is of type List<Map<String, Object>>, handling of other
  * objects would need to be added to the if-clause that checks the instance of the object.
  */
-public class DependentTaskExecutor extends TaskExecutor {
+public class DependentTaskExecutor extends CustomTaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DependentTaskExecutor.class);
-
-  private final CustomTaskExecutorArguments arguments;
 
   private final int DEFAULT_BATCH_SIZE = 1;
 
@@ -51,18 +49,17 @@ public class DependentTaskExecutor extends TaskExecutor {
       SQLTelemetryRegistry telemetryRegistry,
       String experimentStartTime,
       CustomTaskExecutorArguments arguments) {
-    super(telemetryRegistry, experimentStartTime);
-    this.arguments = arguments;
+    super(telemetryRegistry, experimentStartTime, arguments);
   }
 
   @Override
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
       throws ClientException {
     int batch_size;
-    if (this.arguments == null || this.arguments.getDependentTaskBatchSize() == null) {
+    if (this.getArguments() == null || this.getArguments().getDependentTaskBatchSize() == null) {
       batch_size = DEFAULT_BATCH_SIZE;
     } else {
-      batch_size = this.arguments.getDependentTaskBatchSize().intValue();
+      batch_size = this.getArguments().getDependentTaskBatchSize().intValue();
     }
 
     QueryResult queryResult = null;

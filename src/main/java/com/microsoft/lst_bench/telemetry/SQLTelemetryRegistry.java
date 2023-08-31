@@ -18,7 +18,6 @@ package com.microsoft.lst_bench.telemetry;
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.client.ConnectionManager;
-import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.sql.SQLParser;
 import com.microsoft.lst_bench.util.StringUtils;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class SQLTelemetryRegistry {
 
   private final ConnectionManager connectionManager;
 
-  private final List<StatementExec> insertFileStatements;
+  private final List<String> insertFileStatements;
 
   // TODO: Make writing events thread-safe.
   private List<EventInfo> eventsStream;
@@ -52,9 +51,10 @@ public class SQLTelemetryRegistry {
     this.connectionManager = connectionManager;
     this.eventsStream = Collections.synchronizedList(new ArrayList<>());
     this.insertFileStatements =
-        SQLParser.getStatements(insertFile).getStatements().stream()
+        SQLParser.getStatements(insertFile).stream()
             .map(s -> StringUtils.replaceParameters(s, parameterValues))
             .collect(Collectors.toUnmodifiableList());
+
     // Create the tables if they don't exist.
     if (executeDdl) {
       executeDdl(ddlFile, parameterValues);
@@ -65,9 +65,9 @@ public class SQLTelemetryRegistry {
       throws ClientException {
     LOGGER.info("Creating new logging tables...");
     try (Connection connection = connectionManager.createConnection()) {
-      List<StatementExec> ddlFileStatements = SQLParser.getStatements(ddlFile).getStatements();
-      for (StatementExec query : ddlFileStatements) {
-        String currentQuery = StringUtils.replaceParameters(query, parameterValues).getStatement();
+      List<String> ddlFileStatements = SQLParser.getStatements(ddlFile);
+      for (String query : ddlFileStatements) {
+        String currentQuery = StringUtils.replaceParameters(query, parameterValues);
         connection.execute(currentQuery);
       }
     }
@@ -101,8 +101,8 @@ public class SQLTelemetryRegistry {
                           StringUtils.quote(o.getStatus().toString()),
                           StringUtils.quote(o.getPayload())))
               .collect(Collectors.joining("),(", "(", ")")));
-      for (StatementExec query : insertFileStatements) {
-        String currentQuery = StringUtils.replaceParameters(query, values).getStatement();
+      for (String query : insertFileStatements) {
+        String currentQuery = StringUtils.replaceParameters(query, values);
         connection.execute(currentQuery);
       }
 
