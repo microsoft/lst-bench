@@ -60,6 +60,10 @@ public class StringUtils {
 
   public static StatementExec replaceParameters(
       StatementExec statement, Map<String, Object> parameterValues) {
+    if (parameterValues == null || parameterValues.isEmpty()) {
+      // Nothing to do
+      return statement;
+    }
     return ImmutableStatementExec.of(
         statement.getId(), replaceParameters(statement.getStatement(), parameterValues));
   }
