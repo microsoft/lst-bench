@@ -1,0 +1,8 @@
+# Description: Tasks Library
+---
+version: 1
+task_templates:
+# Example task template for the base query of the custom concurrent performance stresstest.
+- id: base_query
+  files:
+  - src/test/resources/scripts/sqlserver/perf_stresstest.sql
