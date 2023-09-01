@@ -74,8 +74,8 @@ public class StringUtils {
       return file;
     }
     LOGGER.info("Trying to examine file: ");
-    LOGGER.info(file.toString());
     LOGGER.info(file.getId());
+    LOGGER.info("num statements: " + file.getStatements().size());
     return ImmutableFileExec.of(
         file.getId(),
         file.getStatements().stream()
