@@ -254,6 +254,7 @@ public class BenchmarkObjectFactory {
     List<FileExec> files = new ArrayList<>();
     for (String file : taskTemplate.getFiles()) {
       final String fileId = taskId + DEFAULT_ID_SEPARATOR + file;
+      LOGGER.info("adding file: " + fileId);
       files.add(
           ImmutableFileExec.of(
               fileId, createStatementExecList(fileId, SQLParser.getStatements(file))));
