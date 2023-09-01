@@ -15,6 +15,7 @@
  */
 package com.microsoft.lst_bench.input;
 
+import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.client.JDBCConnectionManager;
 import com.microsoft.lst_bench.client.SparkConnectionManager;
@@ -53,6 +54,7 @@ public class BenchmarkObjectFactory {
 
   public static final String DEFAULT_ID_SEPARATOR = ";";
   public static final String DEFAULT_ID_CONNECTOR = "_";
+  public static final String DEFAULT_FILE_SEPARATOR = "/";
 
   private BenchmarkObjectFactory() {
     // Defeat instantiation
@@ -102,9 +104,11 @@ public class BenchmarkObjectFactory {
    * @param taskLibrary the task library
    * @param workload the workload
    * @return a benchmark configuration
+   * @throws ClientException
    */
   public static BenchmarkConfig benchmarkConfig(
-      ExperimentConfig experimentConfig, TaskLibrary taskLibrary, Workload workload) {
+      ExperimentConfig experimentConfig, TaskLibrary taskLibrary, Workload workload)
+      throws ClientException {
     Map<String, TaskTemplate> idToTaskTemplate = parseTaskLibrary(taskLibrary);
     ImmutableWorkloadExec workloadExec =
         createWorkloadExec(workload, idToTaskTemplate, experimentConfig);
@@ -141,12 +145,13 @@ public class BenchmarkObjectFactory {
    * @param idToTaskTemplate a map of task templates with unique IDs
    * @param experimentConfig the experiment configuration
    * @return a workload execution
-   * @throws IllegalArgumentException if the workload contains an invalid task template ID
+   * @throws ClientException
    */
   private static ImmutableWorkloadExec createWorkloadExec(
       Workload workload,
       Map<String, TaskTemplate> idToTaskTemplate,
-      ExperimentConfig experimentConfig) {
+      ExperimentConfig experimentConfig)
+      throws ClientException {
     Map<String, Integer> taskTemplateIdToPermuteOrderCounter = new HashMap<>();
     Map<String, Integer> taskTemplateIdToParameterValuesCounter = new HashMap<>();
     List<PhaseExec> phases = new ArrayList<>();
@@ -168,7 +173,8 @@ public class BenchmarkObjectFactory {
       Map<String, TaskTemplate> idToTaskTemplate,
       ExperimentConfig experimentConfig,
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
-      Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
+      Map<String, Integer> taskTemplateIdToParameterValuesCounter)
+      throws ClientException {
     final String SESSION_PREFIX = "session";
     List<SessionExec> sessions = new ArrayList<>();
     for (int i = 0; i < phase.getSessions().size(); i++) {
@@ -199,7 +205,8 @@ public class BenchmarkObjectFactory {
       Map<String, TaskTemplate> idToTaskTemplate,
       ExperimentConfig experimentConfig,
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
-      Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
+      Map<String, Integer> taskTemplateIdToParameterValuesCounter)
+      throws ClientException {
     List<TaskExec> tasks = new ArrayList<>();
     for (int i = 0; i < session.getTasks().size(); i++) {
       Task task = session.getTasks().get(i);
@@ -225,7 +232,8 @@ public class BenchmarkObjectFactory {
       Map<String, TaskTemplate> idToTaskTemplate,
       ExperimentConfig experimentConfig,
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
-      Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
+      Map<String, Integer> taskTemplateIdToParameterValuesCounter)
+      throws ClientException {
     TaskTemplate taskTemplate = idToTaskTemplate.get(task.getTemplateId());
     if (taskTemplate == null) {
       throw new IllegalArgumentException("Unknown task template id: " + task.getTemplateId());
@@ -250,16 +258,15 @@ public class BenchmarkObjectFactory {
       Task task,
       ExperimentConfig experimentConfig,
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
-      Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
+      Map<String, Integer> taskTemplateIdToParameterValuesCounter)
+      throws ClientException {
     List<FileExec> files = new ArrayList<>();
     for (String file : taskTemplate.getFiles()) {
       final String fileId = taskId + DEFAULT_ID_SEPARATOR + file;
-      LOGGER.info("adding file: " + fileId);
       files.add(
           ImmutableFileExec.of(
               fileId, createStatementExecList(fileId, SQLParser.getStatements(file))));
     }
-    LOGGER.info("Arraylist contains " + files.size() + " files.");
     files = applyPermutationOrder(taskTemplate, task, taskTemplateIdToPermuteOrderCounter, files);
     files = applyReplaceRegex(task, files);
     files =
@@ -284,14 +291,16 @@ public class BenchmarkObjectFactory {
       TaskTemplate taskTemplate,
       Task task,
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
-      List<FileExec> files) {
+      List<FileExec> files)
+      throws ClientException {
     if (taskTemplate.getPermutationOrdersDirectory() == null) {
       // Create statements with certain order
       return files;
     }
-    Map<String, FileExec> idToFile = new HashMap<>();
+    Map<String, FileExec> nameToFile = new HashMap<>();
     for (FileExec file : files) {
-      idToFile.put(file.getId(), file);
+      String[] fileNames = file.getId().split(DEFAULT_FILE_SEPARATOR);
+      nameToFile.put(fileNames[fileNames.length - 1], file);
     }
     int counter;
     if (Boolean.TRUE.equals(task.isPermuteOrder())) {
@@ -305,7 +314,15 @@ public class BenchmarkObjectFactory {
         FileParser.getPermutationOrder(taskTemplate.getPermutationOrdersDirectory(), counter);
     List<FileExec> sortedFiles = new ArrayList<>();
     for (String fileId : permutationOrder) {
-      sortedFiles.add(idToFile.get(fileId));
+      if (!nameToFile.containsKey(fileId)) {
+        throw new ClientException(
+            "Could not find file "
+                + fileId
+                + " in file list: "
+                + nameToFile.toString()
+                + "; permutation of order unsuccessful.");
+      }
+      sortedFiles.add(nameToFile.get(fileId));
     }
     return sortedFiles;
   }
