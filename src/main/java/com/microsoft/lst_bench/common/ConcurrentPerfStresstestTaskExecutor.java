@@ -33,7 +33,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Custom task executor implementation that allows users to execute concurrent tasks for specfic performance stress testing. This type of testing focuses on queries that a) get enhanced with additional joins (number specified by the user) and b) get augmented with query padding (empty characters) at the end of the query, if specified by the user.
+ * Custom task executor implementation that allows users to execute concurrent tasks for specfic
+ * performance stress testing. This type of testing focuses on queries that a) get enhanced with
+ * additional joins (number specified by the user) and b) get augmented with query padding (empty
+ * characters) at the end of the query, if specified by the user.
  */
 public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
 
