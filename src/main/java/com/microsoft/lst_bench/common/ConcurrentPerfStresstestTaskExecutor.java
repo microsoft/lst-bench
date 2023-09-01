@@ -33,12 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Custom task executor implementation that allows users to execute dependent tasks. We call a
- * dependent task a task that iteratively executes a) a statement that is expected to return a
- * result; and b) a statement repeatedly that is expected to use that result. The result of the
- * first statement is stored in an intermediate object that can be specific to the connection. The
- * expected object for a JDBC connection is of type List<Map<String, Object>>, handling of other
- * objects would need to be added to the if-clause that checks the instance of the object.
+ * Custom task executor implementation that allows users to execute concurrent tasks for specfic performance stress testing. This type of testing focuses on queries that a) get enhanced with additional joins (number specified by the user) and b) get augmented with query padding (empty characters) at the end of the query, if specified by the user.
  */
 public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
 

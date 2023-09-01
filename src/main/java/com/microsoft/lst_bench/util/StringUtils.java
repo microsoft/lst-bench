@@ -73,6 +73,9 @@ public class StringUtils {
       // Nothing to do
       return file;
     }
+    LOGGER.info("Trying to examine file: ");
+    LOGGER.info(file.toString());
+    LOGGER.info(file.getId());
     return ImmutableFileExec.of(
         file.getId(),
         file.getStatements().stream()
