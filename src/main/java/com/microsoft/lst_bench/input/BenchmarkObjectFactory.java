@@ -43,9 +43,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Factory class for creating benchmark objects from the input configuration. */
 public class BenchmarkObjectFactory {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(BenchmarkObjectFactory.class);
 
   public static final String DEFAULT_ID_SEPARATOR = ";";
   public static final String DEFAULT_ID_CONNECTOR = "_";
@@ -254,6 +258,7 @@ public class BenchmarkObjectFactory {
           ImmutableFileExec.of(
               fileId, createStatementExecList(fileId, SQLParser.getStatements(file))));
     }
+    LOGGER.info("Arraylist contains " + files.size() + " files.");
     files = applyPermutationOrder(taskTemplate, task, taskTemplateIdToPermuteOrderCounter, files);
     files = applyReplaceRegex(task, files);
     files =
