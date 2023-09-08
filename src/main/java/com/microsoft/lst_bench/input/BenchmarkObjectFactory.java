@@ -44,13 +44,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Factory class for creating benchmark objects from the input configuration. */
 public class BenchmarkObjectFactory {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(BenchmarkObjectFactory.class);
 
   public static final String DEFAULT_ID_SEPARATOR = ";";
   public static final String DEFAULT_ID_CONNECTOR = "_";
@@ -298,6 +294,8 @@ public class BenchmarkObjectFactory {
       return files;
     }
     Map<String, FileExec> nameToFile = new HashMap<>();
+    // Per current convention, the id of a file is that of a task appended with the file path.
+    // Permutation order is referenced by file name, i.e., the last part of the file path.
     for (FileExec file : files) {
       String[] fileNames = file.getId().split(DEFAULT_FILE_SEPARATOR);
       nameToFile.put(fileNames[fileNames.length - 1], file);

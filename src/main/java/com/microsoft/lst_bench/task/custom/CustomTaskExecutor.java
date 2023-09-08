@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microsoft.lst_bench.common;
+package com.microsoft.lst_bench.task.custom;
 
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.exec.TaskExec;
 import com.microsoft.lst_bench.input.Task.CustomTaskExecutorArguments;
+import com.microsoft.lst_bench.task.TaskExecutor;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import java.util.Map;
 

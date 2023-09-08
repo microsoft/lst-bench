@@ -13,5 +13,5 @@ phases:
     - template_id: single_user
     - template_id: data_maintenance_iceberg
     - template_id: data_maintenance_dependent
-      custom_task_executor: com.microsoft.lst_bench.common.DependentTaskExecutor
+      custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
     - template_id: optimize_iceberg

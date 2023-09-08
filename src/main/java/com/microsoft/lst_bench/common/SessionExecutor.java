@@ -21,6 +21,7 @@ import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.exec.SessionExec;
 import com.microsoft.lst_bench.exec.TaskExec;
 import com.microsoft.lst_bench.input.Task.CustomTaskExecutorArguments;
+import com.microsoft.lst_bench.task.TaskExecutor;
 import com.microsoft.lst_bench.telemetry.EventInfo;
 import com.microsoft.lst_bench.telemetry.EventInfo.EventType;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
@@ -86,11 +87,7 @@ public class SessionExecutor implements Callable<Boolean> {
         writeTaskEvent(taskStartTime, task.getId(), Status.SUCCESS);
       }
     } catch (Exception e) {
-      LOGGER.error(
-          "Exception executing session: "
-              + session.getId()
-              + ";"
-              + ExceptionUtils.getStackTrace(e));
+      LOGGER.error("Exception executing session: " + session.getId());
       writeSessionEvent(sessionStartTime, session.getId(), Status.FAILURE);
       throw e;
     }

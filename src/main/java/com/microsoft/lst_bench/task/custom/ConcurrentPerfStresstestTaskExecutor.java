@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microsoft.lst_bench.common;
+package com.microsoft.lst_bench.task.custom;
 
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
@@ -132,7 +132,6 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
               + statement.getId()
               + "; "
               + ExceptionUtils.getStackTrace(e);
-      LOGGER.error(error_msg);
       writeStatementEvent(statementStartTime, statement.getId(), Status.FAILURE, error_msg);
       throw new ClientException(error_msg);
     }

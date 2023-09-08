@@ -7,7 +7,7 @@ phases:
   sessions:
   - tasks:
     - template_id: base_query
-      custom_task_executor: com.microsoft.lst_bench.common.ConcurrentPerfStresstestTaskExecutor
+      custom_task_executor: com.microsoft.lst_bench.task.custom.ConcurrentPerfStresstestTaskExecutor
       custom_task_executor_arguments:
         concurrent_task_num_joins: 5
     duplicate_session: 5
@@ -15,6 +15,6 @@ phases:
   sessions:
   - tasks:
     - template_id: base_query
-      custom_task_executor: com.microsoft.lst_bench.common.ConcurrentPerfStresstestTaskExecutor
+      custom_task_executor: com.microsoft.lst_bench.task.custom.ConcurrentPerfStresstestTaskExecutor
       custom_task_executor_arguments:
         concurrent_task_min_query_length: 1000
