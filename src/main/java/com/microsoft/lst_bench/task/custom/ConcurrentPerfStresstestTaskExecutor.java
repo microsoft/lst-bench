@@ -27,6 +27,7 @@ import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
 import java.time.Instant;
 import java.util.Map;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +36,10 @@ import org.slf4j.LoggerFactory;
  * Custom task executor implementation that allows users to execute concurrent tasks for specfic
  * performance stress testing. This type of testing focuses on queries that a) get enhanced with
  * additional joins (number specified by the user) and b) get augmented with query padding (empty
- * characters) at the end of the query, if specified by the user. These properties are defined via
- * the 'custom_task_executor_arguments' property that are part of the workload configuration. Valid
+ * characters) at the end of the query, if specified by the user. This augmentation requires a
+ * specific query of the form "SELECT ... FROM ..." without additional clauses such as "WHERE" or
+ * "ORDER" to allow for join extensions. The properties of this class are defined via the
+ * 'custom_task_executor_arguments' property that are part of the workload configuration. Valid
  * parameter names are 'concurrent_task_num_joins' and 'concurrent_task_min_query_length'.
  */
 public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
@@ -48,6 +51,9 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
   private final int DEFAULT_CONCURRENT_TASK_MIN_QUERY_LENGTH = 0;
   private final String CONCURRENT_TASK_NUM_JOINS = "concurrent_task_num_joins";
   private final String CONCURRENT_TASK_MIN_QUERY_LENGTH = "concurrent_task_min_query_length";
+
+  private final Pattern WHERE_PATTERN = Pattern.compile("WHERE|where|Where");
+  private final Pattern ORDER_PATTERN = Pattern.compile("ORDER|order|Order");
 
   public ConcurrentPerfStresstestTaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
@@ -83,14 +89,14 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
       }
       StatementExec statement = file.getStatements().get(0);
 
-      if (statement.getStatement().contains("WHERE")
-          || statement.getStatement().contains("ORDER")
+      if (WHERE_PATTERN.matcher(statement.getStatement()).find()
+          || ORDER_PATTERN.matcher(statement.getStatement()).find()
           || statement.getStatement().contains(";")) {
         writeStatementEvent(
             fileStartTime,
             file.getId(),
             Status.FAILURE,
-            /* payload= */ "Query contains invalid key words (WHERE, ORDER, etc.): "
+            /* payload= */ "Query contains invalid key words (WHERE, ORDER, ';', etc.): "
                 + statement.getStatement());
         throw new ClientException(
             "Query contains invalid key words (WHERE, ORDER, etc.): " + statement.getStatement());
@@ -105,7 +111,7 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
       }
 
       try {
-        String query = statement.getStatement().split(";")[0];
+        String query = statement.getStatement();
         String join_clause = query.split("FROM")[1].trim();
         // Adjust number of joins.
         for (int i = 0; i < numJoins; i++) {
