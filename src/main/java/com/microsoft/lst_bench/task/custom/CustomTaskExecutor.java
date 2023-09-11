@@ -18,7 +18,6 @@ package com.microsoft.lst_bench.task.custom;
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.exec.TaskExec;
-import com.microsoft.lst_bench.input.Task.CustomTaskExecutorArguments;
 import com.microsoft.lst_bench.task.TaskExecutor;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import java.util.Map;
@@ -33,12 +32,12 @@ import java.util.Map;
  */
 public class CustomTaskExecutor extends TaskExecutor {
 
-  protected final CustomTaskExecutorArguments arguments;
+  protected final Map<String, String> arguments;
 
   public CustomTaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
       String experimentStartTime,
-      CustomTaskExecutorArguments arguments) {
+      Map<String, String> arguments) {
     super(telemetryRegistry, experimentStartTime);
     this.arguments = arguments;
   }
@@ -49,7 +48,7 @@ public class CustomTaskExecutor extends TaskExecutor {
     super.executeTask(connection, task, values);
   }
 
-  protected CustomTaskExecutorArguments getArguments() {
+  protected Map<String, String> getArguments() {
     return this.arguments;
   }
 }

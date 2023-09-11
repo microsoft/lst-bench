@@ -22,7 +22,6 @@ import com.microsoft.lst_bench.exec.ImmutableStatementExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
 import com.microsoft.lst_bench.input.BenchmarkObjectFactory;
-import com.microsoft.lst_bench.input.Task.CustomTaskExecutorArguments;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
@@ -36,26 +35,44 @@ import org.slf4j.LoggerFactory;
  * Custom task executor implementation that allows users to execute concurrent tasks for specfic
  * performance stress testing. This type of testing focuses on queries that a) get enhanced with
  * additional joins (number specified by the user) and b) get augmented with query padding (empty
- * characters) at the end of the query, if specified by the user.
+ * characters) at the end of the query, if specified by the user. These properties are defined via
+ * the 'custom_task_executor_arguments' property that are part of the workload configuration. Valid
+ * parameter names are 'concurrent_task_num_joins' and 'concurrent_task_min_query_length'.
  */
 public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
 
   private static final Logger LOGGER =
       LoggerFactory.getLogger(ConcurrentPerfStresstestTaskExecutor.class);
 
+  private final int DEFAULT_CONCURRENT_TASK_NUM_JOINS = 0;
+  private final int DEFAULT_CONCURRENT_TASK_MIN_QUERY_LENGTH = 0;
+  private final String CONCURRENT_TASK_NUM_JOINS = "concurrent_task_num_joins";
+  private final String CONCURRENT_TASK_MIN_QUERY_LENGTH = "concurrent_task_min_query_length";
+
   public ConcurrentPerfStresstestTaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
       String experimentStartTime,
-      CustomTaskExecutorArguments arguments) {
+      Map<String, String> arguments) {
     super(telemetryRegistry, experimentStartTime, arguments);
   }
 
   @Override
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
       throws ClientException {
-    // Will never be null since they are set to default values.
-    int numJoins = this.getArguments().getConcurrentTaskNumJoins();
-    int minQueryLength = this.getArguments().getConcurrentTaskMinQueryLength();
+    // Set default values.
+    int numJoins;
+    if (this.getArguments() == null || this.getArguments().get(CONCURRENT_TASK_NUM_JOINS) == null) {
+      numJoins = DEFAULT_CONCURRENT_TASK_NUM_JOINS;
+    } else {
+      numJoins = Integer.valueOf(this.getArguments().get(CONCURRENT_TASK_NUM_JOINS));
+    }
+    int minQueryLength;
+    if (this.getArguments() == null
+        || this.getArguments().get(CONCURRENT_TASK_MIN_QUERY_LENGTH) == null) {
+      minQueryLength = DEFAULT_CONCURRENT_TASK_MIN_QUERY_LENGTH;
+    } else {
+      minQueryLength = Integer.valueOf(this.getArguments().get(CONCURRENT_TASK_MIN_QUERY_LENGTH));
+    }
 
     for (FileExec file : task.getFiles()) {
       Instant fileStartTime = Instant.now();

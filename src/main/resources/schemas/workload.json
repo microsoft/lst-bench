@@ -63,24 +63,7 @@
                       "custom_task_executor_arguments": {
                         "type": "object",
                         "title": "Custom task executor arguments",
-                        "description": "Any arguments passed to a custom executor need to be defined here.",
-                        "properties": {
-                          "dependent_task_batch_size": {
-                            "type": "integer",
-                            "title": "Batch size for DependentTaskExecutor",
-                            "description": "Sets the batch size for a task executed; specific to the DependentTaskExecutor class"
-                          },
-                          "concurrent_task_num_joins": {
-                            "type": "integer",
-                            "title": "List of number of joins that are to be tested",
-                            "description": "Determines how the query will be extended with the number of joins"
-                          },
-                          "concurrent_task_min_query_length": {
-                            "type": "integer",
-                            "title": "List of minimum query lengths that are to be tested",
-                            "description": "Determines how the query will be extended with padding if the minimum query length is not exceeded"
-                          }
-                        }
+                        "description": "Any arguments passed to a custom executor need to be defined here."
                       },
                       "replace_regex": {
                         "type": "array",

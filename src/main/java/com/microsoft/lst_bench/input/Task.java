@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
@@ -43,27 +44,7 @@ public interface Task {
   @Nullable String getCustomTaskExecutor();
 
   @JsonProperty("custom_task_executor_arguments")
-  @Nullable CustomTaskExecutorArguments getCustomTaskExecutorArguments();
-
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableCustomTaskExecutorArguments.class)
-  @JsonDeserialize(as = ImmutableCustomTaskExecutorArguments.class)
-  interface CustomTaskExecutorArguments {
-    @JsonProperty("dependent_task_batch_size")
-    @Nullable Integer getDependentTaskBatchSize();
-
-    @JsonProperty("concurrent_task_num_joins")
-    @Value.Default
-    default int getConcurrentTaskNumJoins() {
-      return 0;
-    }
-
-    @JsonProperty("concurrent_task_min_query_length")
-    @Value.Default
-    default int getConcurrentTaskMinQueryLength() {
-      return 0;
-    }
-  }
+  @Nullable Map<String, String> getCustomTaskExecutorArguments();
 
   @JsonProperty("replace_regex")
   @Nullable List<ReplaceRegex> getReplaceRegex();
