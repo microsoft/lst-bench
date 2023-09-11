@@ -21,7 +21,6 @@ import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.ImmutableStatementExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
-import com.microsoft.lst_bench.input.BenchmarkObjectFactory;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
@@ -40,7 +39,10 @@ import org.slf4j.LoggerFactory;
  * specific query of the form "SELECT ... FROM ..." without additional clauses such as "WHERE" or
  * "ORDER" to allow for join extensions. The properties of this class are defined via the
  * 'custom_task_executor_arguments' property that are part of the workload configuration. Valid
- * parameter names are 'concurrent_task_num_joins' and 'concurrent_task_min_query_length'.
+ * parameter names are 'concurrent_task_num_joins' and 'concurrent_task_min_query_length', their
+ * defaults are set to '0'. The user may further choose to specify parameters
+ * 'concurrent_id_separator' and 'concurrent_id_connector' which are used to build the id of the
+ * newly generated queries. The default for these parameters is set to ';' resp. '-'.
  */
 public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
 
@@ -51,6 +53,10 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
   private final int DEFAULT_CONCURRENT_TASK_MIN_QUERY_LENGTH = 0;
   private final String CONCURRENT_TASK_NUM_JOINS = "concurrent_task_num_joins";
   private final String CONCURRENT_TASK_MIN_QUERY_LENGTH = "concurrent_task_min_query_length";
+  private final String DEFAULT_CONCURRENT_ID_SEPARATOR = ";";
+  private final String DEFAULT_CONCURRENT_ID_CONNECTOR = "-";
+  private final String CONCURRENT_ID_SEPARATOR = "concurrent_id_separator";
+  private final String CONCURRENT_ID_CONNECTOR = "concurrent_id_connector";
 
   private final Pattern WHERE_PATTERN = Pattern.compile("WHERE|where|Where");
   private final Pattern ORDER_PATTERN = Pattern.compile("ORDER|order|Order");
@@ -126,10 +132,10 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
         StatementExec mod_statement =
             ImmutableStatementExec.of(
                 statement.getId()
-                    + BenchmarkObjectFactory.DEFAULT_ID_SEPARATOR
+                    + getIdSeparator()
                     + "numJoins"
                     + numJoins
-                    + BenchmarkObjectFactory.DEFAULT_ID_CONNECTOR
+                    + getIdConnector()
                     + "minQueryLength"
                     + minQueryLength,
                 query);
@@ -159,5 +165,25 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
       throw new ClientException(error_msg);
     }
     writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
+  }
+
+  private String getIdSeparator() {
+    String idSeparator;
+    if (this.getArguments() == null || this.getArguments().get(CONCURRENT_ID_SEPARATOR) == null) {
+      idSeparator = DEFAULT_CONCURRENT_ID_SEPARATOR;
+    } else {
+      idSeparator = this.getArguments().get(CONCURRENT_ID_SEPARATOR);
+    }
+    return idSeparator;
+  }
+
+  private String getIdConnector() {
+    String idConnector;
+    if (this.getArguments() == null || this.getArguments().get(CONCURRENT_ID_CONNECTOR) == null) {
+      idConnector = DEFAULT_CONCURRENT_ID_CONNECTOR;
+    } else {
+      idConnector = this.getArguments().get(CONCURRENT_ID_CONNECTOR);
+    }
+    return idConnector;
   }
 }
