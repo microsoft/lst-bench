@@ -45,7 +45,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ObjectUtils;
 
-/** Factory class for creating benchmark objects from the input configuration. */
+/**
+ * Factory class for creating benchmark objects from the input configuration.
+ *
+ * <p>Per convention, the identifiers for each phase, session, task, file, and statement are
+ * hierarchically constructed. For example, task template 'test-task' that is only task in phase
+ * 'test-phase' which only has a single session will be identified as
+ * test-phase;session-0;test-task-0.
+ */
 public class BenchmarkObjectFactory {
 
   public static final String DEFAULT_ID_SEPARATOR = ";";
@@ -171,19 +178,13 @@ public class BenchmarkObjectFactory {
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
       Map<String, Integer> taskTemplateIdToParameterValuesCounter)
       throws ClientException {
-    final String SESSION_PREFIX = "session";
     List<SessionExec> sessions = new ArrayList<>();
     for (int i = 0; i < phase.getSessions().size(); i++) {
       Session session = phase.getSessions().get(i);
       for (int j = 0; j <= session.getDuplicateSession(); j++) {
-        String sessionId =
-            phase.getId() + DEFAULT_ID_SEPARATOR + SESSION_PREFIX + DEFAULT_ID_CONNECTOR + i;
-        if (j > 0) {
-          sessionId += DEFAULT_ID_CONNECTOR + j;
-        }
         SessionExec sessionExec =
             createSessionExec(
-                sessionId,
+                createSessionId(phase.getId(), i, j),
                 session,
                 idToTaskTemplate,
                 experimentConfig,
@@ -193,6 +194,16 @@ public class BenchmarkObjectFactory {
       }
     }
     return ImmutablePhaseExec.of(phase.getId(), sessions);
+  }
+
+  private static String createSessionId(String phaseId, int number, int duplicate_number) {
+    final String SESSION_PREFIX = "session";
+    String sessionId =
+        phaseId + DEFAULT_ID_SEPARATOR + SESSION_PREFIX + DEFAULT_ID_CONNECTOR + number;
+    if (duplicate_number > 0) {
+      sessionId += DEFAULT_ID_CONNECTOR + duplicate_number;
+    }
+    return sessionId;
   }
 
   private static SessionExec createSessionExec(
@@ -206,11 +217,9 @@ public class BenchmarkObjectFactory {
     List<TaskExec> tasks = new ArrayList<>();
     for (int i = 0; i < session.getTasks().size(); i++) {
       Task task = session.getTasks().get(i);
-      String taskId =
-          sessionId + DEFAULT_ID_SEPARATOR + task.getTemplateId() + DEFAULT_ID_CONNECTOR + i;
       TaskExec taskExec =
           createTaskExec(
-              taskId,
+              createTaskId(sessionId, task.getTemplateId(), i),
               task,
               idToTaskTemplate,
               experimentConfig,
@@ -220,6 +229,10 @@ public class BenchmarkObjectFactory {
     }
     return ImmutableSessionExec.of(
         sessionId, tasks, ObjectUtils.defaultIfNull(session.getTargetEndpoint(), 0));
+  }
+
+  private static String createTaskId(String sessionId, String templateId, int number) {
+    return sessionId + DEFAULT_ID_SEPARATOR + templateId + DEFAULT_ID_CONNECTOR + number;
   }
 
   private static TaskExec createTaskExec(
@@ -258,10 +271,12 @@ public class BenchmarkObjectFactory {
       throws ClientException {
     List<FileExec> files = new ArrayList<>();
     for (String file : taskTemplate.getFiles()) {
-      final String fileId = taskId + DEFAULT_ID_SEPARATOR + file;
+      final String fileId = createFileId(taskId, file);
       files.add(
           ImmutableFileExec.of(
-              fileId, createStatementExecList(fileId, SQLParser.getStatements(file))));
+              fileId,
+              createFileName(file),
+              createStatementExecList(fileId, SQLParser.getStatements(file))));
     }
     files = applyPermutationOrder(taskTemplate, task, taskTemplateIdToPermuteOrderCounter, files);
     files = applyReplaceRegex(task, files);
@@ -271,16 +286,28 @@ public class BenchmarkObjectFactory {
     return files;
   }
 
+  private static String createFileId(String taskId, String filePath) {
+    return taskId + DEFAULT_ID_SEPARATOR + filePath;
+  }
+
+  private static String createFileName(String filePath) {
+    String[] fileNames = filePath.split(DEFAULT_FILE_SEPARATOR);
+    return fileNames[fileNames.length - 1];
+  }
+
   private static List<StatementExec> createStatementExecList(
       String fileId, List<String> statements) {
     List<StatementExec> statement_execs = new ArrayList<>();
-    final String STATEMENT_PREFIX = "statement";
     for (int i = 0; i < statements.size(); i++) {
-      String statementId =
-          fileId + DEFAULT_ID_SEPARATOR + STATEMENT_PREFIX + DEFAULT_ID_CONNECTOR + i;
-      statement_execs.add(ImmutableStatementExec.of(statementId, statements.get(i)));
+      statement_execs.add(
+          ImmutableStatementExec.of(createStatementId(fileId, i), statements.get(i)));
     }
     return statement_execs;
+  }
+
+  private static String createStatementId(String fileId, int number) {
+    final String STATEMENT_PREFIX = "statement";
+    return fileId + DEFAULT_ID_SEPARATOR + STATEMENT_PREFIX + DEFAULT_ID_CONNECTOR + number;
   }
 
   private static List<FileExec> applyPermutationOrder(
@@ -294,11 +321,10 @@ public class BenchmarkObjectFactory {
       return files;
     }
     Map<String, FileExec> nameToFile = new HashMap<>();
-    // Per current convention, the id of a file is that of a task appended with the file path.
-    // Permutation order is referenced by file name, i.e., the last part of the file path.
+    // The permutation order is identified by file name, i.e., the last part of the file path, as
+    // per current convention.
     for (FileExec file : files) {
-      String[] fileNames = file.getId().split(DEFAULT_FILE_SEPARATOR);
-      nameToFile.put(fileNames[fileNames.length - 1], file);
+      nameToFile.put(file.getName(), file);
     }
     int counter;
     if (Boolean.TRUE.equals(task.isPermuteOrder())) {
