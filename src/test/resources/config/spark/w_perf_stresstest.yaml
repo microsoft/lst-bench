@@ -3,6 +3,10 @@
 version: 1
 id: perf-stresstest
 phases:
+- id: setup
+  sessions:
+  - tasks:
+    - template_id: setup
 - id: query_execution_1
   sessions:
   - tasks:

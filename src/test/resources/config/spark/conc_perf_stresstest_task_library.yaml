@@ -1,0 +1,12 @@
+# Description: Tasks Library
+---
+version: 1
+task_templates:
+# Create external tables needed for benchmark
+- id: setup
+  files:
+  - src/main/resources/scripts/tpcds/setup/spark/ddl-external-tables.sql
+# Example task template for the base query of the custom concurrent performance stresstest.
+- id: base_query
+  files:
+  - src/test/resources/scripts/spark/perf_stresstest.sql
