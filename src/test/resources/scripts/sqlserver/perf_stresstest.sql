@@ -1,1 +1,1 @@
-SELECT t.* FROM test_table t
+SELECT t.* FROM test_table t;

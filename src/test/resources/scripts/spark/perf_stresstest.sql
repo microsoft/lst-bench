@@ -1,1 +1,1 @@
-SELECT s.* FROM ${catalog}.${database}.store s
+SELECT s.* FROM ${catalog}.${database}.store s;

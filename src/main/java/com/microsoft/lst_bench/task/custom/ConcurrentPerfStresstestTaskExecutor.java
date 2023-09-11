@@ -60,6 +60,9 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
 
   private final Pattern WHERE_PATTERN = Pattern.compile("WHERE|where|Where");
   private final Pattern ORDER_PATTERN = Pattern.compile("ORDER|order|Order");
+  private final Pattern FROM_PATTERN = Pattern.compile("FROM|from|From");
+
+  private final String QUERY_END_TOKEN = ";";
 
   public ConcurrentPerfStresstestTaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
@@ -96,17 +99,16 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
       StatementExec statement = file.getStatements().get(0);
 
       if (WHERE_PATTERN.matcher(statement.getStatement()).find()
-          || ORDER_PATTERN.matcher(statement.getStatement()).find()
-          || statement.getStatement().contains(";")) {
+          || ORDER_PATTERN.matcher(statement.getStatement()).find()) {
         writeStatementEvent(
             fileStartTime,
             file.getId(),
             Status.FAILURE,
-            /* payload= */ "Query contains invalid key words (WHERE, ORDER, ';', etc.): "
+            /* payload= */ "Query contains invalid key words (WHERE, ORDER, etc.): "
                 + statement.getStatement());
         throw new ClientException(
             "Query contains invalid key words (WHERE, ORDER, etc.): " + statement.getStatement());
-      } else if (!statement.getStatement().contains("FROM")) {
+      } else if (!FROM_PATTERN.matcher(statement.getStatement()).find()) {
         writeStatementEvent(
             fileStartTime,
             file.getId(),
@@ -117,8 +119,8 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
       }
 
       try {
-        String query = statement.getStatement();
-        String join_clause = query.split("FROM")[1].trim();
+        String query = statement.getStatement().split(QUERY_END_TOKEN)[0];
+        String join_clause = query.split(FROM_PATTERN.pattern())[1].trim();
         // Adjust number of joins.
         for (int i = 0; i < numJoins; i++) {
           query += ", " + join_clause + i;
@@ -128,6 +130,7 @@ public class ConcurrentPerfStresstestTaskExecutor extends CustomTaskExecutor {
         if (queryPadding > 0) {
           query += new String(new char[queryPadding]).replace('\0', ' ');
         }
+        query += QUERY_END_TOKEN;
 
         StatementExec mod_statement =
             ImmutableStatementExec.of(
