@@ -35,9 +35,9 @@ public interface Session {
   @JsonProperty("target_endpoint")
   @Nullable Integer getTargetEndpoint();
 
-  @JsonProperty("duplicate_session")
+  @JsonProperty("num_instances")
   @Value.Default
-  default int getDuplicateSession() {
-    return 0;
+  default int getNumInstances() {
+    return 1;
   }
 }

@@ -10,7 +10,7 @@ phases:
       custom_task_executor: com.microsoft.lst_bench.task.custom.ConcurrentPerfStresstestTaskExecutor
       custom_task_executor_arguments:
         concurrent_task_num_joins: 5
-    duplicate_session: 5
+    num_instances: 5
 - id: query_execution_2
   sessions:
   - tasks:

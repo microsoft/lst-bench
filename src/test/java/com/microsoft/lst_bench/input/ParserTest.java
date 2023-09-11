@@ -496,7 +496,7 @@ public class ParserTest {
             List<Task> tasksDM = sessions.get(1).getTasks();
             Assertions.assertEquals(2, tasksDM.size());
             Assertions.assertEquals(1, sessions.get(1).getTargetEndpoint());
-            Assertions.assertEquals(0, sessions.get(1).getDuplicateSession());
+            Assertions.assertEquals(1, sessions.get(1).getNumInstances());
           }
           break;
         case "single_user_2_optimize_1":
@@ -506,7 +506,7 @@ public class ParserTest {
             List<Task> tasksO = sessions.get(1).getTasks();
             Assertions.assertEquals(1, tasksO.size());
             Assertions.assertEquals(1, sessions.get(1).getTargetEndpoint());
-            Assertions.assertEquals(0, sessions.get(1).getDuplicateSession());
+            Assertions.assertEquals(1, sessions.get(1).getNumInstances());
           }
           break;
         case "setup":

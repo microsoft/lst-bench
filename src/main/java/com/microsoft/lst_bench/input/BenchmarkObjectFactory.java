@@ -181,7 +181,7 @@ public class BenchmarkObjectFactory {
     List<SessionExec> sessions = new ArrayList<>();
     for (int i = 0; i < phase.getSessions().size(); i++) {
       Session session = phase.getSessions().get(i);
-      for (int j = 0; j <= session.getDuplicateSession(); j++) {
+      for (int j = 1; j <= session.getNumInstances(); j++) {
         SessionExec sessionExec =
             createSessionExec(
                 createSessionId(phase.getId(), i, j),
@@ -196,12 +196,12 @@ public class BenchmarkObjectFactory {
     return ImmutablePhaseExec.of(phase.getId(), sessions);
   }
 
-  private static String createSessionId(String phaseId, int number, int duplicate_number) {
+  private static String createSessionId(String phaseId, int number, int numInstances) {
     final String SESSION_PREFIX = "session";
     String sessionId =
         phaseId + DEFAULT_ID_SEPARATOR + SESSION_PREFIX + DEFAULT_ID_CONNECTOR + number;
-    if (duplicate_number > 0) {
-      sessionId += DEFAULT_ID_CONNECTOR + duplicate_number;
+    if (numInstances > 1) {
+      sessionId += DEFAULT_ID_CONNECTOR + numInstances;
     }
     return sessionId;
   }

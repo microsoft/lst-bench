@@ -110,10 +110,10 @@
                   "title": "Target endpoint index (default: 0)",
                   "description": "The positional index (starting from 0) of the connection manager within the connections configuration file"
                 },
-                "duplicate_session": {
+                "num_instances": {
                   "type": "integer",
-                  "title": "Duplication count for this session",
-                  "description": "Determines how often a session will be duplicated; total session count is duplicate_session + 1 (default: 0)"
+                  "title": "Number of instances for this session",
+                  "description": "Determines how often a session will be instantiated (default: 1)"
                 }
               }
             }
