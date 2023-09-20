@@ -40,7 +40,8 @@ public class JDBCConnection implements Connection {
     Exception last_error = null;
     int error_count = 0;
 
-    while (error_count < this.max_num_retries) {
+    // Retry count is in addition to the 1 default try, thus '<='.
+    while (error_count <= this.max_num_retries) {
       try (Statement s = connection.createStatement()) {
         boolean hasResults = s.execute(sqlText);
         if (hasResults) {
@@ -59,9 +60,9 @@ public class JDBCConnection implements Connection {
 
     if (last_error != null) {
       String last_error_msg =
-          "Query retries ("
+          "Query execution ("
               + this.max_num_retries
-              + ") unsuccessful. Error occurred while executing the following query: "
+              + " retries) unsuccessful. Error occurred while executing the following query: "
               + sqlText
               + "; stack trace: "
               + ExceptionUtils.getStackTrace(last_error);
