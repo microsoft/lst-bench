@@ -34,7 +34,7 @@ public interface JDBCConnectionConfig extends ConnectionConfig {
   @JsonProperty("max_num_retries")
   @Value.Default
   default int getMaxNumRetries() {
-    return 1;
+    return 0;
   }
 
   @Nullable String getUsername();
