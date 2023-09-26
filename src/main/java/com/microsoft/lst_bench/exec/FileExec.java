@@ -25,5 +25,7 @@ public interface FileExec {
 
   String getId();
 
+  String getName();
+
   List<StatementExec> getStatements();
 }

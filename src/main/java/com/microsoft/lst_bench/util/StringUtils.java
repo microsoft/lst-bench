@@ -50,6 +50,14 @@ public class StringUtils {
     return "'" + str + "'";
   }
 
+  public static String replaceParameters(String statement, Map<String, Object> parameterValues) {
+    if (parameterValues == null || parameterValues.isEmpty()) {
+      // Nothing to do
+      return statement;
+    }
+    return StringUtils.format(statement, parameterValues);
+  }
+
   public static StatementExec replaceParameters(
       StatementExec statement, Map<String, Object> parameterValues) {
     if (parameterValues == null || parameterValues.isEmpty()) {
@@ -67,16 +75,18 @@ public class StringUtils {
     }
     return ImmutableFileExec.of(
         file.getId(),
+        file.getName(),
         file.getStatements().stream()
             .map(s -> replaceParameters(s, parameterValues))
             .collect(Collectors.toList()));
   }
 
-  public static FileExec replaceRegex(FileExec f, String regex, String replacement) {
+  public static FileExec replaceRegex(FileExec file, String regex, String replacement) {
     Pattern pattern = Pattern.compile(regex);
     return ImmutableFileExec.of(
-        f.getId(),
-        f.getStatements().stream()
+        file.getId(),
+        file.getName(),
+        file.getStatements().stream()
             .map(
                 s ->
                     ImmutableStatementExec.of(

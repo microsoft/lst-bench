@@ -1,0 +1,7 @@
+# Description: Experiment Configuration
+---
+version: 1
+id: perf-stresstest
+repetitions: 1
+metadata:
+  system: sqlserver

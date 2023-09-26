@@ -181,6 +181,19 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/w_all_tpcds_single_session_jdbc-iceberg.yaml");
   }
 
+  /* TODO: Replace eventually with SQL Server version, once CI pipeline has been established. */
+  @Test
+  @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "delta")
+  @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
+  public void testJDBCConcurrentPerfStresstest() throws Exception {
+    runDriver(
+        "src/test/resources/config/spark/jdbc_connection_config.yaml",
+        "src/test/resources/config/spark/experiment_config-delta.yaml",
+        "src/test/resources/config/spark/telemetry_config.yaml",
+        "src/test/resources/config/spark/conc_perf_stresstest_task_library.yaml",
+        "src/test/resources/config/spark/w_perf_stresstest.yaml");
+  }
+
   private void runDriver(String arg0, String arg1, String arg2, String arg3, String arg4)
       throws Exception {
     Driver.main(new String[] {"-c", arg0, "-e", arg1, "-t", arg2, "-l", arg3, "-w", arg4});

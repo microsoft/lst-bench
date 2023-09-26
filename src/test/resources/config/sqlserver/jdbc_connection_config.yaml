@@ -1,0 +1,9 @@
+# Description: Connections Configuration
+---
+version: 1
+connections:
+- id: sqlserver_0
+  driver: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  url: jdbc:sqlserver://localhost:1433;encrypt=false;database=testdb;
+  username: $USER
+  password: $PASSWORD

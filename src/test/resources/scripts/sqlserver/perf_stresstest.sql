@@ -1,0 +1,1 @@
+SELECT t.* FROM test_table t;

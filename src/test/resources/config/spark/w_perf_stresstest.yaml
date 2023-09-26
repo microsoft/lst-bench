@@ -1,0 +1,24 @@
+# Description: Example for custom concurrent performance stresstest workload
+---
+version: 1
+id: perf-stresstest
+phases:
+- id: setup
+  sessions:
+  - tasks:
+    - template_id: setup
+- id: query_execution_1
+  sessions:
+  - tasks:
+    - template_id: base_query
+      custom_task_executor: com.microsoft.lst_bench.task.custom.ConcurrentPerfStresstestTaskExecutor
+      custom_task_executor_arguments:
+        concurrent_task_num_joins: 5
+    num_instances: 5
+- id: query_execution_2
+  sessions:
+  - tasks:
+    - template_id: base_query
+      custom_task_executor: com.microsoft.lst_bench.task.custom.ConcurrentPerfStresstestTaskExecutor
+      custom_task_executor_arguments:
+        concurrent_task_min_query_length: 1000

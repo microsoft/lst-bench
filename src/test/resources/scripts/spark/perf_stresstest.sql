@@ -1,0 +1,1 @@
+SELECT s.* FROM ${catalog}.${database}.store s;
