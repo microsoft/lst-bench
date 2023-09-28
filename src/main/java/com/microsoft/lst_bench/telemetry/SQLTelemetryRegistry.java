@@ -99,7 +99,7 @@ public class SQLTelemetryRegistry {
                           StringUtils.quote(o.getEventId()),
                           StringUtils.quote(o.getEventType().toString()),
                           StringUtils.quote(o.getStatus().toString()),
-                          StringUtils.quote(o.getPayload())))
+                          StringUtils.quote(StringUtils.replaceSingleQuotes(o.getPayload()))))
               .collect(Collectors.joining("),(", "(", ")")));
       for (StatementExec query : insertFileStatements) {
         String currentQuery = StringUtils.replaceParameters(query, values).getStatement();
