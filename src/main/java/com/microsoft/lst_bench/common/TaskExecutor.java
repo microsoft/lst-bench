@@ -39,8 +39,8 @@ public class TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutor.class);
 
-  private final SQLTelemetryRegistry telemetryRegistry;
-  private String experimentStartTime;
+  protected final SQLTelemetryRegistry telemetryRegistry;
+  protected final String experimentStartTime;
 
   public TaskExecutor(SQLTelemetryRegistry telemetryRegistry, String experimentStartTime) {
     this.experimentStartTime = experimentStartTime;
@@ -58,10 +58,15 @@ public class TaskExecutor {
             connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
           } catch (Exception e) {
             LOGGER.error("Exception executing statement: " + statement.getId());
-            writeStatementEvent(statementStartTime, statement.getId(), Status.FAILURE);
+            writeStatementEvent(
+                statementStartTime,
+                statement.getId(),
+                Status.FAILURE,
+                e.getMessage() + "; " + e.getStackTrace());
             throw e;
           }
-          writeStatementEvent(statementStartTime, statement.getId(), Status.SUCCESS);
+          writeStatementEvent(
+              statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
         }
       } catch (Exception e) {
         LOGGER.error("Exception executing file: " + file.getId());
@@ -72,7 +77,7 @@ public class TaskExecutor {
     }
   }
 
-  private EventInfo writeFileEvent(Instant startTime, String id, Status status) {
+  protected final EventInfo writeFileEvent(Instant startTime, String id, Status status) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
             experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_FILE, status);
@@ -80,10 +85,24 @@ public class TaskExecutor {
     return eventInfo;
   }
 
-  private EventInfo writeStatementEvent(Instant startTime, String id, Status status) {
-    EventInfo eventInfo =
-        ImmutableEventInfo.of(
-            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_STATEMENT, status);
+  protected final EventInfo writeStatementEvent(
+      Instant startTime, String id, Status status, String payload) {
+    EventInfo eventInfo = null;
+    if (payload != null) {
+      eventInfo =
+          ImmutableEventInfo.of(
+                  experimentStartTime,
+                  startTime,
+                  Instant.now(),
+                  id,
+                  EventType.EXEC_STATEMENT,
+                  status)
+              .withPayload(payload);
+    } else {
+      eventInfo =
+          ImmutableEventInfo.of(
+              experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_STATEMENT, status);
+    }
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
   }

@@ -37,6 +37,11 @@ public class SparkConnection implements Connection {
   }
 
   @Override
+  public QueryResult executeQuery(String sqlText) throws ClientException {
+    throw new UnsupportedOperationException("This function has not been implemented yet.");
+  }
+
+  @Override
   public void close() {
     session.close();
   }

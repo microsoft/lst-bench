@@ -33,6 +33,10 @@
               "type": "string",
               "title": "JDBC driver class name"
             },
+            "max_num_retries": {
+              "type": "integer",
+              "title": "The number of times a query can be retried (default: 0)"
+            },
             "username": {
               "type": "string",
               "title": "Username for authentication"

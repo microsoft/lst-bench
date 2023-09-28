@@ -1,0 +1,17 @@
+# Description: Workload for test: All task types, TPC-DS, Iceberg
+---
+version: 1
+id: w_all_tpcds_single_session_jdbc
+phases:
+- id: all
+  sessions:
+  - tasks:
+    - template_id: setup
+    - template_id: setup_data_maintenance
+    - template_id: init
+    - template_id: build
+    - template_id: single_user
+    - template_id: data_maintenance_iceberg
+    - template_id: data_maintenance_dependent
+      custom_task_executor: com.microsoft.lst_bench.common.DependentTaskExecutor
+    - template_id: optimize_iceberg

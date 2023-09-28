@@ -73,7 +73,10 @@ public class BenchmarkObjectFactory {
           "Unable to load driver class: " + connectionConfig.getDriver(), e);
     }
     return new JDBCConnectionManager(
-        connectionConfig.getUrl(), connectionConfig.getUsername(), connectionConfig.getPassword());
+        connectionConfig.getUrl(),
+        connectionConfig.getMaxNumRetries(),
+        connectionConfig.getUsername(),
+        connectionConfig.getPassword());
   }
 
   private static SparkConnectionManager sparkConnectionManager(
@@ -99,6 +102,7 @@ public class BenchmarkObjectFactory {
         experimentConfig.getId(),
         experimentConfig.getRepetitions(),
         experimentConfig.getMetadata(),
+        experimentConfig.getArguments(),
         workloadExec);
   }
 
@@ -215,7 +219,10 @@ public class BenchmarkObjectFactory {
             experimentConfig,
             taskTemplateIdToPermuteOrderCounter,
             taskTemplateIdToParameterValuesCounter);
-    return ImmutableTaskExec.of(taskId, files).withTimeTravelPhaseId(task.getTimeTravelPhaseId());
+    return ImmutableTaskExec.of(taskId, files)
+        .withTimeTravelPhaseId(task.getTimeTravelPhaseId())
+        .withCustomTaskExecutor(task.getCustomTaskExecutor())
+        .withCustomTaskExecutorArguments(task.getCustomTaskExecutorArguments());
   }
 
   private static List<FileExec> createFileExecList(

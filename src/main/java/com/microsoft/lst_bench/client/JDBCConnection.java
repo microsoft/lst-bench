@@ -18,29 +18,92 @@ package com.microsoft.lst_bench.client;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A JDBC connection. */
 public class JDBCConnection implements Connection {
 
-  private final java.sql.Connection connection;
+  private static final Logger LOGGER = LoggerFactory.getLogger(JDBCConnection.class);
 
-  public JDBCConnection(java.sql.Connection connection) {
+  private final java.sql.Connection connection;
+  private final int max_num_retries;
+
+  public JDBCConnection(java.sql.Connection connection, int max_num_retries) {
     this.connection = connection;
+    this.max_num_retries = max_num_retries;
   }
 
   @Override
   public void execute(String sqlText) throws ClientException {
-    try (Statement s = connection.createStatement()) {
-      boolean hasResults = s.execute(sqlText);
-      if (hasResults) {
-        ResultSet rs = s.getResultSet();
-        while (rs.next()) {
-          // do nothing
+    Exception last_error = null;
+    int error_count = 0;
+
+    // Retry count is in addition to the 1 default try, thus '<='.
+    while (error_count <= this.max_num_retries) {
+      try (Statement s = connection.createStatement()) {
+        boolean hasResults = s.execute(sqlText);
+        if (hasResults) {
+          ResultSet rs = s.getResultSet();
+          while (rs.next()) {
+            // do nothing
+          }
         }
+        return;
+
+      } catch (Exception e) {
+        last_error = e;
+        error_count++;
       }
-    } catch (Exception e) {
-      throw new ClientException(e);
     }
+
+    if (last_error != null) {
+      String last_error_msg =
+          "Query execution ("
+              + this.max_num_retries
+              + " retries) unsuccessful. Error occurred while executing the following query: "
+              + sqlText
+              + "; stack trace: "
+              + ExceptionUtils.getStackTrace(last_error);
+      LOGGER.warn(last_error_msg);
+      throw new ClientException(last_error_msg);
+    }
+  }
+
+  @Override
+  public QueryResult executeQuery(String sqlText) throws ClientException {
+    QueryResult qr = new QueryResult();
+    Exception last_error = null;
+    int error_count = 0;
+
+    while (error_count < this.max_num_retries) {
+      try (Statement s = connection.createStatement()) {
+        ResultSet rs = s.executeQuery(sqlText);
+        qr.populate(rs);
+
+        return qr;
+      } catch (Exception e) {
+        last_error = e;
+        error_count++;
+      }
+    }
+
+    if (last_error != null) {
+      String last_error_msg =
+          "Query retries ("
+              + this.max_num_retries
+              + ") unsuccessful. Error occurred while executing the following query: "
+              + sqlText
+              + "; stack trace: "
+              + ExceptionUtils.getStackTrace(last_error);
+      LOGGER.warn(last_error_msg);
+      throw new ClientException(last_error_msg);
+    }
+
+    // This should never be reached because either the QueryResult is returned or an error is
+    // thrown.
+    return null;
   }
 
   @Override

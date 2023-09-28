@@ -20,6 +20,7 @@ import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.exec.SessionExec;
 import com.microsoft.lst_bench.exec.TaskExec;
+import com.microsoft.lst_bench.input.Task.CustomTaskExecutorArguments;
 import com.microsoft.lst_bench.telemetry.EventInfo;
 import com.microsoft.lst_bench.telemetry.EventInfo.EventType;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
@@ -27,6 +28,7 @@ import com.microsoft.lst_bench.telemetry.ImmutableEventInfo;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.DateTimeFormatter;
 import com.microsoft.lst_bench.util.StringUtils;
+import java.lang.reflect.Constructor;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -71,8 +73,7 @@ public class SessionExecutor implements Callable<Boolean> {
     try (Connection connection = connectionManager.createConnection()) {
       for (TaskExec task : session.getTasks()) {
         Map<String, Object> values = updateRuntimeParameterValues(task);
-        TaskExecutor taskExecutor =
-            new TaskExecutor(this.telemetryRegistry, this.experimentStartTime);
+        TaskExecutor taskExecutor = getTaskExecutor(task);
         Instant taskStartTime = Instant.now();
         try {
           taskExecutor.executeTask(connection, task, values);
@@ -110,6 +111,27 @@ public class SessionExecutor implements Callable<Boolean> {
       values.put("asof", "");
     }
     return values;
+  }
+
+  private TaskExecutor getTaskExecutor(TaskExec task) {
+    if (task.getCustomTaskExecutor() == null) {
+      return new TaskExecutor(this.telemetryRegistry, this.experimentStartTime);
+    } else {
+      try {
+        Constructor<?> constructor =
+            Class.forName(task.getCustomTaskExecutor())
+                .getDeclaredConstructor(
+                    SQLTelemetryRegistry.class, String.class, CustomTaskExecutorArguments.class);
+        return (TaskExecutor)
+            constructor.newInstance(
+                this.telemetryRegistry,
+                this.experimentStartTime,
+                task.getCustomTaskExecutorArguments());
+      } catch (Exception e) {
+        throw new IllegalArgumentException(
+            "Unable to load custom task class: " + task.getCustomTaskExecutor(), e);
+      }
+    }
   }
 
   private EventInfo writeSessionEvent(Instant startTime, String id, Status status) {
