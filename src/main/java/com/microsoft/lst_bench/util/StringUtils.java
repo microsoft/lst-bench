@@ -50,11 +50,11 @@ public class StringUtils {
     return "'" + str + "'";
   }
 
-  public static String replaceSingleQuotes(String str) {
+  public static String escapeSql(String str) {
     if (str == null) {
       return null;
     }
-    return str.replace("'", "\"");
+    return str.replace("'", "''");
   }
 
   public static StatementExec replaceParameters(
