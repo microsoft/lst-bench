@@ -28,82 +28,62 @@ public class JDBCConnection implements Connection {
   private static final Logger LOGGER = LoggerFactory.getLogger(JDBCConnection.class);
 
   private final java.sql.Connection connection;
-  private final int max_num_retries;
+  private final int maxNumRetries;
 
-  public JDBCConnection(java.sql.Connection connection, int max_num_retries) {
+  public JDBCConnection(java.sql.Connection connection, int maxNumRetries) {
     this.connection = connection;
-    this.max_num_retries = max_num_retries;
+    this.maxNumRetries = maxNumRetries;
   }
 
   @Override
   public void execute(String sqlText) throws ClientException {
-    Exception last_error = null;
-    int error_count = 0;
-
-    // Retry count is in addition to the 1 default try, thus '<='.
-    while (error_count <= this.max_num_retries) {
-      try (Statement s = connection.createStatement()) {
-        boolean hasResults = s.execute(sqlText);
-        if (hasResults) {
-          ResultSet rs = s.getResultSet();
-          while (rs.next()) {
-            // do nothing
-          }
-        }
-        return;
-
-      } catch (Exception e) {
-        last_error = e;
-        error_count++;
-      }
-    }
-
-    if (last_error != null) {
-      String last_error_msg =
-          "Query execution ("
-              + this.max_num_retries
-              + " retries) unsuccessful. Error occurred while executing the following query: "
-              + sqlText
-              + "; stack trace: "
-              + ExceptionUtils.getStackTrace(last_error);
-      LOGGER.warn(last_error_msg);
-      throw new ClientException(last_error_msg);
-    }
+    execute(sqlText, true);
   }
 
   @Override
   public QueryResult executeQuery(String sqlText) throws ClientException {
-    QueryResult qr = new QueryResult();
-    Exception last_error = null;
-    int error_count = 0;
+    return execute(sqlText, false);
+  }
 
-    while (error_count < this.max_num_retries) {
+  private QueryResult execute(String sqlText, boolean ignoreResults) throws ClientException {
+    QueryResult queryResult = null;
+    int errorCount = 0;
+
+    // Retry count is in addition to the 1 default try, thus '<='.
+    while (errorCount <= this.maxNumRetries) {
       try (Statement s = connection.createStatement()) {
-        ResultSet rs = s.executeQuery(sqlText);
-        qr.populate(rs);
-
-        return qr;
+        boolean hasResults = s.execute(sqlText);
+        if (hasResults) {
+          ResultSet rs = s.getResultSet();
+          if (ignoreResults) {
+            while (rs.next()) {
+              // do nothing
+            }
+          } else {
+            queryResult = new QueryResult();
+            queryResult.populate(rs);
+          }
+        }
+        // Return here if successful
+        return queryResult;
       } catch (Exception e) {
-        last_error = e;
-        error_count++;
+        queryResult = null;
+        errorCount++;
+        if (errorCount == this.maxNumRetries) {
+          String lastErrorMsg =
+              "Query execution ("
+                  + this.maxNumRetries
+                  + " retries) unsuccessful. Error occurred while executing the following query: "
+                  + sqlText
+                  + "; stack trace: "
+                  + ExceptionUtils.getStackTrace(e);
+          LOGGER.warn(lastErrorMsg);
+          throw new ClientException(lastErrorMsg);
+        }
       }
     }
-
-    if (last_error != null) {
-      String last_error_msg =
-          "Query retries ("
-              + this.max_num_retries
-              + ") unsuccessful. Error occurred while executing the following query: "
-              + sqlText
-              + "; stack trace: "
-              + ExceptionUtils.getStackTrace(last_error);
-      LOGGER.warn(last_error_msg);
-      throw new ClientException(last_error_msg);
-    }
-
-    // This should never be reached because either the QueryResult is returned or an error is
-    // thrown.
-    return null;
+    // Return here if max retries reached without success
+    return queryResult;
   }
 
   @Override
