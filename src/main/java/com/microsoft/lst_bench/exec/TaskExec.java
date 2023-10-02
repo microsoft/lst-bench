@@ -15,8 +15,8 @@
  */
 package com.microsoft.lst_bench.exec;
 
-import com.microsoft.lst_bench.input.Task.CustomTaskExecutorArguments;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
@@ -36,5 +36,5 @@ public interface TaskExec {
   @Nullable String getCustomTaskExecutor();
 
   @Value.Parameter(false)
-  @Nullable CustomTaskExecutorArguments getCustomTaskExecutorArguments();
+  @Nullable Map<String, String> getCustomTaskExecutorArguments();
 }
