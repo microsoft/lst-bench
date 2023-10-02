@@ -14,8 +14,8 @@ CREATE
             c_nationkey BIGINT,
             c_phone CHAR(15),
             c_acctbal DECIMAL,
-            c_mktsegment CHAR(10),
-            c_comment VARCHAR(117)
+            c_comment VARCHAR(117),
+            c_mktsegment CHAR(10)
         )
         USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}customer/" ${external_options_suffix}
@@ -42,12 +42,12 @@ CREATE
             l_tax DECIMAL,
             l_returnflag CHAR(1),
             l_linestatus CHAR(1),
-            l_shipdate DATE,
             l_commitdate DATE,
             l_receiptdate DATE,
             l_shipinstruct CHAR(25),
             l_shipmode CHAR(10),
-            l_comment VARCHAR(44)
+            l_comment VARCHAR(44),
+            l_shipdate DATE
         )
         USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}lineitem/" ${external_options_suffix}
@@ -68,11 +68,11 @@ CREATE
             o_custkey BIGINT,
             o_orderstatus CHAR(1),
             o_totalprice DECIMAL,
-            o_orderdate DATE,
             o_orderpriority CHAR(15),
             o_clerk CHAR(15),
             o_shippriority INT,
-            o_comment VARCHAR(79)
+            o_comment VARCHAR(79),
+            o_orderdate DATE
         )
         USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}orders/" ${external_options_suffix}
@@ -123,12 +123,12 @@ CREATE
             p_partkey BIGINT,
             p_name VARCHAR(55),
             p_mfgr CHAR(25),
-            p_brand CHAR(10),
             p_type VARCHAR(25),
             p_size INT,
             p_container CHAR(10),
             p_retailprice DECIMAL,
-            p_comment VARCHAR(23)
+            p_comment VARCHAR(23),
+            p_brand CHAR(10)
         )
         USING ${external_table_format} OPTIONS(
             PATH = "${external_data_path}part/" ${external_options_suffix}
