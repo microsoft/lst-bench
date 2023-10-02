@@ -50,6 +50,13 @@ public class StringUtils {
     return "'" + str + "'";
   }
 
+  public static String escapeSql(String str) {
+    if (str == null) {
+      return null;
+    }
+    return str.replace("'", "''");
+  }
+
   public static StatementExec replaceParameters(
       StatementExec statement, Map<String, Object> parameterValues) {
     if (parameterValues == null || parameterValues.isEmpty()) {
