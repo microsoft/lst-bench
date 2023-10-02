@@ -80,6 +80,8 @@ public class QueryResult {
           this.valueList.get(key).subList(listMin, listMax).stream()
               .map(s -> s.toString())
               .collect(Collectors.toUnmodifiableList());
+      // TODO: This assumes a VARCHAR type (or implicit casting by the engine),
+      //       we should probably handle it more generically using data types.
       result.put(key, "'" + String.join("','", localList) + "'");
     }
     return result;
