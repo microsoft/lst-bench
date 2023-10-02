@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.microsoft.lst_bench.common;
+package com.microsoft.lst_bench.task.custom;
 
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
@@ -21,7 +21,6 @@ import com.microsoft.lst_bench.client.QueryResult;
 import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
-import com.microsoft.lst_bench.input.Task.CustomTaskExecutorArguments;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
@@ -35,34 +34,33 @@ import org.slf4j.LoggerFactory;
  * Custom task executor implementation that allows users to execute dependent tasks. We call a
  * dependent task a task that iteratively executes a) a statement that is expected to return a
  * result; and b) a statement repeatedly that is expected to use that result. The result of the
- * first statement is stored in an intermediate object that can be specific to the connection. The
- * expected object for a JDBC connection is of type List<Map<String, Object>>, handling of other
- * objects would need to be added to the if-clause that checks the instance of the object.
+ * first statement is stored in a QueryResult object which is then used and interpreted by the
+ * second statement. For this task executor, we allow the second statement to be executed in
+ * batches. The batch size can be set via the 'custom_task_executor_arguments' property that is part
+ * of the workload configuration. The parameter name is 'dependent_task_batch_size'.
  */
-public class DependentTaskExecutor extends TaskExecutor {
+public class DependentTaskExecutor extends CustomTaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DependentTaskExecutor.class);
 
-  private final CustomTaskExecutorArguments arguments;
-
   private final int DEFAULT_BATCH_SIZE = 1;
+  private final String DEPENDENT_TASK_BATCH_SIZE = "dependent_task_batch_size";
 
   public DependentTaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
       String experimentStartTime,
-      CustomTaskExecutorArguments arguments) {
-    super(telemetryRegistry, experimentStartTime);
-    this.arguments = arguments;
+      Map<String, String> arguments) {
+    super(telemetryRegistry, experimentStartTime, arguments);
   }
 
   @Override
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
       throws ClientException {
-    int batch_size;
-    if (this.arguments == null || this.arguments.getDependentTaskBatchSize() == null) {
-      batch_size = DEFAULT_BATCH_SIZE;
+    int batchSize;
+    if (this.getArguments() == null || this.getArguments().get(DEPENDENT_TASK_BATCH_SIZE) == null) {
+      batchSize = DEFAULT_BATCH_SIZE;
     } else {
-      batch_size = this.arguments.getDependentTaskBatchSize().intValue();
+      batchSize = Integer.valueOf(this.getArguments().get(DEPENDENT_TASK_BATCH_SIZE));
     }
 
     QueryResult queryResult = null;
@@ -92,8 +90,8 @@ public class DependentTaskExecutor extends TaskExecutor {
         } else {
           // Execute second query repeatedly with the parameters extracted from the first query.
           Integer size = queryResult.getValueListSize();
-          for (int j = 0; j < size; j += batch_size) {
-            int localMax = (j + batch_size) > size ? size : (j + batch_size);
+          for (int j = 0; j < size; j += batchSize) {
+            int localMax = (j + batchSize) > size ? size : (j + batchSize);
             Map<String, Object> localValues = new HashMap<>(values);
             localValues.putAll(queryResult.getStringMappings(j, localMax));
 
