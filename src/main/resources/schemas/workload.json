@@ -63,14 +63,7 @@
                       "custom_task_executor_arguments": {
                         "type": "object",
                         "title": "Custom task executor arguments",
-                        "description": "Any arguments passed to a custom executor need to be defined here.",
-                        "properties": {
-                          "dependent_task_batch_size": {
-                            "type": "integer",
-                            "title": "Batch size for DependentTaskExecutor",
-                            "description": "Sets the batch size for a task executed; specific to the DependentTaskExecutor class"
-                          }
-                        }
+                        "description": "Any arguments passed to a custom executor need to be defined here."
                       },
                       "replace_regex": {
                         "type": "array",
