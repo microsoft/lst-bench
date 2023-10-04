@@ -1,0 +1,10 @@
+# Description: Workload for test: Failure handling via SkipFailedQueryTaskExecutor
+---
+version: 1
+id: w_faulty_test
+phases:
+- id: test
+  sessions:
+  - tasks:
+    - template_id: faulty_test
+    custom_task_executor: com.microsoft.lst_bench.task.custom.SkipFailedQueryTaskExecutor

@@ -225,6 +225,18 @@ public class DriverSparkTest {
         tempDir);
   }
 
+  @Test
+  @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "delta")
+  @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
+  public void testJDBCSkipFailedQueriesDelta() throws Exception {
+    runDriver(
+        "src/test/resources/config/spark/jdbc_connection_config.yaml",
+        "src/test/resources/config/spark/experiment_config-delta.yaml",
+        "src/test/resources/config/spark/telemetry_config.yaml",
+        "src/test/resources/config/spark/simplified_task_library.yaml",
+        "src/test/resources/config/spark/w_faulty_test.yaml");
+  }
+
   private void testSparkSession(
       String arg0, String arg1, String arg2, String arg3, String arg4, Path tempDir)
       throws Exception {
