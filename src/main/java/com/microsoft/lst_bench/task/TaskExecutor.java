@@ -57,12 +57,16 @@ public class TaskExecutor {
           try {
             connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
           } catch (Exception e) {
-            LOGGER.error("Exception executing statement: " + statement.getId());
+            String loggedError =
+                "Exception executing statement: "
+                    + statement.getId()
+                    + ", statement text: "
+                    + statement.getStatement()
+                    + "; error message: "
+                    + e.getMessage();
+            LOGGER.error(loggedError);
             writeStatementEvent(
-                statementStartTime,
-                statement.getId(),
-                Status.FAILURE,
-                e.getMessage() + "; " + e.getStackTrace());
+                statementStartTime, statement.getId(), Status.FAILURE, /* payload= */ loggedError);
             throw e;
           }
           writeStatementEvent(

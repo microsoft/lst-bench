@@ -105,12 +105,20 @@ public class DependentTaskExecutor extends CustomTaskExecutor {
           queryResult = null;
         }
       } catch (Exception e) {
+        String loggedError =
+            "Exception executing statement: "
+                + statement.getId()
+                + ", statement text: "
+                + statement.getStatement()
+                + "; error message: "
+                + e.getMessage();
+        LOGGER.error(loggedError);
+        writeStatementEvent(
+            fileStartTime, statement.getId(), Status.FAILURE, /* payload= */ loggedError);
+
         LOGGER.error("Exception executing file: " + file.getId());
         writeStatementEvent(
-            fileStartTime,
-            file.getId(),
-            Status.FAILURE,
-            /* payload= */ e.getMessage() + "; " + e.getStackTrace());
+            fileStartTime, file.getId(), Status.FAILURE, /* payload= */ loggedError);
         throw e;
       }
       writeFileEvent(fileStartTime, file.getId(), Status.SUCCESS);
