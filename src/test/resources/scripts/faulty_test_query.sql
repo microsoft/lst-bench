@@ -4,4 +4,4 @@ SELECT
     SUM( SR_RETURN_AMT_INC_TAX ) AS ctr_total_return
 FROM
     ${catalog}.${database}.store_returns ${asof},
-    ${catalog}.${database}.date_dim
+    ${catalog}.${database}.date_dim;

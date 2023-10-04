@@ -234,7 +234,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/experiment_config-delta.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
         "src/test/resources/config/spark/simplified_task_library.yaml",
-        "src/test/resources/config/spark/w_faulty_test.yaml");
+        "src/test/resources/config/spark/w_faulty_query_test.yaml");
   }
 
   private void testSparkSession(
