@@ -181,7 +181,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/w_all_tpcds_single_session_jdbc-iceberg.yaml");
   }
 
-    @Test
+  @Test
   @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "delta")
   @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
   public void testJDBCSkipFailedQueriesDelta() throws Exception {
