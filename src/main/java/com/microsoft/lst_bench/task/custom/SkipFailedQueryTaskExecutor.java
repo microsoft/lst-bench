@@ -72,19 +72,25 @@ public class SkipFailedQueryTaskExecutor extends CustomTaskExecutor {
           try {
             connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
           } catch (Exception e) {
+            String loggedError =
+                "Exception executing statement: "
+                    + statement.getId()
+                    + ", statement text: "
+                    + statement.getStatement()
+                    + "; error message: "
+                    + e.getMessage();
             for (String skipException : exceptionTaskStrings) {
-              LOGGER.error("Exception executing statement: " + statement.getId());
-              writeStatementEvent(
-                  statementStartTime,
-                  statement.getId(),
-                  Status.FAILURE,
-                  e.getMessage() + "; " + e.getStackTrace());
               if (e.getMessage().contains(skipException)) {
+                LOGGER.warn(loggedError);
                 skip = true;
                 break;
               }
             }
+            writeStatementEvent(
+                statementStartTime, statement.getId(), Status.FAILURE, /* payload= */ loggedError);
+
             if (!skip) {
+              LOGGER.error(loggedError);
               throw e;
             }
           }
