@@ -69,16 +69,16 @@ public class JDBCConnection implements Connection {
       } catch (Exception e) {
         queryResult = null;
         errorCount++;
+        String lastErrorMsg =
+            "Query execution ("
+                + this.maxNumRetries
+                + " retries) unsuccessful; stack trace: "
+                + ExceptionUtils.getStackTrace(e);
         if (errorCount == this.maxNumRetries) {
-          String lastErrorMsg =
-              "Query execution ("
-                  + this.maxNumRetries
-                  + " retries) unsuccessful. Error occurred while executing the following query: "
-                  + sqlText
-                  + "; stack trace: "
-                  + ExceptionUtils.getStackTrace(e);
-          LOGGER.warn(lastErrorMsg);
+          LOGGER.error(lastErrorMsg);
           throw new ClientException(lastErrorMsg);
+        } else {
+          LOGGER.warn(lastErrorMsg);
         }
       }
     }
