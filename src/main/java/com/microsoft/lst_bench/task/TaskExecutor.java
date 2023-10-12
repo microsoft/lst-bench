@@ -63,21 +63,25 @@ public class TaskExecutor {
     return this.arguments;
   }
 
-  public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
-      throws ClientException {
-
+  protected String[] getExceptionStrings() {
     // Check whether there are any strings that errors are allowed to contain. In that case, we skip
     // the erroneous query and log a warning.
-    String[] exceptionTaskStrings;
+    String[] exceptionStrings;
     if (this.getArguments() == null
         || this.getArguments().get(SKIP_ERRONEOUS_QUERY_STRINGS_KEY) == null) {
-      exceptionTaskStrings = new String[] {""};
+      exceptionStrings = new String[] {""};
     } else {
-      exceptionTaskStrings =
+      exceptionStrings =
           this.getArguments()
               .get(SKIP_ERRONEOUS_QUERY_STRINGS_KEY)
               .split(SKIP_ERRONEOUS_QUERY_DELIMITER);
     }
+    return exceptionStrings;
+  }
+
+  public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
+      throws ClientException {
+    String[] exceptionStrings = this.getExceptionStrings();
 
     for (FileExec file : task.getFiles()) {
       boolean skip = false;
@@ -96,7 +100,7 @@ public class TaskExecutor {
                     + statement.getStatement()
                     + "; error message: "
                     + e.getMessage();
-            for (String skipException : exceptionTaskStrings) {
+            for (String skipException : exceptionStrings) {
               if (e.getMessage().contains(skipException)) {
                 LOGGER.warn(loggedError);
                 writeStatementEvent(
