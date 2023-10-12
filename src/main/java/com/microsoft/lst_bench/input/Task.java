@@ -40,11 +40,11 @@ public interface Task {
   @JsonProperty("time_travel_phase_id")
   @Nullable String getTimeTravelPhaseId();
 
+  @JsonProperty("task_executor_arguments")
+  @Nullable Map<String, String> getTaskExecutorArguments();
+
   @JsonProperty("custom_task_executor")
   @Nullable String getCustomTaskExecutor();
-
-  @JsonProperty("custom_task_executor_arguments")
-  @Nullable Map<String, String> getCustomTaskExecutorArguments();
 
   @JsonProperty("replace_regex")
   @Nullable List<ReplaceRegex> getReplaceRegex();

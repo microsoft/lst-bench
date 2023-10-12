@@ -115,7 +115,8 @@ public class SessionExecutor implements Callable<Boolean> {
 
   private TaskExecutor getTaskExecutor(TaskExec task) {
     if (task.getCustomTaskExecutor() == null) {
-      return new TaskExecutor(this.telemetryRegistry, this.experimentStartTime);
+      return new TaskExecutor(
+          this.telemetryRegistry, this.experimentStartTime, task.getTaskExecutorArguments());
     } else {
       try {
         Constructor<?> constructor =
@@ -123,9 +124,7 @@ public class SessionExecutor implements Callable<Boolean> {
                 .getDeclaredConstructor(SQLTelemetryRegistry.class, String.class, Map.class);
         return (TaskExecutor)
             constructor.newInstance(
-                this.telemetryRegistry,
-                this.experimentStartTime,
-                task.getCustomTaskExecutorArguments());
+                this.telemetryRegistry, this.experimentStartTime, task.getTaskExecutorArguments());
       } catch (Exception e) {
         throw new IllegalArgumentException(
             "Unable to load custom task class: " + task.getCustomTaskExecutor(), e);

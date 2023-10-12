@@ -37,11 +37,11 @@ phases:
   - tasks:
     - template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 1000
     - template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 1000
 - id: single_user_2
   sessions:
@@ -52,11 +52,11 @@ phases:
   - tasks:
     - template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 1000
     - template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 1000
 - id: single_user_3
   sessions:
@@ -67,11 +67,11 @@ phases:
   - tasks:
     - template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 1000
     - template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 1000
 - id: single_user_4
   sessions:
@@ -82,11 +82,11 @@ phases:
   - tasks:
     - template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 1000
     - template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 1000
 - id: single_user_5
   sessions:
@@ -97,11 +97,11 @@ phases:
   - tasks:
     - template_id: template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 1000
     - template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 1000
 - id: single_user_6
   sessions:

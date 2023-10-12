@@ -21,6 +21,7 @@ import com.microsoft.lst_bench.client.QueryResult;
 import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
+import com.microsoft.lst_bench.task.TaskExecutor;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
@@ -36,10 +37,10 @@ import org.slf4j.LoggerFactory;
  * result; and b) a statement repeatedly that is expected to use that result. The result of the
  * first statement is stored in a QueryResult object which is then used and interpreted by the
  * second statement. For this task executor, we allow the second statement to be executed in
- * batches. The batch size can be set via the 'custom_task_executor_arguments' property that is part
- * of the workload configuration. The parameter name is 'dependent_task_batch_size'.
+ * batches. The batch size can be set via the 'task_executor_arguments' property that is part of the
+ * workload configuration. The parameter name is 'dependent_task_batch_size'.
  */
-public class DependentTaskExecutor extends CustomTaskExecutor {
+public class DependentTaskExecutor extends TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DependentTaskExecutor.class);
 
