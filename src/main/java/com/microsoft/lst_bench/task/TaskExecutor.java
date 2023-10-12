@@ -44,7 +44,7 @@ public class TaskExecutor {
   private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutor.class);
 
   private final String SKIP_ERRONEOUS_QUERY_DELIMITER = ";";
-  private final String SKIP_ERRONEOUS_QUERY_STRINGS = "skip_erroneous_query_strings";
+  private final String SKIP_ERRONEOUS_QUERY_STRINGS_KEY = "skip_erroneous_query_strings_key";
 
   protected final SQLTelemetryRegistry telemetryRegistry;
   protected final String experimentStartTime;
@@ -70,12 +70,12 @@ public class TaskExecutor {
     // the erroneous query and log a warning.
     String[] exceptionTaskStrings;
     if (this.getArguments() == null
-        || this.getArguments().get(SKIP_ERRONEOUS_QUERY_STRINGS) == null) {
+        || this.getArguments().get(SKIP_ERRONEOUS_QUERY_STRINGS_KEY) == null) {
       exceptionTaskStrings = new String[] {""};
     } else {
       exceptionTaskStrings =
           this.getArguments()
-              .get(SKIP_ERRONEOUS_QUERY_STRINGS)
+              .get(SKIP_ERRONEOUS_QUERY_STRINGS_KEY)
               .split(SKIP_ERRONEOUS_QUERY_DELIMITER);
     }
 

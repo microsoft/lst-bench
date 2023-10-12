@@ -8,5 +8,4 @@ phases:
   - tasks:
     - template_id: faulty_query
       task_executor_arguments:
-        skip_failed_query_task_strings: this is a nonsense string;column
-        
+        skip_erroneous_query_strings_key: this is a nonsense string;column
