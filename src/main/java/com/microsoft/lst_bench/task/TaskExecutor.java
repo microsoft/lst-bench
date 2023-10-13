@@ -44,7 +44,7 @@ public class TaskExecutor {
   private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutor.class);
 
   private final String SKIP_ERRONEOUS_QUERY_DELIMITER = ";";
-  private final String SKIP_ERRONEOUS_QUERY_STRINGS_KEY = "skip_erroneous_query_strings_key";
+  private final String SKIP_ERRONEOUS_QUERY_STRINGS_KEY = "skip_erroneous_query_strings";
 
   protected final SQLTelemetryRegistry telemetryRegistry;
   protected final String experimentStartTime;
@@ -69,7 +69,7 @@ public class TaskExecutor {
     String[] exceptionStrings;
     if (this.getArguments() == null
         || this.getArguments().get(SKIP_ERRONEOUS_QUERY_STRINGS_KEY) == null) {
-      exceptionStrings = new String[] {""};
+      exceptionStrings = new String[] {};
     } else {
       exceptionStrings =
           this.getArguments()
