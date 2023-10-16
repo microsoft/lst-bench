@@ -1,0 +1,11 @@
+# Description: Workload for test: Failure handling via SkipFailedQueryTaskExecutor
+---
+version: 1
+id: w_faulty_query_test
+phases:
+- id: test
+  sessions:
+  - tasks:
+    - template_id: faulty_query
+      task_executor_arguments:
+        skip_erroneous_query_strings: this is a nonsense string;column

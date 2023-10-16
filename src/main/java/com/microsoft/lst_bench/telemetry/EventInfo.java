@@ -57,6 +57,7 @@ public interface EventInfo {
   enum Status {
     SUCCESS,
     FAILURE,
+    WARN,
     UNKNOWN;
   }
 }

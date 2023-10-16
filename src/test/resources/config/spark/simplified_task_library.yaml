@@ -89,3 +89,7 @@ task_templates:
 - id: optimize_hudi
   files:
   - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-hudi.sql
+# Execution of faulty TPC-DS query
+- id: faulty_query
+  files:
+  - src/test/resources/scripts/faulty_test_query.sql

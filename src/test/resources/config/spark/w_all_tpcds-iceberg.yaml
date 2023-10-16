@@ -31,9 +31,9 @@ phases:
   sessions:
   - tasks:
     - template_id: data_maintenance_dependent
-      custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-      custom_task_executor_arguments:
+      task_executor_arguments:
         dependent_task_batch_size: 100
+      custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
 - id: optimize
   sessions:
   - tasks:

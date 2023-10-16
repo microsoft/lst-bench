@@ -33,8 +33,8 @@ public interface TaskExec {
   @Nullable String getTimeTravelPhaseId();
 
   @Value.Parameter(false)
-  @Nullable String getCustomTaskExecutor();
+  @Nullable Map<String, String> getTaskExecutorArguments();
 
   @Value.Parameter(false)
-  @Nullable Map<String, String> getCustomTaskExecutorArguments();
+  @Nullable String getCustomTaskExecutor();
 }
