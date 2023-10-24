@@ -98,19 +98,19 @@ public class TaskExecutor {
                 "Exception executing statement: "
                     + statement.getId()
                     + ", statement text: "
-                    + statement.getStatement()
-                    + "; error message: "
-                    + e.getMessage();
+                    + statement.getStatement();
 
+            // sql server driver exception messages
             if (e instanceof SQLException) {
               SQLException sqlException = (SQLException) e;
-              loggedError =
-                  "SQL State: "
+              loggedError +=
+                  "; SQL State: "
                       + sqlException.getSQLState()
                       + "; Error Code: "
-                      + sqlException.getErrorCode()
-                      + loggedError;
+                      + sqlException.getErrorCode();
             }
+
+            loggedError += "; Error message: " + e.getMessage();
 
             for (String skipException : exceptionStrings) {
               if (e.getMessage().contains(skipException)) {
