@@ -104,10 +104,10 @@ public class TaskExecutor {
 
             if (e instanceof SQLException) {
               SQLException sqlException = (SQLException) e;
-              loggedError +=
+              loggedError =
                   "SQL State: "
                       + sqlException.getSQLState()
-                      + " Error Code: "
+                      + "; Error Code: "
                       + sqlException.getErrorCode()
                       + loggedError;
             }
