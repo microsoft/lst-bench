@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
-            <version>1.10.0</version>
+            <version>1.11.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -209,7 +209,7 @@
                 <dependency>
                     <groupId>io.trino</groupId>
                     <artifactId>trino-jdbc</artifactId>
-                    <version>430</version>
+                    <version>431</version>
                 </dependency>
             </dependencies>
         </profile>
