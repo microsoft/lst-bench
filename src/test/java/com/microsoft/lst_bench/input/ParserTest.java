@@ -119,7 +119,7 @@ public class ParserTest {
         FileParser.createObject(
             CONFIG_PATH + "tpcds" + File.separator + "task_library.yaml", TaskLibrary.class);
     Assertions.assertEquals(1, taskLibrary.getVersion());
-    Assertions.assertEquals(13, taskLibrary.getTaskTemplates().size());
+    Assertions.assertEquals(16, taskLibrary.getTaskTemplates().size());
     for (TaskTemplate taskTemplate : taskLibrary.getTaskTemplates()) {
       switch (taskTemplate.getId()) {
         case "setup":
@@ -145,8 +145,11 @@ public class ParserTest {
         case "build":
         case "analyze":
         case "optimize_delta":
+        case "optimize_split_delta":
         case "optimize_hudi":
+        case "optimize_split_hudi":
         case "optimize_iceberg":
+        case "optimize_split_iceberg":
           Assertions.assertNull(taskTemplate.getParameterValuesFile());
           Assertions.assertNull(taskTemplate.getPermutationOrdersDirectory());
           Assertions.assertNull(taskTemplate.supportsTimeTravel());
