@@ -19,6 +19,9 @@ phases:
   sessions:
   - tasks:
     - template_id: build
+      replace_regex:
+      - pattern: '(?i)options\((.|\n)*?\)'
+        replacement: ''
 - id: single_user
   sessions:
   - tasks:
