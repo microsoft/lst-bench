@@ -238,3 +238,45 @@ task_templates:
   - src/main/resources/scripts/tpcds/optimize/trino/o_web_returns.sql
   - src/main/resources/scripts/tpcds/optimize/trino/o_web_sales.sql
   - src/main/resources/scripts/tpcds/optimize/trino/o_web_site.sql
+# Execution of optimize on all benchmark tables but splitting optimization
+# of partitioned tables into batches by relying on dependent task executor
+- id: optimize_split
+  files:
+  - src/main/resources/scripts/tpcds/optimize/trino/o_call_center.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_catalog_page.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_catalog_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_catalog_returns_IN.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_catalog_returns_NULL.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_catalog_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_catalog_sales_IN.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_catalog_sales_NULL.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_customer.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_customer_address.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_customer_demographics.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_date_dim.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_household_demographics.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_income_band.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_inventory_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_inventory_IN.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_inventory_NULL.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_item.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_promotion.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_reason.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_ship_mode.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_store.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_store_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_store_returns_IN.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_store_returns_NULL.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_store_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_store_sales_IN.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_store_sales_NULL.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_time_dim.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_warehouse.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_web_page.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_web_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_web_returns_IN.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_web_returns_NULL.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_web_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_web_sales_IN.sql
+  - src/main/resources/scripts/tpcds/optimize_split/trino/o_web_sales_NULL.sql
+  - src/main/resources/scripts/tpcds/optimize/trino/o_web_site.sql
