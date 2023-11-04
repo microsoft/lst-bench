@@ -39,7 +39,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -ntp -B package --file pom.xml
 
   ## ----------------------------------------------------------------------------------
   ## Apache Spark (Session)
@@ -61,7 +61,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Run tests
-        run: mvn -B test --file pom.xml -Pspark-client -Dlst-bench.test.db=spark -Dlst-bench.test.lst=${{ matrix.lst }} -Dlst-bench.test.connection=spark
+        run: mvn -ntp -B test --file pom.xml -Pspark-client -Dlst-bench.test.db=spark -Dlst-bench.test.lst=${{ matrix.lst }} -Dlst-bench.test.connection=spark
 
   ## ----------------------------------------------------------------------------------
   ## Apache Spark (JDBC)
@@ -101,4 +101,4 @@ jobs:
       - name: Start Spark Thrift Server
         run: ./.github/scripts/spark/start_thrift_server.sh ${{ matrix.lst }}
       - name: Run tests
-        run: mvn -B test --file pom.xml -Pspark-jdbc -Dlst-bench.test.db=spark -Dlst-bench.test.lst=${{ matrix.lst }} -Dlst-bench.test.connection=jdbc
+        run: mvn -ntp -B test --file pom.xml -Pspark-jdbc -Dlst-bench.test.db=spark -Dlst-bench.test.lst=${{ matrix.lst }} -Dlst-bench.test.connection=jdbc
