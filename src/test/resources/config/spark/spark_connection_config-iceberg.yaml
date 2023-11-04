@@ -6,5 +6,6 @@ connections:
   type: spark
   url: local[*]
   config:
+    log4j.rootCategory: WARN,console
     spark.sql.catalog.spark_catalog: org.apache.iceberg.spark.SparkSessionCatalog
     spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
