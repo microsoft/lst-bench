@@ -6,7 +6,6 @@ connections:
   type: spark
   url: local[*]
   config:
-    log4j.rootCategory: WARN,console
     spark.sql.catalog.spark_catalog: org.apache.spark.sql.delta.catalog.DeltaCatalog
     spark.sql.extensions: io.delta.sql.DeltaSparkSessionExtension
 
