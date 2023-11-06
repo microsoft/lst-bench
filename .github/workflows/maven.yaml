@@ -72,7 +72,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        lst: [ delta, hudi ]
+        lst: [ delta, hudi, iceberg ]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4

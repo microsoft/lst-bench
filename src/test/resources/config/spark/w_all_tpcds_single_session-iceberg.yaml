@@ -10,6 +10,9 @@ phases:
     - template_id: setup_data_maintenance
     - template_id: init
     - template_id: build
+      replace_regex:
+        - pattern: '(?i)options\((.|\n)*?\)'
+          replacement: ''
     - template_id: single_user
     - template_id: data_maintenance_iceberg
     - template_id: optimize_iceberg
