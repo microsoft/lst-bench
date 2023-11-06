@@ -269,6 +269,48 @@ task_templates:
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_returns-delta.sql
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_sales-delta.sql
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_site-delta.sql
+# Execution of optimize on all benchmark tables but splitting optimization
+# of partitioned tables into batches by relying on dependent task executor (Delta)
+- id: optimize_split_delta
+  files:
+  - src/main/resources/scripts/tpcds/optimize/spark/o_call_center-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_catalog_page-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_IN-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_NULL-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_sales_IN-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_sales_NULL-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_customer-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_customer_address-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_customer_demographics-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_date_dim-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_household_demographics-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_income_band-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_inventory_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_inventory_IN-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_inventory_NULL-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_item-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_promotion-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_reason-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_store-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_returns_IN-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_returns_NULL-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_sales_IN-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_sales_NULL-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_time_dim-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_warehouse-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_web_page-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_returns_IN-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_returns_NULL-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_sales_IN-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_sales_NULL-delta.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_web_site-delta.sql
 # Execution of optimize on all benchmark tables (Iceberg)
 - id: optimize_iceberg
   files:
@@ -296,6 +338,48 @@ task_templates:
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_returns-iceberg.sql
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_sales-iceberg.sql
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_site-iceberg.sql
+# Execution of optimize on all benchmark tables but splitting optimization
+# of partitioned tables into batches by relying on dependent task executor (Iceberg)
+- id: optimize_split_iceberg
+  files:
+  - src/main/resources/scripts/tpcds/optimize/spark/o_call_center-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_catalog_page-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_IN-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_NULL-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_sales_IN-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_sales_NULL-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_customer-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_customer_address-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_customer_demographics-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_date_dim-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_household_demographics-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_income_band-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_inventory_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_inventory_IN-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_inventory_NULL-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_item-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_promotion-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_reason-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_store-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_returns_IN-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_returns_NULL-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_sales_IN-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_sales_NULL-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_time_dim-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_warehouse-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_web_page-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_returns_IN-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_returns_NULL-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_sales_IN-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_sales_NULL-iceberg.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_web_site-iceberg.sql
 # Execution of optimize on all benchmark tables (Hudi)
 - id: optimize_hudi
   files:
@@ -322,6 +406,48 @@ task_templates:
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_page-hudi.sql
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_returns-hudi.sql
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_sales-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_web_site-hudi.sql
+# Execution of optimize on all benchmark tables but splitting optimization
+# of partitioned tables into batches by relying on dependent task executor (Hudi)
+- id: optimize_split_hudi
+  files:
+  - src/main/resources/scripts/tpcds/optimize/spark/o_call_center-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_catalog_page-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_IN-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_NULL-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_sales_IN-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_sales_NULL-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_customer-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_customer_address-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_customer_demographics-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_date_dim-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_household_demographics-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_income_band-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_inventory_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_inventory_IN-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_inventory_NULL-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_item-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_promotion-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_reason-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_store-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_returns_IN-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_returns_NULL-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_sales_IN-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_store_sales_NULL-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_time_dim-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_warehouse-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize/spark/o_web_page-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_returns_IN-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_returns_NULL-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_sales_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_sales_IN-hudi.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_web_sales_NULL-hudi.sql
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_site-hudi.sql
 # Execution of dependent TPC-DS data maintenance queries (Delta)
 - id: data_maintenance_dependent

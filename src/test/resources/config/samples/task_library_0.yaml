@@ -37,3 +37,8 @@ task_templates:
 - id: optimize_delta
   files:
   - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-delta.sql
+- id: optimize_split_delta
+  files:
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_SELECT.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_IN-delta.sql
+  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_NULL-delta.sql

@@ -1,0 +1,1 @@
+CALL ${catalog}.system.rewrite_data_files(table => '${database}.inventory', where => 'inv_date_sk IN (${inv_date_sk})');

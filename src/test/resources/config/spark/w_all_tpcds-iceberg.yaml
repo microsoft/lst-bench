@@ -41,3 +41,10 @@ phases:
   sessions:
   - tasks:
     - template_id: optimize_iceberg
+- id: optimize_split
+  sessions:
+  - tasks:
+    - template_id: optimize_split_iceberg
+      task_executor_arguments:
+        dependent_task_batch_size: 100
+      custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
