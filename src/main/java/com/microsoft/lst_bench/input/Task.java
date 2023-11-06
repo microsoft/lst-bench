@@ -43,9 +43,6 @@ public interface Task {
   @JsonProperty("task_executor_arguments")
   @Nullable Map<String, String> getTaskExecutorArguments();
 
-  @JsonProperty("custom_task_executor")
-  @Nullable String getCustomTaskExecutor();
-
   @JsonProperty("replace_regex")
   @Nullable List<ReplaceRegex> getReplaceRegex();
 
