@@ -265,11 +265,11 @@ public class DriverSparkTest {
       String arg0, String arg1, String arg2, String arg3, String arg4, Path tempDir)
       throws Exception {
     // Create Java objects from input files
-    TaskLibrary taskLibrary = FileParser.createObject(arg0, TaskLibrary.class);
-    Workload workload = FileParser.createObject(arg1, Workload.class);
-    ConnectionsConfig connectionsConfig = FileParser.createObject(arg2, ConnectionsConfig.class);
-    ExperimentConfig experimentConfig = FileParser.createObject(arg3, ExperimentConfig.class);
-    TelemetryConfig telemetryConfig = FileParser.createObject(arg4, TelemetryConfig.class);
+    TaskLibrary taskLibrary = FileParser.loadTaskLibrary(arg0);
+    Workload workload = FileParser.loadWorkload(arg1);
+    ConnectionsConfig connectionsConfig = FileParser.loadConnectionsConfig(arg2);
+    ExperimentConfig experimentConfig = FileParser.loadExperimentConfig(arg3);
+    TelemetryConfig telemetryConfig = FileParser.loadTelemetryConfig(arg4);
 
     // Setup path
     experimentConfig = ingestTempDir(experimentConfig, tempDir);

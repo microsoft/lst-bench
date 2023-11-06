@@ -81,23 +81,16 @@ public class ValidationTest {
   }
 
   private void testValidationExperimentConfig(String experimentConfigFilePath) throws IOException {
+    // Validate YAML file contents and create POJO object
+    ExperimentConfig experimentConfig = FileParser.loadExperimentConfig(experimentConfigFilePath);
+    // Validate YAML generated from POJO object
     ObjectMapper mapper = new YAMLMapper();
-    // Read schema
     JsonSchemaFactory factory =
         JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
         factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "experiment_config.json")));
-    // Validate YAML file contents
-    JsonNode jsonNodeDirect =
-        mapper.readTree(Files.newInputStream(Paths.get(experimentConfigFilePath)));
-    Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
-    Assertions.assertEquals(
-        0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
-    // Validate YAML generated from POJO object
-    ExperimentConfig experimentConfig =
-        FileParser.createObject(experimentConfigFilePath, ExperimentConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(experimentConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -129,8 +122,10 @@ public class ValidationTest {
   }
 
   private void testValidationConnectionsConfig(String configFilePath) throws IOException {
+    // Validate YAML file contents and create POJO object
+    ConnectionsConfig connectionsConfig = FileParser.loadConnectionsConfig(configFilePath);
+    // Validate YAML generated from POJO object
     ObjectMapper mapper = new YAMLMapper();
-    // Read schema
     JsonSchemaFactory factory =
         JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
             .objectMapper(mapper)
@@ -138,14 +133,6 @@ public class ValidationTest {
     JsonSchema schema =
         factory.getSchema(
             Files.newInputStream(Paths.get(SCHEMAS_PATH + "connections_config.json")));
-    // Validate YAML file contents
-    JsonNode jsonNodeDirect = mapper.readTree(Files.newInputStream(Paths.get(configFilePath)));
-    Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
-    Assertions.assertEquals(
-        0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
-    // Validate YAML generated from POJO object
-    ConnectionsConfig connectionsConfig =
-        FileParser.createObject(configFilePath, ConnectionsConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(connectionsConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -177,21 +164,16 @@ public class ValidationTest {
   }
 
   private void testValidationTaskLibrary(String taskLibraryPath) throws IOException {
+    // Validate YAML file contents and create POJO object
+    TaskLibrary taskLibrary = FileParser.loadTaskLibrary(taskLibraryPath);
+    // Validate YAML generated from POJO object
     ObjectMapper mapper = new YAMLMapper();
-    // Read schema
     JsonSchemaFactory factory =
         JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
         factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "task_library.json")));
-    // Validate YAML file contents
-    JsonNode jsonNodeDirect = mapper.readTree(Files.newInputStream(Paths.get(taskLibraryPath)));
-    Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
-    Assertions.assertEquals(
-        0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
-    // Validate YAML generated from POJO object
-    TaskLibrary taskLibrary = FileParser.createObject(taskLibraryPath, TaskLibrary.class);
     JsonNode jsonNodeObject = mapper.convertValue(taskLibrary, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -247,21 +229,16 @@ public class ValidationTest {
   }
 
   private void testValidationWorkload(String workloadFilePath) throws IOException {
+    // Validate YAML file contents and create POJO object
+    Workload workload = FileParser.loadWorkload(workloadFilePath);
+    // Validate YAML generated from POJO object
     ObjectMapper mapper = new YAMLMapper();
-    // Read schema
     JsonSchemaFactory factory =
         JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
         factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "workload.json")));
-    // Validate YAML file contents
-    JsonNode jsonNodeDirect = mapper.readTree(Files.newInputStream(Paths.get(workloadFilePath)));
-    Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
-    Assertions.assertEquals(
-        0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
-    // Validate YAML generated from POJO object
-    Workload workload = FileParser.createObject(workloadFilePath, Workload.class);
     JsonNode jsonNodeObject = mapper.convertValue(workload, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -284,24 +261,17 @@ public class ValidationTest {
   }
 
   private void testValidationTelemetryConfig(String configPath) throws IOException {
+    // Validate YAML file contents and create POJO object
+    TelemetryConfig telemetryConfig =
+        FileParser.loadTelemetryConfig(configPath + "sample_telemetry_config.yaml");
+    // Validate YAML generated from POJO object
     ObjectMapper mapper = new YAMLMapper();
-    // Read schema
     JsonSchemaFactory factory =
         JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
         factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "telemetry_config.json")));
-    // Validate YAML file contents
-    JsonNode jsonNodeDirect =
-        mapper.readTree(
-            Files.newInputStream(Paths.get(configPath + "sample_telemetry_config.yaml")));
-    Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
-    Assertions.assertEquals(
-        0, errorsFromFile.size(), () -> "Errors found in validation: " + errorsFromFile);
-    // Validate YAML generated from POJO object
-    TelemetryConfig telemetryConfig =
-        FileParser.createObject(configPath + "sample_telemetry_config.yaml", TelemetryConfig.class);
     JsonNode jsonNodeObject = mapper.convertValue(telemetryConfig, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(

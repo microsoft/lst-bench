@@ -111,12 +111,12 @@ class LSTBenchmarkExecutorTest {
     URL taskLibFile =
         getClass().getClassLoader().getResource("./config/samples/task_library_0.yaml");
     Assertions.assertNotNull(taskLibFile);
-    TaskLibrary taskLibrary = FileParser.createObject(taskLibFile.getFile(), TaskLibrary.class);
+    TaskLibrary taskLibrary = FileParser.loadTaskLibrary(taskLibFile.getFile());
 
     URL workloadFile =
         getClass().getClassLoader().getResource("./config/spark/w_all_tpcds-delta.yaml");
     Assertions.assertNotNull(workloadFile);
-    Workload workload = FileParser.createObject(workloadFile.getFile(), Workload.class);
+    Workload workload = FileParser.loadWorkload(workloadFile.getFile());
 
     var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
 
@@ -144,8 +144,7 @@ class LSTBenchmarkExecutorTest {
     URL telemetryConfigFile =
         getClass().getClassLoader().getResource("./config/spark/telemetry_config.yaml");
     Assertions.assertNotNull(telemetryConfigFile);
-    TelemetryConfig telemetryConfig =
-        FileParser.createObject(telemetryConfigFile.getFile(), TelemetryConfig.class);
+    TelemetryConfig telemetryConfig = FileParser.loadTelemetryConfig(telemetryConfigFile.getFile());
 
     var uniqueTelemetryDbName =
         ImmutableJDBCConnectionConfig.builder()

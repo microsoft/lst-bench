@@ -104,15 +104,14 @@ public class Driver {
     Validate.notNull(inputTelemetryConfigFile, "Telemetry config file is required.");
 
     // Create Java objects from input files
-    final TaskLibrary taskLibrary =
-        FileParser.createObject(inputTaskLibraryFile, TaskLibrary.class);
-    final Workload workload = FileParser.createObject(inputWorkloadFile, Workload.class);
+    final TaskLibrary taskLibrary = FileParser.loadTaskLibrary(inputTaskLibraryFile);
+    final Workload workload = FileParser.loadWorkload(inputWorkloadFile);
     final ConnectionsConfig connectionsConfig =
-        FileParser.createObject(inputConnectionsConfigFile, ConnectionsConfig.class);
+        FileParser.loadConnectionsConfig(inputConnectionsConfigFile);
     final ExperimentConfig experimentConfig =
-        FileParser.createObject(inputExperimentConfigFile, ExperimentConfig.class);
+        FileParser.loadExperimentConfig(inputExperimentConfigFile);
     final TelemetryConfig telemetryConfig =
-        FileParser.createObject(inputTelemetryConfigFile, TelemetryConfig.class);
+        FileParser.loadTelemetryConfig(inputTelemetryConfigFile);
 
     run(taskLibrary, workload, connectionsConfig, experimentConfig, telemetryConfig);
   }
