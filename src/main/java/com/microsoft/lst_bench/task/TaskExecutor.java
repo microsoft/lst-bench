@@ -26,6 +26,7 @@ import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.ImmutableEventInfo;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -97,9 +98,20 @@ public class TaskExecutor {
                 "Exception executing statement: "
                     + statement.getId()
                     + ", statement text: "
-                    + statement.getStatement()
-                    + "; error message: "
-                    + e.getMessage();
+                    + statement.getStatement();
+
+            // sql server driver exception messages
+            if (e instanceof SQLException) {
+              SQLException sqlException = (SQLException) e;
+              loggedError +=
+                  "; SQL State: "
+                      + sqlException.getSQLState()
+                      + "; Error Code: "
+                      + sqlException.getErrorCode();
+            }
+
+            loggedError += "; Error message: " + e.getMessage();
+
             for (String skipException : exceptionStrings) {
               if (e.getMessage().contains(skipException)) {
                 LOGGER.warn(loggedError);
