@@ -48,8 +48,7 @@ public class ParserTest {
   @Test
   public void testParseExperimentConfig() throws IOException {
     ExperimentConfig experimentConfig =
-        FileParser.createObject(
-            CONFIG_PATH + "sample_experiment_config.yaml", ExperimentConfig.class);
+        FileParser.loadExperimentConfig(CONFIG_PATH + "sample_experiment_config.yaml");
     Assertions.assertEquals(1, experimentConfig.getVersion());
     Assertions.assertEquals("spark_del_sf_10", experimentConfig.getId());
     Assertions.assertNotNull(experimentConfig.getMetadata());
@@ -87,8 +86,7 @@ public class ParserTest {
   @SetEnvironmentVariable(key = "DATABASE_PASSWORD", value = "p@ssw0rd0")
   public void testParseConnectionConfig() throws IOException {
     ConnectionsConfig connectionsConfig =
-        FileParser.createObject(
-            CONFIG_PATH + "sample_connections_config.yaml", ConnectionsConfig.class);
+        FileParser.loadConnectionsConfig(CONFIG_PATH + "sample_connections_config.yaml");
     Assertions.assertEquals(1, connectionsConfig.getVersion());
     Assertions.assertEquals(3, connectionsConfig.getConnections().size());
     JDBCConnectionConfig connection0 =
@@ -116,8 +114,7 @@ public class ParserTest {
   @Test
   public void testParseTaskLibrary() throws IOException {
     TaskLibrary taskLibrary =
-        FileParser.createObject(
-            CONFIG_PATH + "tpcds" + File.separator + "task_library.yaml", TaskLibrary.class);
+        FileParser.loadTaskLibrary(CONFIG_PATH + "tpcds" + File.separator + "task_library.yaml");
     Assertions.assertEquals(1, taskLibrary.getVersion());
     Assertions.assertEquals(16, taskLibrary.getTaskTemplates().size());
     for (TaskTemplate taskTemplate : taskLibrary.getTaskTemplates()) {
@@ -171,8 +168,7 @@ public class ParserTest {
   @Test
   public void testParseW0Delta() throws IOException {
     Workload workload =
-        FileParser.createObject(
-            CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-delta.yaml", Workload.class);
+        FileParser.loadWorkload(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-delta.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("w0_tpcds_delta", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
@@ -233,8 +229,7 @@ public class ParserTest {
   @Test
   public void testParseW0Hudi() throws IOException {
     Workload workload =
-        FileParser.createObject(
-            CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-hudi.yaml", Workload.class);
+        FileParser.loadWorkload(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-hudi.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("w0_tpcds_hudi", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
@@ -310,8 +305,7 @@ public class ParserTest {
   @Test
   public void testParseW0Iceberg() throws IOException {
     Workload workload =
-        FileParser.createObject(
-            CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-iceberg.yaml", Workload.class);
+        FileParser.loadWorkload(CONFIG_PATH + "tpcds" + File.separator + "w0_tpcds-iceberg.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("w0_tpcds_iceberg", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
@@ -372,8 +366,7 @@ public class ParserTest {
   @Test
   public void testParseWP1Longevity() throws IOException {
     Workload workload =
-        FileParser.createObject(
-            CONFIG_PATH + "tpcds" + File.separator + "wp1_longevity.yaml", Workload.class);
+        FileParser.loadWorkload(CONFIG_PATH + "tpcds" + File.separator + "wp1_longevity.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp1_longevity", workload.getId());
     Assertions.assertEquals(15, workload.getPhases().size());
@@ -382,8 +375,7 @@ public class ParserTest {
   @Test
   public void testParseWP2Resilience() throws IOException {
     Workload workload =
-        FileParser.createObject(
-            CONFIG_PATH + "tpcds" + File.separator + "wp2_resilience.yaml", Workload.class);
+        FileParser.loadWorkload(CONFIG_PATH + "tpcds" + File.separator + "wp2_resilience.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp2_resilience", workload.getId());
     Assertions.assertEquals(17, workload.getPhases().size());
@@ -417,8 +409,7 @@ public class ParserTest {
   @Test
   public void testParseWP3RWConcurrency() throws IOException {
     Workload workload =
-        FileParser.createObject(
-            CONFIG_PATH + "tpcds" + File.separator + "wp3_rw_concurrency.yaml", Workload.class);
+        FileParser.loadWorkload(CONFIG_PATH + "tpcds" + File.separator + "wp3_rw_concurrency.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp3_rw_concurrency", workload.getId());
     Assertions.assertEquals(10, workload.getPhases().size());
@@ -484,9 +475,8 @@ public class ParserTest {
   @Test
   public void testParseWP3RWConcurrencyMulti() throws IOException {
     Workload workload =
-        FileParser.createObject(
-            CONFIG_PATH + "tpcds" + File.separator + "wp3_rw_concurrency_multi.yaml",
-            Workload.class);
+        FileParser.loadWorkload(
+            CONFIG_PATH + "tpcds" + File.separator + "wp3_rw_concurrency_multi.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp3_rw_concurrency_multi", workload.getId());
     Assertions.assertEquals(10, workload.getPhases().size());
@@ -529,8 +519,7 @@ public class ParserTest {
   @Test
   public void testParseWP4TimeTravel() throws IOException {
     Workload workload =
-        FileParser.createObject(
-            CONFIG_PATH + "tpcds" + File.separator + "wp4_time_travel.yaml", Workload.class);
+        FileParser.loadWorkload(CONFIG_PATH + "tpcds" + File.separator + "wp4_time_travel.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp4_time_travel", workload.getId());
     Assertions.assertEquals(18, workload.getPhases().size());
@@ -584,8 +573,7 @@ public class ParserTest {
   @Test
   public void testParseTelemetryConfig() throws IOException {
     TelemetryConfig telemetryConfig =
-        FileParser.createObject(
-            CONFIG_PATH + "sample_telemetry_config.yaml", TelemetryConfig.class);
+        FileParser.loadTelemetryConfig(CONFIG_PATH + "sample_telemetry_config.yaml");
     Assertions.assertEquals(1, telemetryConfig.getVersion());
     Assertions.assertNotNull(telemetryConfig.getConnection());
     JDBCConnectionConfig connectionConfig = (JDBCConnectionConfig) telemetryConfig.getConnection();

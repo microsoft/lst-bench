@@ -49,8 +49,10 @@
             "title": "Identifier for a custom task executor",
             "description": "If the task template should be executed with a custom task executor, this property can be used to specify which executor to use"
           }
-        }
+        },
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "additionalProperties": false
 }

@@ -81,7 +81,6 @@
             <groupId>com.networknt</groupId>
             <artifactId>json-schema-validator</artifactId>
             <version>1.0.87</version>
-            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>

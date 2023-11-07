@@ -15,24 +15,45 @@
  */
 package com.microsoft.lst_bench.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.microsoft.lst_bench.input.TaskLibrary;
+import com.microsoft.lst_bench.input.Workload;
+import com.microsoft.lst_bench.input.config.ConnectionsConfig;
+import com.microsoft.lst_bench.input.config.ExperimentConfig;
+import com.microsoft.lst_bench.input.config.TelemetryConfig;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /** Utility class with methods to parse auxiliary files for the benchmark. */
 public class FileParser {
 
-  private static final ObjectMapper yamlMapper = new YAMLMapper();
+  private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
+  private static final String SCHEMAS_PATH =
+      "src"
+          + File.separator
+          + "main"
+          + File.separator
+          + "resources"
+          + File.separator
+          + "schemas"
+          + File.separator;
 
   private FileParser() {
     // Defeat instantiation
@@ -104,10 +125,66 @@ public class FileParser {
   }
 
   /**
-   * Reads the YAML file and replaces all environment variables (if present). Creates and returns an
-   * object of `objectType` class.
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema. Creates and returns a `TaskLibrary` object.
    */
-  public static <T> T createObject(String filePath, Class<T> objectType) throws IOException {
-    return yamlMapper.readValue(StringUtils.replaceEnvVars(new File(filePath)), objectType);
+  public static TaskLibrary loadTaskLibrary(String filePath) throws IOException {
+    return createObject(filePath, TaskLibrary.class, SCHEMAS_PATH + "task_library.json");
+  }
+
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema. Creates and returns a `Workload` object.
+   */
+  public static Workload loadWorkload(String filePath) throws IOException {
+    return createObject(filePath, Workload.class, SCHEMAS_PATH + "workload.json");
+  }
+
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema. Creates and returns a `ConnectionsConfig` object.
+   */
+  public static ConnectionsConfig loadConnectionsConfig(String filePath) throws IOException {
+    return createObject(
+        filePath, ConnectionsConfig.class, SCHEMAS_PATH + "connections_config.json");
+  }
+
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema. Creates and returns a `ExperimentConfig` object.
+   */
+  public static ExperimentConfig loadExperimentConfig(String filePath) throws IOException {
+    return createObject(filePath, ExperimentConfig.class, SCHEMAS_PATH + "experiment_config.json");
+  }
+
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema. Creates and returns a `TelemetryConfig` object.
+   */
+  public static TelemetryConfig loadTelemetryConfig(String filePath) throws IOException {
+    return createObject(filePath, TelemetryConfig.class, SCHEMAS_PATH + "telemetry_config.json");
+  }
+
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema (if validation is enabled). Creates and returns an object of
+   * `objectType` class.
+   */
+  private static <T> T createObject(String filePath, Class<T> objectType, String schemaFilePath)
+      throws IOException {
+    String resolvedYAMLContent = StringUtils.replaceEnvVars(new File(filePath));
+    // Validate YAML file contents
+    JsonSchemaFactory factory =
+        JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
+            .objectMapper(YAML_MAPPER)
+            .build();
+    JsonSchema schema = factory.getSchema(Files.newInputStream(Paths.get(schemaFilePath)));
+    JsonNode jsonNodeDirect = YAML_MAPPER.readTree(resolvedYAMLContent);
+    Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
+    if (!errorsFromFile.isEmpty()) {
+      throw new IllegalArgumentException("Errors found in YAML validation: " + errorsFromFile);
+    }
+    // Create and return POJO
+    return YAML_MAPPER.treeToValue(jsonNodeDirect, objectType);
   }
 }
