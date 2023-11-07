@@ -34,6 +34,7 @@ task_templates:
 - id: data_maintenance_dependent
   files:
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_1.sql
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
 - id: optimize_delta
   files:
   - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-delta.sql
@@ -42,3 +43,4 @@ task_templates:
   - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_SELECT.sql
   - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_IN-delta.sql
   - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_NULL-delta.sql
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor

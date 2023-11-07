@@ -221,8 +221,8 @@ public class BenchmarkObjectFactory {
             taskTemplateIdToParameterValuesCounter);
     return ImmutableTaskExec.of(taskId, files)
         .withTimeTravelPhaseId(task.getTimeTravelPhaseId())
-        .withTaskExecutorArguments(task.getTaskExecutorArguments())
-        .withCustomTaskExecutor(task.getCustomTaskExecutor());
+        .withCustomTaskExecutor(taskTemplate.getCustomTaskExecutor())
+        .withTaskExecutorArguments(task.getTaskExecutorArguments());
   }
 
   private static List<FileExec> createFileExecList(
