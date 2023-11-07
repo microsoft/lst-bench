@@ -2,7 +2,6 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "title": "Schema for workload definition file",
-  "required": [ "version", "id", "phases" ],
   "properties": {
     "version": {
       "type": "integer",
@@ -99,5 +98,7 @@
         }
       }
     }
-  }
+  },
+  "required": [ "version", "id", "phases" ],
+  "additionalProperties": false
 }

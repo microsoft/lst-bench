@@ -44,8 +44,10 @@
             "title": "Supports time travel",
             "description": "Whether a task based on this template can specify a 'time_travel_phase_id' that will be used to inject time travel information into the SQL scripts executed by the task during the experiment"
           }
-        }
+        },
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "additionalProperties": false
 }

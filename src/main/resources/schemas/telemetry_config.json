@@ -2,7 +2,6 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "title": "Schema for telemetry configuration input file",
-  "required": [ "version", "connection", "execute_ddl", "ddl_file", "insert_file" ],
   "properties": {
     "version": {
       "type": "integer",
@@ -29,5 +28,7 @@
       "title": "Telemetry parameter values",
       "description": "Map of parameter name-value pairs. When a parameter name is referenced in a SQL script used to log telemetry, it will be replaced by its corresponding value"
     }
-  }
+  },
+  "required": [ "version", "connection", "execute_ddl", "ddl_file", "insert_file" ],
+  "additionalProperties": false
 }

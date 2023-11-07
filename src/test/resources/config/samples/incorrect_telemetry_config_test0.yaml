@@ -1,0 +1,13 @@
+# Description: Telemetry Configuration
+---
+version: 1
+connection:
+  id: sqlite_0
+  driver: org.sqlite.JDBC
+  url: jdbc:sqlite:create_drop-telemetry.db
+  non_existing_property: 0
+execute_ddl: true
+ddl_file: ../logging/ddl.sql
+insert_file: ../logging/insert.sql
+parameter_values:
+  data_path: ''

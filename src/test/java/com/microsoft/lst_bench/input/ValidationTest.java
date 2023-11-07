@@ -277,4 +277,32 @@ public class ValidationTest {
     Assertions.assertEquals(
         0, errorsFromPOJO.size(), () -> "Errors found in validation: " + errorsFromPOJO);
   }
+
+  @ParameterizedTest
+  @EnabledOnOs({OS.LINUX, OS.MAC})
+  @ValueSource(
+      strings = {
+        "src/test/resources/config/samples/incorrect_telemetry_config_test0.yaml",
+        "src/test/resources/config/samples/incorrect_telemetry_config_test1.yaml"
+      })
+  public void testValidationIncorrectTelemetryConfigUnix(String configFilePath) {
+    testValidationIncorrectTelemetryConfig(configFilePath);
+  }
+
+  @ParameterizedTest
+  @EnabledOnOs({OS.WINDOWS})
+  @ValueSource(
+      strings = {
+        "src\\test\\resources\\config\\samples\\incorrect_telemetry_config_test0.yaml",
+        "src\\test\\resources\\config\\samples\\incorrect_telemetry_config_test1.yaml"
+      })
+  public void testValidationIncorrectTelemetryConfigWin(String configFilePath) {
+    testValidationIncorrectTelemetryConfig(configFilePath);
+  }
+
+  private void testValidationIncorrectTelemetryConfig(String configFilePath) {
+    // Validate YAML file contents and create POJO object
+    Assertions.assertThrows(
+        IllegalArgumentException.class, () -> FileParser.loadTelemetryConfig(configFilePath));
+  }
 }

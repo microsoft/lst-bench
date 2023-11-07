@@ -1,0 +1,11 @@
+# Description: Telemetry Configuration
+---
+version: 1
+connection:
+  id: sqlite_0
+  driver: org.sqlite.JDBC
+execute_ddl: true
+ddl_file: ../logging/ddl.sql
+insert_file: ../logging/insert.sql
+parameter_values:
+  data_path: ''

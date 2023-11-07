@@ -26,5 +26,6 @@
       "title": "Experiment parameter values",
       "description": "Map of parameter name-value pairs. When a parameter name is referenced in a SQL script used in the experiment, it will be replaced by its corresponding value"
     }
-  }
+  },
+  "additionalProperties": false
 }
