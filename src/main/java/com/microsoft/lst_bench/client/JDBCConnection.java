@@ -68,7 +68,6 @@ public class JDBCConnection implements Connection {
         return queryResult;
       } catch (Exception e) {
         queryResult = null;
-        errorCount++;
         String lastErrorMsg =
             "Query execution ("
                 + this.maxNumRetries
@@ -80,6 +79,7 @@ public class JDBCConnection implements Connection {
         } else {
           LOGGER.warn(lastErrorMsg);
         }
+        errorCount++;
       }
     }
     // Return here if max retries reached without success
