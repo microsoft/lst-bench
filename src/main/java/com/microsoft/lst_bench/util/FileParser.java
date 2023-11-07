@@ -129,7 +129,7 @@ public class FileParser {
    * file according to the schema. Creates and returns a `TaskLibrary` object.
    */
   public static TaskLibrary loadTaskLibrary(String filePath) throws IOException {
-    return createObject(filePath, TaskLibrary.class, true, SCHEMAS_PATH + "task_library.json");
+    return createObject(filePath, TaskLibrary.class, SCHEMAS_PATH + "task_library.json");
   }
 
   /**
@@ -137,7 +137,7 @@ public class FileParser {
    * file according to the schema. Creates and returns a `Workload` object.
    */
   public static Workload loadWorkload(String filePath) throws IOException {
-    return createObject(filePath, Workload.class, true, SCHEMAS_PATH + "workload.json");
+    return createObject(filePath, Workload.class, SCHEMAS_PATH + "workload.json");
   }
 
   /**
@@ -146,7 +146,7 @@ public class FileParser {
    */
   public static ConnectionsConfig loadConnectionsConfig(String filePath) throws IOException {
     return createObject(
-        filePath, ConnectionsConfig.class, true, SCHEMAS_PATH + "connections_config.json");
+        filePath, ConnectionsConfig.class, SCHEMAS_PATH + "connections_config.json");
   }
 
   /**
@@ -154,8 +154,7 @@ public class FileParser {
    * file according to the schema. Creates and returns a `ExperimentConfig` object.
    */
   public static ExperimentConfig loadExperimentConfig(String filePath) throws IOException {
-    return createObject(
-        filePath, ExperimentConfig.class, true, SCHEMAS_PATH + "experiment_config.json");
+    return createObject(filePath, ExperimentConfig.class, SCHEMAS_PATH + "experiment_config.json");
   }
 
   /**
@@ -163,16 +162,7 @@ public class FileParser {
    * file according to the schema. Creates and returns a `TelemetryConfig` object.
    */
   public static TelemetryConfig loadTelemetryConfig(String filePath) throws IOException {
-    return createObject(
-        filePath, TelemetryConfig.class, true, SCHEMAS_PATH + "telemetry_config.json");
-  }
-
-  /**
-   * Reads the YAML file and replaces all environment variables (if present). Creates and returns an
-   * object of `objectType` class.
-   */
-  private static <T> T createObject(String filePath, Class<T> objectType) throws IOException {
-    return createObject(filePath, objectType, false, null);
+    return createObject(filePath, TelemetryConfig.class, SCHEMAS_PATH + "telemetry_config.json");
   }
 
   /**
@@ -180,24 +170,21 @@ public class FileParser {
    * file according to the schema (if validation is enabled). Creates and returns an object of
    * `objectType` class.
    */
-  private static <T> T createObject(
-      String filePath, Class<T> objectType, boolean validate, String schemaFilePath)
+  private static <T> T createObject(String filePath, Class<T> objectType, String schemaFilePath)
       throws IOException {
     String resolvedYAMLContent = StringUtils.replaceEnvVars(new File(filePath));
-    if (validate) {
-      // Validate YAML file contents
-      JsonSchemaFactory factory =
-          JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
-              .objectMapper(YAML_MAPPER)
-              .build();
-      JsonSchema schema = factory.getSchema(Files.newInputStream(Paths.get(schemaFilePath)));
-      JsonNode jsonNodeDirect = YAML_MAPPER.readTree(resolvedYAMLContent);
-      Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
-      if (!errorsFromFile.isEmpty()) {
-        throw new IllegalArgumentException("Errors found in YAML validation: " + errorsFromFile);
-      }
-      return YAML_MAPPER.treeToValue(jsonNodeDirect, objectType);
+    // Validate YAML file contents
+    JsonSchemaFactory factory =
+        JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
+            .objectMapper(YAML_MAPPER)
+            .build();
+    JsonSchema schema = factory.getSchema(Files.newInputStream(Paths.get(schemaFilePath)));
+    JsonNode jsonNodeDirect = YAML_MAPPER.readTree(resolvedYAMLContent);
+    Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
+    if (!errorsFromFile.isEmpty()) {
+      throw new IllegalArgumentException("Errors found in YAML validation: " + errorsFromFile);
     }
-    return YAML_MAPPER.readValue(resolvedYAMLContent, objectType);
+    // Create and return POJO
+    return YAML_MAPPER.treeToValue(jsonNodeDirect, objectType);
   }
 }

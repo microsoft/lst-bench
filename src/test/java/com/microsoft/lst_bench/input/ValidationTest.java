@@ -301,7 +301,7 @@ public class ValidationTest {
   }
 
   private void testValidationIncorrectTelemetryConfig(String configFilePath) {
-    // Validate YAML file contents and create POJO object
+    // Try to create POJO object, which should fail at validation time
     Assertions.assertThrows(
         IllegalArgumentException.class, () -> FileParser.loadTelemetryConfig(configFilePath));
   }
