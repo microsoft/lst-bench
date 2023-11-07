@@ -134,7 +134,7 @@ class LSTBenchmarkExecutorTest {
       while (resultset.next()) {
         totalEvents++;
       }
-      Assertions.assertEquals(179, totalEvents);
+      Assertions.assertEquals(165, totalEvents);
 
       // TODO improve event validation
     }

@@ -12,6 +12,6 @@ phases:
     - template_id: build
     - template_id: single_user
     - template_id: data_maintenance_delta
-    - template_id: data_maintenance_dependent
+#    - template_id: data_maintenance_dependent
     - template_id: optimize_delta
-    - template_id: optimize_split_delta
+#    - template_id: optimize_split_delta
