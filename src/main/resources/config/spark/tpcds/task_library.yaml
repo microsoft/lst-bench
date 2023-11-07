@@ -272,6 +272,7 @@ task_templates:
 # Execution of optimize on all benchmark tables but splitting optimization
 # of partitioned tables into batches by relying on dependent task executor (Delta)
 - id: optimize_split_delta
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
   files:
   - src/main/resources/scripts/tpcds/optimize/spark/o_call_center-delta.sql
   - src/main/resources/scripts/tpcds/optimize/spark/o_catalog_page-delta.sql
@@ -341,6 +342,7 @@ task_templates:
 # Execution of optimize on all benchmark tables but splitting optimization
 # of partitioned tables into batches by relying on dependent task executor (Iceberg)
 - id: optimize_split_iceberg
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
   files:
   - src/main/resources/scripts/tpcds/optimize/spark/o_call_center-iceberg.sql
   - src/main/resources/scripts/tpcds/optimize/spark/o_catalog_page-iceberg.sql
@@ -410,6 +412,7 @@ task_templates:
 # Execution of optimize on all benchmark tables but splitting optimization
 # of partitioned tables into batches by relying on dependent task executor (Hudi)
 - id: optimize_split_hudi
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
   files:
   - src/main/resources/scripts/tpcds/optimize/spark/o_call_center-hudi.sql
   - src/main/resources/scripts/tpcds/optimize/spark/o_catalog_page-hudi.sql
@@ -451,6 +454,7 @@ task_templates:
   - src/main/resources/scripts/tpcds/optimize/spark/o_web_site-hudi.sql
 # Execution of dependent TPC-DS data maintenance queries (Delta)
 - id: data_maintenance_dependent
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
   files:
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_1.sql
   - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_delete.sql
