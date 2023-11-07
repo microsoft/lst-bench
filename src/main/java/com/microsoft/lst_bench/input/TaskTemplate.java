@@ -46,4 +46,7 @@ public interface TaskTemplate {
 
   @JsonProperty("supports_time_travel")
   @Nullable Boolean supportsTimeTravel();
+
+  @JsonProperty("custom_task_executor")
+  @Nullable String getCustomTaskExecutor();
 }
