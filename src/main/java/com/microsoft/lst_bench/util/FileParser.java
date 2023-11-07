@@ -124,24 +124,44 @@ public class FileParser {
     return values;
   }
 
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema. Creates and returns a `TaskLibrary` object.
+   */
   public static TaskLibrary loadTaskLibrary(String filePath) throws IOException {
     return createObject(filePath, TaskLibrary.class, true, SCHEMAS_PATH + "task_library.json");
   }
 
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema. Creates and returns a `Workload` object.
+   */
   public static Workload loadWorkload(String filePath) throws IOException {
     return createObject(filePath, Workload.class, true, SCHEMAS_PATH + "workload.json");
   }
 
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema. Creates and returns a `ConnectionsConfig` object.
+   */
   public static ConnectionsConfig loadConnectionsConfig(String filePath) throws IOException {
     return createObject(
         filePath, ConnectionsConfig.class, true, SCHEMAS_PATH + "connections_config.json");
   }
 
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema. Creates and returns a `ExperimentConfig` object.
+   */
   public static ExperimentConfig loadExperimentConfig(String filePath) throws IOException {
     return createObject(
         filePath, ExperimentConfig.class, true, SCHEMAS_PATH + "experiment_config.json");
   }
 
+  /**
+   * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
+   * file according to the schema. Creates and returns a `TelemetryConfig` object.
+   */
   public static TelemetryConfig loadTelemetryConfig(String filePath) throws IOException {
     return createObject(
         filePath, TelemetryConfig.class, true, SCHEMAS_PATH + "telemetry_config.json");
