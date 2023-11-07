@@ -30,19 +30,19 @@ phases:
   sessions:
   - tasks:
     - template_id: data_maintenance_iceberg
-- id: data_maintenance_dependent
-  sessions:
-  - tasks:
-    - template_id: data_maintenance_dependent
-      task_executor_arguments:
-        dependent_task_batch_size: 100
+#- id: data_maintenance_dependent
+#  sessions:
+#  - tasks:
+#    - template_id: data_maintenance_dependent
+#      task_executor_arguments:
+#        dependent_task_batch_size: 100
 - id: optimize
   sessions:
   - tasks:
     - template_id: optimize_iceberg
-- id: optimize_split
-  sessions:
-  - tasks:
-    - template_id: optimize_split_iceberg
-      task_executor_arguments:
-        dependent_task_batch_size: 100
+#- id: optimize_split
+#  sessions:
+#  - tasks:
+#    - template_id: optimize_split_iceberg
+#      task_executor_arguments:
+#        dependent_task_batch_size: 100

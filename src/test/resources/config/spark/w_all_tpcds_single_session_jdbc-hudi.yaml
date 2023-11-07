@@ -15,6 +15,6 @@ phases:
           replacement: 'string'
     - template_id: single_user
     - template_id: data_maintenance_hudi
-    - template_id: data_maintenance_dependent
+#    - template_id: data_maintenance_dependent
     - template_id: optimize_hudi
-    - template_id: optimize_split_hudi
+#    - template_id: optimize_split_hudi
