@@ -36,6 +36,8 @@ phases:
     - template_id: data_maintenance_dependent
       task_executor_arguments:
         dependent_task_batch_size: 100
+        # TODO: Remove this once #182 is fixed
+        skip_erroneous_query_strings: "[PARSE_SYNTAX_ERROR]"
 - id: optimize
   sessions:
   - tasks:
@@ -46,3 +48,5 @@ phases:
     - template_id: optimize_split_hudi
       task_executor_arguments:
         dependent_task_batch_size: 100
+        # TODO: Remove this once #182 is fixed
+        skip_erroneous_query_strings: "[PARSE_SYNTAX_ERROR]"
