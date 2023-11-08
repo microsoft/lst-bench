@@ -17,6 +17,7 @@ package com.microsoft.lst_bench.task;
 
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
+import com.microsoft.lst_bench.client.QueryResult;
 import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
@@ -50,6 +51,8 @@ public class TaskExecutor {
   protected final String experimentStartTime;
   protected final Map<String, String> arguments;
 
+  protected final String[] exceptionStrings;
+
   public TaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
       String experimentStartTime,
@@ -57,13 +60,14 @@ public class TaskExecutor {
     this.experimentStartTime = experimentStartTime;
     this.telemetryRegistry = telemetryRegistry;
     this.arguments = arguments;
+    this.exceptionStrings = getExceptionStrings();
   }
 
   protected Map<String, String> getArguments() {
     return this.arguments;
   }
 
-  protected String[] getExceptionStrings() {
+  private String[] getExceptionStrings() {
     // Check whether there are any strings that errors are allowed to contain. In that case, we skip
     // the erroneous query and log a warning.
     String[] exceptionStrings;
@@ -81,61 +85,71 @@ public class TaskExecutor {
 
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
       throws ClientException {
-    String[] exceptionStrings = this.getExceptionStrings();
-
     for (FileExec file : task.getFiles()) {
-      boolean skip = false;
-
       Instant fileStartTime = Instant.now();
       try {
         for (StatementExec statement : file.getStatements()) {
-          Instant statementStartTime = Instant.now();
-          try {
-            connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
-          } catch (Exception e) {
-            String loggedError =
-                "Exception executing statement: "
-                    + statement.getId()
-                    + ", statement text: "
-                    + statement.getStatement()
-                    + "; error message: "
-                    + e.getMessage();
-            for (String skipException : exceptionStrings) {
-              if (e.getMessage().contains(skipException)) {
-                LOGGER.warn(loggedError);
-                writeStatementEvent(
-                    statementStartTime, statement.getId(), Status.WARN, /* payload= */ loggedError);
-
-                skip = true;
-                break;
-              }
-            }
-
-            if (!skip) {
-              LOGGER.error(loggedError);
-              writeStatementEvent(
-                  statementStartTime,
-                  statement.getId(),
-                  Status.FAILURE,
-                  /* payload= */ loggedError);
-
-              throw e;
-            }
-          }
-          // Only log success if we have not skipped execution.
-          if (!skip) {
-            writeStatementEvent(
-                statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
-          }
+          executeStatement(connection, statement, values, true);
         }
       } catch (Exception e) {
         LOGGER.error("Exception executing file: " + file.getId());
         writeFileEvent(fileStartTime, file.getId(), Status.FAILURE);
-
         throw e;
       }
       writeFileEvent(fileStartTime, file.getId(), Status.SUCCESS);
     }
+  }
+
+  protected final QueryResult executeStatement(
+      Connection connection,
+      StatementExec statement,
+      Map<String, Object> values,
+      boolean ignoreResults)
+      throws ClientException {
+    boolean skip = false;
+    QueryResult queryResult = null;
+    Instant statementStartTime = Instant.now();
+    try {
+      if (ignoreResults) {
+        connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
+      } else {
+        queryResult =
+            connection.executeQuery(
+                StringUtils.replaceParameters(statement, values).getStatement());
+      }
+    } catch (Exception e) {
+      String loggedError =
+          "Exception executing statement: "
+              + statement.getId()
+              + ", statement text: "
+              + statement.getStatement()
+              + "; error message: "
+              + e.getMessage();
+      for (String skipException : exceptionStrings) {
+        if (e.getMessage().contains(skipException)) {
+          LOGGER.warn(loggedError);
+          writeStatementEvent(
+              statementStartTime, statement.getId(), Status.WARN, /* payload= */ loggedError);
+
+          skip = true;
+          break;
+        }
+      }
+
+      if (!skip) {
+        LOGGER.error(loggedError);
+        writeStatementEvent(
+            statementStartTime, statement.getId(), Status.FAILURE, /* payload= */ loggedError);
+
+        throw e;
+      }
+    }
+    // Only log success if we have not skipped execution.
+    if (!skip) {
+      writeStatementEvent(
+          statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
+    }
+    return queryResult;
   }
 
   protected final EventInfo writeFileEvent(Instant startTime, String id, Status status) {

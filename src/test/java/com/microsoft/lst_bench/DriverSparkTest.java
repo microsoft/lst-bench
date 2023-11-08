@@ -208,7 +208,7 @@ public class DriverSparkTest {
   @Test
   @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "iceberg")
   @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
-  public void testJDBCSkipFailedQueriesIceber() throws Exception {
+  public void testJDBCSkipFailedQueriesIceberg() throws Exception {
     runDriver(
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-iceberg.yaml",

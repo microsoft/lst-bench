@@ -12,6 +12,12 @@ phases:
     - template_id: build
     - template_id: single_user
     - template_id: data_maintenance_delta
-#    - template_id: data_maintenance_dependent
+    - template_id: data_maintenance_dependent
+      task_executor_arguments:
+        # TODO: Remove this once #182 is fixed
+        skip_erroneous_query_strings: "[DELTA_FAILED_RECOGNIZE_PREDICATE]"
     - template_id: optimize_delta
-#    - template_id: optimize_split_delta
+    - template_id: optimize_split_delta
+      task_executor_arguments:
+        # TODO: Remove this once #182 is fixed
+        skip_erroneous_query_strings: "[DELTA_FAILED_RECOGNIZE_PREDICATE]"

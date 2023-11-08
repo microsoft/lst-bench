@@ -24,7 +24,6 @@ import com.microsoft.lst_bench.exec.TaskExec;
 import com.microsoft.lst_bench.task.TaskExecutor;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
-import com.microsoft.lst_bench.util.StringUtils;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,12 +77,7 @@ public class DependentTaskExecutor extends TaskExecutor {
       try {
         if (queryResult == null) {
           // Execute first query that retrieves the iterable input for the second query.
-          Instant statementStartTime = Instant.now();
-          queryResult =
-              connection.executeQuery(
-                  StringUtils.replaceParameters(statement, values).getStatement());
-          writeStatementEvent(
-              statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
+          queryResult = executeStatement(connection, statement, values, false);
           if (queryResult == null || queryResult.containsEmptyResultColumnOnly()) {
             // Reset queryResult variable if result is (intentionally) empty.
             queryResult = null;
@@ -95,31 +89,14 @@ public class DependentTaskExecutor extends TaskExecutor {
             int localMax = (j + batchSize) > size ? size : (j + batchSize);
             Map<String, Object> localValues = new HashMap<>(values);
             localValues.putAll(queryResult.getStringMappings(j, localMax));
-
-            Instant statementStartTime = Instant.now();
-            connection.execute(
-                StringUtils.replaceParameters(statement, localValues).getStatement());
-            writeStatementEvent(
-                statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
+            executeStatement(connection, statement, localValues, true);
           }
           // Reset query result.
           queryResult = null;
         }
       } catch (Exception e) {
-        String loggedError =
-            "Exception executing statement: "
-                + statement.getId()
-                + ", statement text: "
-                + statement.getStatement()
-                + "; error message: "
-                + e.getMessage();
-        LOGGER.error(loggedError);
-        writeStatementEvent(
-            fileStartTime, statement.getId(), Status.FAILURE, /* payload= */ loggedError);
-
         LOGGER.error("Exception executing file: " + file.getId());
-        writeStatementEvent(
-            fileStartTime, file.getId(), Status.FAILURE, /* payload= */ loggedError);
+        writeFileEvent(fileStartTime, file.getId(), Status.FAILURE);
         throw e;
       }
       writeFileEvent(fileStartTime, file.getId(), Status.SUCCESS);
