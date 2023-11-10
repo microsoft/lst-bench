@@ -1,0 +1,7 @@
+SELECT
+    CS_ORDER_NUMBER as CR_ORDER_NUMBER
+FROM
+    catalog_sales, date_dim
+WHERE
+    WHERE CS_SOLD_DATE_SK=D_DATE_SK
+    AND D_DATE BETWEEN CAST('${param3}' AS DATE) AND CAST('${param4}' AS DATE);
