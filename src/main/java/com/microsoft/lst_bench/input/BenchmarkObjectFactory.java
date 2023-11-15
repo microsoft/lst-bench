@@ -101,6 +101,7 @@ public class BenchmarkObjectFactory {
     return new BenchmarkConfig(
         experimentConfig.getId(),
         experimentConfig.getRepetitions(),
+        experimentConfig.getRetryOnErroneusQueryStrings(),
         experimentConfig.getMetadata(),
         experimentConfig.getArguments(),
         workloadExec);

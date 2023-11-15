@@ -25,6 +25,7 @@ import com.microsoft.lst_bench.task.TaskExecutor;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -63,6 +64,9 @@ public class DependentTaskExecutor extends TaskExecutor {
       batchSize = Integer.valueOf(this.getArguments().get(DEPENDENT_TASK_BATCH_SIZE));
     }
 
+    // Combine exception Experiment and Task exception strings into a single collection
+    ArrayList<String> exceptionStrings = GetExceptionStrings(values);
+
     QueryResult queryResult = null;
     for (FileExec file : task.getFiles()) {
       Instant fileStartTime = Instant.now();
@@ -77,7 +81,7 @@ public class DependentTaskExecutor extends TaskExecutor {
       try {
         if (queryResult == null) {
           // Execute first query that retrieves the iterable input for the second query.
-          queryResult = executeStatement(connection, statement, values, false);
+          queryResult = executeStatement(connection, statement, values, exceptionStrings, false);
           if (queryResult == null || queryResult.containsEmptyResultColumnOnly()) {
             // Reset queryResult variable if result is (intentionally) empty.
             queryResult = null;
@@ -89,7 +93,7 @@ public class DependentTaskExecutor extends TaskExecutor {
             int localMax = (j + batchSize) > size ? size : (j + batchSize);
             Map<String, Object> localValues = new HashMap<>(values);
             localValues.putAll(queryResult.getStringMappings(j, localMax));
-            executeStatement(connection, statement, localValues, true);
+            executeStatement(connection, statement, localValues, exceptionStrings, true);
           }
           // Reset query result.
           queryResult = null;

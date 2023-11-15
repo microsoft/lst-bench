@@ -37,7 +37,7 @@ phases:
       task_executor_arguments:
         dependent_task_batch_size: 100
         # TODO: Remove this once #182 is fixed
-        skip_erroneous_query_strings: "[PARSE_SYNTAX_ERROR]"
+        retry_erroneous_query_strings: "[PARSE_SYNTAX_ERROR]"
 - id: optimize
   sessions:
   - tasks:
@@ -49,4 +49,4 @@ phases:
       task_executor_arguments:
         dependent_task_batch_size: 100
         # TODO: Remove this once #182 is fixed
-        skip_erroneous_query_strings: "[PARSE_SYNTAX_ERROR]"
+        retry_erroneous_query_strings: "[PARSE_SYNTAX_ERROR]"

@@ -34,7 +34,7 @@ phases:
       task_executor_arguments:
         dependent_task_batch_size: 100
         # TODO: Remove this once #182 is fixed
-        skip_erroneous_query_strings: "[DELTA_FAILED_RECOGNIZE_PREDICATE]"
+        retry_erroneous_query_strings: "[DELTA_FAILED_RECOGNIZE_PREDICATE]"
 - id: optimize
   sessions:
   - tasks:
@@ -46,4 +46,4 @@ phases:
       task_executor_arguments:
         dependent_task_batch_size: 100
         # TODO: Remove this once #182 is fixed
-        skip_erroneous_query_strings: "[DELTA_FAILED_RECOGNIZE_PREDICATE]"
+        retry_erroneous_query_strings: "[DELTA_FAILED_RECOGNIZE_PREDICATE]"

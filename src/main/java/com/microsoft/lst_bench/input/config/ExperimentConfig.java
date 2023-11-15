@@ -36,6 +36,9 @@ public interface ExperimentConfig {
 
   int getRepetitions();
 
+  @JsonProperty("global_retry_erroneous_query_strings")
+  @Nullable String getRetryOnErroneusQueryStrings();
+
   @Nullable Map<String, String> getMetadata();
 
   @JsonProperty("parameter_values")

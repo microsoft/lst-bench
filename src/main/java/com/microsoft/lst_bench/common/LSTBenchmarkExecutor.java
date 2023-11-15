@@ -90,6 +90,8 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
         Map<String, Object> runtimeParameterValues = new HashMap<>();
         runtimeParameterValues.put("repetition", i);
         runtimeParameterValues.put("experiment_start_time", experimentStartTime);
+        runtimeParameterValues.put(
+            "global_retry_erroneous_query_strings", this.config.getRetryOnErroneusQueryStrings());
         experimentMetadata.putAll(runtimeParameterValues);
         // Go over phases and execute
         Map<String, Instant> phaseIdToEndTime = new HashMap<>();

@@ -16,6 +16,11 @@
       "type": "integer",
       "title": "Number of times to repeat the experiment"
     },
+    "global_retry_erroneous_query_strings": {
+      "type": "string",
+      "title": "Retry when exception contains any query string",
+      "description": "It is mainly used to repeat the execution of a task on w/w conflict errors. Error messages are separated by ';' If there is any match in the exception message, the current executing task will be executed again until it succeeds"
+    },
     "metadata": {
       "type": "object",
       "title": "Experiment metadata",

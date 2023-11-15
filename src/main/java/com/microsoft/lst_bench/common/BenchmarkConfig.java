@@ -25,6 +25,7 @@ public class BenchmarkConfig {
 
   private final String id;
   private final int repetitions;
+  private final String retryOnErroneusQueryStrings;
   private final Map<String, String> metadata;
   private final Map<String, Object> arguments;
   private final WorkloadExec workload;
@@ -32,11 +33,13 @@ public class BenchmarkConfig {
   public BenchmarkConfig(
       String id,
       int repetitions,
+      String retryOnErroneusQueryStrings,
       Map<String, String> metadata,
       Map<String, Object> arguments,
       WorkloadExec workload) {
     this.id = id;
     this.repetitions = repetitions;
+    this.retryOnErroneusQueryStrings = retryOnErroneusQueryStrings;
     this.metadata = Collections.unmodifiableMap(metadata == null ? new HashMap<>() : metadata);
     this.arguments = Collections.unmodifiableMap(arguments == null ? new HashMap<>() : arguments);
     this.workload = workload;
@@ -48,6 +51,10 @@ public class BenchmarkConfig {
 
   public int getRepetitions() {
     return repetitions;
+  }
+
+  public String getRetryOnErroneusQueryStrings() {
+    return retryOnErroneusQueryStrings;
   }
 
   public Map<String, String> getMetadata() {
