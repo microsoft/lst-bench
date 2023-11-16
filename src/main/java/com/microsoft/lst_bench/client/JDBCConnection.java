@@ -51,7 +51,7 @@ public class JDBCConnection implements Connection {
 
     // Infinite retries if number of retries is set to '-1', otherwise retry count is in addition to
     // the 1 default try, thus '<='.
-    while (this.maxNumRetries == -1 || errorCount <= this.maxNumRetries) {
+    while (errorCount <= this.maxNumRetries) {
       try (Statement s = connection.createStatement()) {
         boolean hasResults = s.execute(sqlText);
         if (hasResults) {
