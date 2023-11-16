@@ -8,14 +8,14 @@ SELECT
     AVG( wr_refunded_cash ),
     AVG( wr_fee )
 FROM
-    ${catalog}.${database}.web_sales ${asof},
-    ${catalog}.${database}.web_returns ${asof},
-    ${catalog}.${database}.web_page,
-    ${catalog}.${database}.customer_demographics cd1,
-    ${catalog}.${database}.customer_demographics cd2,
-    ${catalog}.${database}.customer_address,
-    ${catalog}.${database}.date_dim,
-    ${catalog}.${database}.reason
+    spark_catalog.tpcds_hudi_sf_100.web_sales,
+    spark_catalog.tpcds_hudi_sf_100.web_returns,
+    spark_catalog.tpcds_hudi_sf_100.web_page,
+    spark_catalog.tpcds_hudi_sf_100.customer_demographics cd1,
+    spark_catalog.tpcds_hudi_sf_100.customer_demographics cd2,
+    spark_catalog.tpcds_hudi_sf_100.customer_address,
+    spark_catalog.tpcds_hudi_sf_100.date_dim,
+    spark_catalog.tpcds_hudi_sf_100.reason
 WHERE
     ws_web_page_sk = wp_web_page_sk
     AND ws_item_sk = wr_item_sk
