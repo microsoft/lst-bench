@@ -15,8 +15,6 @@
  */
 package com.microsoft.lst_bench.task;
 
-import static org.mockito.Answers.values;
-
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.client.QueryResult;
@@ -76,7 +74,6 @@ public class TaskExecutor {
       String[] data = exceptionQueryString.split(RETRY_ERRONEOUS_QUERY_DELIMITER);
       for (String query : data) {
         if (!arrayList.contains(query)) {
-          LOGGER.info("Adding to exception: " + query);
           arrayList.add(query);
         }
       }
@@ -96,7 +93,7 @@ public class TaskExecutor {
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
       throws ClientException {
 
-    // Combine exception Experiment and Task exception strings into a single collection
+    // Combine Experiment and Task exception strings into a single collection
     ArrayList<String> exceptionStrings = GetExceptionStrings(values);
 
     for (FileExec file : task.getFiles()) {
@@ -150,7 +147,6 @@ public class TaskExecutor {
             LOGGER.warn(loggedError);
             writeStatementEvent(
                 statementStartTime, statement.getId(), Status.WARN, /* payload= */ loggedError);
-            LOGGER.warn("REPEATING = TRUE");
             repeat = true;
             break;
           }
