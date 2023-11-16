@@ -57,7 +57,7 @@
                       "task_executor_arguments": {
                         "type": "object",
                         "title": "Task executor arguments",
-                        "description": "Any arguments passed to a (custom) task executor need to be defined here."
+                        "description": "Any arguments passed to a (custom) task executor can be defined here. Arguments set here are defined locally for a single task."
                       },
                       "replace_regex": {
                         "type": "array",

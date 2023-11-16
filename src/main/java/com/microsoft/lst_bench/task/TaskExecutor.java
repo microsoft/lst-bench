@@ -21,6 +21,7 @@ import com.microsoft.lst_bench.client.QueryResult;
 import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
+import com.microsoft.lst_bench.task.util.TaskExecutorArguments;
 import com.microsoft.lst_bench.telemetry.EventInfo;
 import com.microsoft.lst_bench.telemetry.EventInfo.EventType;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
@@ -44,43 +45,17 @@ public class TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecutor.class);
 
-  private final String SKIP_ERRONEOUS_QUERY_DELIMITER = ";";
-  private final String SKIP_ERRONEOUS_QUERY_STRINGS_KEY = "skip_erroneous_query_strings";
-
   protected final SQLTelemetryRegistry telemetryRegistry;
   protected final String experimentStartTime;
-  protected final Map<String, String> arguments;
-
-  protected final String[] exceptionStrings;
+  protected final TaskExecutorArguments arguments;
 
   public TaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
       String experimentStartTime,
-      Map<String, String> arguments) {
+      TaskExecutorArguments arguments) {
     this.experimentStartTime = experimentStartTime;
     this.telemetryRegistry = telemetryRegistry;
     this.arguments = arguments;
-    this.exceptionStrings = getExceptionStrings();
-  }
-
-  protected Map<String, String> getArguments() {
-    return this.arguments;
-  }
-
-  private String[] getExceptionStrings() {
-    // Check whether there are any strings that errors are allowed to contain. In that case, we skip
-    // the erroneous query and log a warning.
-    String[] exceptionStrings;
-    if (this.getArguments() == null
-        || this.getArguments().get(SKIP_ERRONEOUS_QUERY_STRINGS_KEY) == null) {
-      exceptionStrings = new String[] {};
-    } else {
-      exceptionStrings =
-          this.getArguments()
-              .get(SKIP_ERRONEOUS_QUERY_STRINGS_KEY)
-              .split(SKIP_ERRONEOUS_QUERY_DELIMITER);
-    }
-    return exceptionStrings;
   }
 
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
@@ -106,50 +81,58 @@ public class TaskExecutor {
       Map<String, Object> values,
       boolean ignoreResults)
       throws ClientException {
-    boolean skip = false;
+    boolean execute = true;
     QueryResult queryResult = null;
     Instant statementStartTime = Instant.now();
-    try {
-      if (ignoreResults) {
-        connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
-      } else {
-        queryResult =
-            connection.executeQuery(
-                StringUtils.replaceParameters(statement, values).getStatement());
-      }
-    } catch (Exception e) {
-      String loggedError =
-          "Exception executing statement: "
-              + statement.getId()
-              + ", statement text: "
-              + statement.getStatement()
-              + "; error message: "
-              + e.getMessage();
-      for (String skipException : exceptionStrings) {
-        if (e.getMessage().contains(skipException)) {
-          LOGGER.warn(loggedError);
+
+    while (execute) {
+      try {
+        if (ignoreResults) {
+          connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
+        } else {
+          queryResult =
+              connection.executeQuery(
+                  StringUtils.replaceParameters(statement, values).getStatement());
+        }
+      } catch (Exception e) {
+        String loggedError =
+            "Exception executing statement: "
+                + statement.getId()
+                + ", statement text: "
+                + statement.getStatement()
+                + "; error message: "
+                + e.getMessage();
+
+        if (containsException(e.getMessage(), this.arguments.getRetryExceptionStrings())) {
+          // If retry is specified, log a warning and continue.
+          LOGGER.warn("Query failed but retry mechanism is set: " + loggedError);
           writeStatementEvent(
               statementStartTime, statement.getId(), Status.WARN, /* payload= */ loggedError);
-
-          skip = true;
-          break;
+          continue;
+        } else if (containsException(e.getMessage(), this.arguments.getSkipExceptionStrings())) {
+          // If skip is specified, log a warning and stop query execution.
+          LOGGER.warn("Query failed but skip mechanism is set: " + loggedError);
+          writeStatementEvent(
+              statementStartTime, statement.getId(), Status.WARN, /* payload= */ loggedError);
+          execute = false;
+        } else {
+          LOGGER.error(loggedError);
+          writeStatementEvent(
+              statementStartTime, statement.getId(), Status.FAILURE, /* payload= */ loggedError);
+          throw e;
         }
       }
-
-      if (!skip) {
-        LOGGER.error(loggedError);
-        writeStatementEvent(
-            statementStartTime, statement.getId(), Status.FAILURE, /* payload= */ loggedError);
-
-        throw e;
-      }
-    }
-    // Only log success if we have not skipped execution.
-    if (!skip) {
-      writeStatementEvent(
-          statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
     }
     return queryResult;
+  }
+
+  private boolean containsException(String message, String[] exceptionStrings) {
+    for (String exception : exceptionStrings) {
+      if (message.contains(exception)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   protected final EventInfo writeFileEvent(Instant startTime, String id, Status status) {

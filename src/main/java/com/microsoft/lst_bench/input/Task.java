@@ -41,7 +41,7 @@ public interface Task {
   @Nullable String getTimeTravelPhaseId();
 
   @JsonProperty("task_executor_arguments")
-  @Nullable Map<String, String> getTaskExecutorArguments();
+  @Nullable Map<String, Object> getTaskExecutorArguments();
 
   @JsonProperty("replace_regex")
   @Nullable List<ReplaceRegex> getReplaceRegex();

@@ -22,6 +22,7 @@ import com.microsoft.lst_bench.exec.FileExec;
 import com.microsoft.lst_bench.exec.StatementExec;
 import com.microsoft.lst_bench.exec.TaskExec;
 import com.microsoft.lst_bench.task.TaskExecutor;
+import com.microsoft.lst_bench.task.util.TaskExecutorArguments;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import java.time.Instant;
@@ -43,24 +44,19 @@ public class DependentTaskExecutor extends TaskExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DependentTaskExecutor.class);
 
-  private final int DEFAULT_BATCH_SIZE = 1;
-  private final String DEPENDENT_TASK_BATCH_SIZE = "dependent_task_batch_size";
-
   public DependentTaskExecutor(
       SQLTelemetryRegistry telemetryRegistry,
       String experimentStartTime,
-      Map<String, String> arguments) {
+      TaskExecutorArguments arguments) {
     super(telemetryRegistry, experimentStartTime, arguments);
   }
 
   @Override
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
       throws ClientException {
-    int batchSize;
-    if (this.getArguments() == null || this.getArguments().get(DEPENDENT_TASK_BATCH_SIZE) == null) {
-      batchSize = DEFAULT_BATCH_SIZE;
-    } else {
-      batchSize = Integer.valueOf(this.getArguments().get(DEPENDENT_TASK_BATCH_SIZE));
+    Integer batchSize = this.arguments.getBatchSize();
+    if (batchSize == null) {
+      throw new ClientException("Batch size needs to be set for dependent task execution.");
     }
 
     QueryResult queryResult = null;
