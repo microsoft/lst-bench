@@ -223,7 +223,7 @@ public class DriverSparkTest {
   public void testJDBCSkipFailedQueriesGlobalDelta() throws Exception {
     runDriver(
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
-        "src/test/resources/config/spark/experiment_config-delta-faulty.yaml",
+        "src/test/resources/config/spark/experiment_config-delta-skip-faulty.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
         "src/test/resources/config/spark/simplified_task_library.yaml",
         "src/test/resources/config/spark/w_faulty_query_test2.yaml");
