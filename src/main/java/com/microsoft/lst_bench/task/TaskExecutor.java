@@ -94,6 +94,10 @@ public class TaskExecutor {
               connection.executeQuery(
                   StringUtils.replaceParameters(statement, values).getStatement());
         }
+        execute = false;
+        writeStatementEvent(
+              statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
+              
       } catch (Exception e) {
         String loggedError =
             "Exception executing statement: "
@@ -123,6 +127,7 @@ public class TaskExecutor {
         }
       }
     }
+
     return queryResult;
   }
 
