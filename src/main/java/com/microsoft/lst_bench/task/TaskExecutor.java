@@ -96,8 +96,8 @@ public class TaskExecutor {
         }
         execute = false;
         writeStatementEvent(
-              statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
-              
+            statementStartTime, statement.getId(), Status.SUCCESS, /* payload= */ null);
+
       } catch (Exception e) {
         String loggedError =
             "Exception executing statement: "
