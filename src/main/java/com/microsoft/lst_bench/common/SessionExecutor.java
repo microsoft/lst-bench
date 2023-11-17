@@ -21,6 +21,7 @@ import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.exec.SessionExec;
 import com.microsoft.lst_bench.exec.TaskExec;
 import com.microsoft.lst_bench.task.TaskExecutor;
+import com.microsoft.lst_bench.task.util.TaskExecutorArguments;
 import com.microsoft.lst_bench.telemetry.EventInfo;
 import com.microsoft.lst_bench.telemetry.EventInfo.EventType;
 import com.microsoft.lst_bench.telemetry.EventInfo.Status;
@@ -121,7 +122,8 @@ public class SessionExecutor implements Callable<Boolean> {
       try {
         Constructor<?> constructor =
             Class.forName(task.getCustomTaskExecutor())
-                .getDeclaredConstructor(SQLTelemetryRegistry.class, String.class, Map.class);
+                .getDeclaredConstructor(
+                    SQLTelemetryRegistry.class, String.class, TaskExecutorArguments.class);
         return (TaskExecutor)
             constructor.newInstance(
                 this.telemetryRegistry, this.experimentStartTime, task.getTaskExecutorArguments());
