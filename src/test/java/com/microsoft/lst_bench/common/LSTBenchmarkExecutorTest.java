@@ -142,6 +142,10 @@ class LSTBenchmarkExecutorTest {
     }
   }
 
+  /**
+   * This test checks whether erroneous execution of a query will lead to a (successful) retry if
+   * the workload specifies that a specific error is permitted.
+   */
   @Test
   void testExperimentRetry() throws Exception {
     final String queryString = "SELECT * FROM test;";
@@ -152,7 +156,6 @@ class LSTBenchmarkExecutorTest {
     Mockito.when(mockConnectionManager.createConnection()).thenReturn(mockConnection);
     doThrow(new ClientException(errorString)).doNothing().when(mockConnection).execute(queryString);
 
-    // Current workload relies on 2 connection managers
     var connectionManagers = new ArrayList<ConnectionManager>();
     connectionManagers.add(mockConnectionManager);
 
