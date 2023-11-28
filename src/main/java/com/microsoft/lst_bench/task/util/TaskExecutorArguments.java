@@ -45,7 +45,7 @@ public class TaskExecutorArguments {
 
   // Added arguments are automatically appended if possible.
   public void addArguments(Map<String, Object> arguments) {
-    this.arguments = arguments;
+    this.arguments.putAll(arguments);
 
     this.retryExceptionStrings =
         Stream.of(
