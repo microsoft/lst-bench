@@ -23,12 +23,12 @@ public class TaskExecutorArguments {
 
   private String[] retryExceptionStrings;
   private String[] skipExceptionStrings;
-  private Integer batchSize;
+  private Map<String, Object> arguments;
 
   public TaskExecutorArguments(Map<String, Object> arguments) {
     this.retryExceptionStrings = TaskExecutorArgumentsParser.parseRetryExceptionStrings(arguments);
     this.skipExceptionStrings = TaskExecutorArgumentsParser.parseSkipExceptionStrings(arguments);
-    this.batchSize = TaskExecutorArgumentsParser.parseBatchSize(arguments);
+    this.arguments = arguments;
   }
 
   public String[] getRetryExceptionStrings() {
@@ -39,13 +39,14 @@ public class TaskExecutorArguments {
     return this.skipExceptionStrings;
   }
 
-  public Integer getBatchSize() {
-    return this.batchSize;
+  public Map<String, Object> getArguments() {
+    return this.arguments;
   }
 
-  // Added arguments are automatically appended if possible. If not possible, they will replace
-  // prior values.
+  // Added arguments are automatically appended if possible.
   public void addArguments(Map<String, Object> arguments) {
+    this.arguments = arguments;
+
     this.retryExceptionStrings =
         Stream.of(
                 this.getRetryExceptionStrings(),
@@ -59,8 +60,5 @@ public class TaskExecutorArguments {
                 TaskExecutorArgumentsParser.parseSkipExceptionStrings(arguments))
             .flatMap(Stream::of)
             .toArray(String[]::new);
-
-    Integer parsedBatchSize = TaskExecutorArgumentsParser.parseBatchSize(arguments);
-    this.batchSize = parsedBatchSize == null ? this.batchSize : parsedBatchSize;
   }
 }

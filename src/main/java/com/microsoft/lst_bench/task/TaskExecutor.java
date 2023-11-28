@@ -109,7 +109,7 @@ public class TaskExecutor {
 
         if (containsException(e.getMessage(), this.arguments.getRetryExceptionStrings())) {
           // If retry is specified, log a warning and continue.
-          LOGGER.warn("Query failed but retry mechanism is set: " + loggedError);
+          LOGGER.warn("Query failed but retry mechanism is set: {}", loggedError);
           writeStatementEvent(
               statementStartTime, statement.getId(), Status.WARN, /* payload= */ loggedError);
           continue;
