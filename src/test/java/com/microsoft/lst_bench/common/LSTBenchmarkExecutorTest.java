@@ -15,6 +15,8 @@
  */
 package com.microsoft.lst_bench.common;
 
+import static org.mockito.Mockito.doThrow;
+
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.client.ConnectionManager;
@@ -138,6 +140,42 @@ class LSTBenchmarkExecutorTest {
 
       // TODO improve event validation
     }
+  }
+
+  @Test
+  void testExperimentRetry() throws Exception {
+    final String queryString = "SELECT * FROM test;";
+    final String errorString = "testError";
+
+    Connection mockConnection = Mockito.mock(Connection.class);
+    ConnectionManager mockConnectionManager = Mockito.mock(ConnectionManager.class);
+    Mockito.when(mockConnectionManager.createConnection()).thenReturn(mockConnection);
+    doThrow(new ClientException(errorString)).doNothing().when(mockConnection).execute(queryString);
+
+    // Current workload relies on 2 connection managers
+    var connectionManagers = new ArrayList<ConnectionManager>();
+    connectionManagers.add(mockConnectionManager);
+
+    ExperimentConfig experimentConfig =
+        ImmutableExperimentConfig.builder().id("retryTest").version(1).repetitions(1).build();
+
+    URL taskLibFile =
+        getClass().getClassLoader().getResource("./config/samples/task_library_retry.yaml");
+    Assertions.assertNotNull(taskLibFile);
+    TaskLibrary taskLibrary = FileParser.loadTaskLibrary(taskLibFile.getFile());
+
+    URL workloadFile =
+        getClass().getClassLoader().getResource("./config/spark/w_retry_query_test.yaml");
+    Assertions.assertNotNull(workloadFile);
+    Workload workload = FileParser.loadWorkload(workloadFile.getFile());
+
+    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
+
+    SQLTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
+
+    LSTBenchmarkExecutor benchmark =
+        new LSTBenchmarkExecutor(connectionManagers, config, telemetryRegistry);
+    benchmark.run();
   }
 
   private SQLTelemetryRegistry getTelemetryRegistry() throws ClientException, IOException {
