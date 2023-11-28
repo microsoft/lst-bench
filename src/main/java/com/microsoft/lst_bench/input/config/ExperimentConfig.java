@@ -41,6 +41,6 @@ public interface ExperimentConfig {
   @JsonProperty("parameter_values")
   @Nullable Map<String, Object> getParameterValues();
 
-  @JsonProperty("arguments")
-  @Nullable Map<String, Object> getArguments();
+  @JsonProperty("task_executor_arguments")
+  @Nullable Map<String, Object> getTaskExecutorArguments();
 }

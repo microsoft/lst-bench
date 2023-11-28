@@ -26,19 +26,13 @@ public class BenchmarkConfig {
   private final String id;
   private final int repetitions;
   private final Map<String, String> metadata;
-  private final Map<String, Object> arguments;
   private final WorkloadExec workload;
 
   public BenchmarkConfig(
-      String id,
-      int repetitions,
-      Map<String, String> metadata,
-      Map<String, Object> arguments,
-      WorkloadExec workload) {
+      String id, int repetitions, Map<String, String> metadata, WorkloadExec workload) {
     this.id = id;
     this.repetitions = repetitions;
     this.metadata = Collections.unmodifiableMap(metadata == null ? new HashMap<>() : metadata);
-    this.arguments = Collections.unmodifiableMap(arguments == null ? new HashMap<>() : arguments);
     this.workload = workload;
   }
 
@@ -52,10 +46,6 @@ public class BenchmarkConfig {
 
   public Map<String, String> getMetadata() {
     return metadata;
-  }
-
-  public Map<String, Object> getArguments() {
-    return arguments;
   }
 
   public WorkloadExec getWorkload() {

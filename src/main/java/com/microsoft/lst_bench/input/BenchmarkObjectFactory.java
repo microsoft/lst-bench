@@ -32,6 +32,7 @@ import com.microsoft.lst_bench.input.config.ExperimentConfig;
 import com.microsoft.lst_bench.input.config.JDBCConnectionConfig;
 import com.microsoft.lst_bench.input.config.SparkConnectionConfig;
 import com.microsoft.lst_bench.sql.SQLParser;
+import com.microsoft.lst_bench.task.util.TaskExecutorArguments;
 import com.microsoft.lst_bench.util.FileParser;
 import com.microsoft.lst_bench.util.StringUtils;
 import java.util.ArrayList;
@@ -102,7 +103,6 @@ public class BenchmarkObjectFactory {
         experimentConfig.getId(),
         experimentConfig.getRepetitions(),
         experimentConfig.getMetadata(),
-        experimentConfig.getArguments(),
         workloadExec);
   }
 
@@ -219,10 +219,18 @@ public class BenchmarkObjectFactory {
             experimentConfig,
             taskTemplateIdToPermuteOrderCounter,
             taskTemplateIdToParameterValuesCounter);
+
+    // TODO: Figure out whether we should turn this into a class variable to avoid recomputation.
+    // Allow the use of globally (via the experiment config defined) arguments to be parsed into the
+    // tasks.
+    TaskExecutorArguments taskExecutorArguments =
+        new TaskExecutorArguments(experimentConfig.getTaskExecutorArguments());
+    taskExecutorArguments.addArguments(task.getTaskExecutorArguments());
+
     return ImmutableTaskExec.of(taskId, files)
         .withTimeTravelPhaseId(task.getTimeTravelPhaseId())
         .withCustomTaskExecutor(taskTemplate.getCustomTaskExecutor())
-        .withTaskExecutorArguments(task.getTaskExecutorArguments());
+        .withTaskExecutorArguments(taskExecutorArguments);
   }
 
   private static List<FileExec> createFileExecList(
