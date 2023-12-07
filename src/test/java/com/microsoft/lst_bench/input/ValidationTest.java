@@ -143,29 +143,29 @@ public class ValidationTest {
   @EnabledOnOs({OS.LINUX, OS.MAC})
   @ValueSource(
       strings = {
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
-        "src/main/resources/config/trino/tpcds/task_library.yaml",
-        "src/main/resources/config/spark/tpch/task_library.yaml"
+        "src/main/resources/config/spark/tpcds/library.yaml",
+        "src/main/resources/config/trino/tpcds/library.yaml",
+        "src/main/resources/config/spark/tpch/library.yaml"
       })
-  public void testValidationTaskLibraryUnix(String taskLibraryPath) throws IOException {
-    testValidationTaskLibrary(taskLibraryPath);
+  public void testValidationLibraryUnix(String libraryPath) throws IOException {
+    testValidationLibrary(libraryPath);
   }
 
   @ParameterizedTest
   @EnabledOnOs({OS.WINDOWS})
   @ValueSource(
       strings = {
-        "src\\main\\resources\\config\\spark\\tpcds\\task_library.yaml",
-        "src\\main\\resources\\config\\trino\\tpcds\\task_library.yaml",
-        "src\\main\\resources\\config\\spark\\tpch\\task_library.yaml"
+        "src\\main\\resources\\config\\spark\\tpcds\\library.yaml",
+        "src\\main\\resources\\config\\trino\\tpcds\\library.yaml",
+        "src\\main\\resources\\config\\spark\\tpch\\library.yaml"
       })
-  public void testValidationTaskLibraryWin(String taskLibraryPath) throws IOException {
-    testValidationTaskLibrary(taskLibraryPath);
+  public void testValidationLibraryWin(String libraryPath) throws IOException {
+    testValidationLibrary(libraryPath);
   }
 
-  private void testValidationTaskLibrary(String taskLibraryPath) throws IOException {
+  private void testValidationLibrary(String libraryPath) throws IOException {
     // Validate YAML file contents and create POJO object
-    TaskLibrary taskLibrary = FileParser.loadTaskLibrary(taskLibraryPath);
+    Library taskLibrary = FileParser.loadLibrary(libraryPath);
     // Validate YAML generated from POJO object
     ObjectMapper mapper = new YAMLMapper();
     JsonSchemaFactory factory =
@@ -173,7 +173,7 @@ public class ValidationTest {
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
-        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "task_library.json")));
+        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "library.json")));
     JsonNode jsonNodeObject = mapper.convertValue(taskLibrary, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(

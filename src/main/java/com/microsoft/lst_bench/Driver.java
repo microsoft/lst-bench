@@ -20,7 +20,7 @@ import com.microsoft.lst_bench.common.BenchmarkConfig;
 import com.microsoft.lst_bench.common.BenchmarkRunnable;
 import com.microsoft.lst_bench.common.LSTBenchmarkExecutor;
 import com.microsoft.lst_bench.input.BenchmarkObjectFactory;
-import com.microsoft.lst_bench.input.TaskLibrary;
+import com.microsoft.lst_bench.input.Library;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ConnectionConfig;
 import com.microsoft.lst_bench.input.config.ConnectionsConfig;
@@ -50,7 +50,7 @@ public class Driver {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Driver.class);
 
-  private static final String OPT_INPUT_TASK_LIBRARY_FILE = "task-library";
+  private static final String OPT_INPUT_LIBRARY_FILE = "library";
   private static final String OPT_INPUT_WORKLOAD_FILE = "workload";
   private static final String OPT_INPUT_CONNECTION_CONFIG_FILE = "connections-config";
   private static final String OPT_INPUT_EXPERIMENT_CONFIG_FILE = "experiment-config";
@@ -61,7 +61,7 @@ public class Driver {
 
   /** Main method. */
   public static void main(String[] args) throws Exception {
-    String inputTaskLibraryFile = null;
+    String inputLibraryFile = null;
     String inputWorkloadFile = null;
     String inputConnectionsConfigFile = null;
     String inputExperimentConfigFile = null;
@@ -75,8 +75,8 @@ public class Driver {
       if (cmd.getOptions().length == 0) {
         usageAndHelp();
       } else {
-        if (cmd.hasOption(OPT_INPUT_TASK_LIBRARY_FILE)) {
-          inputTaskLibraryFile = cmd.getOptionValue(OPT_INPUT_TASK_LIBRARY_FILE);
+        if (cmd.hasOption(OPT_INPUT_LIBRARY_FILE)) {
+          inputLibraryFile = cmd.getOptionValue(OPT_INPUT_LIBRARY_FILE);
         }
         if (cmd.hasOption(OPT_INPUT_WORKLOAD_FILE)) {
           inputWorkloadFile = cmd.getOptionValue(OPT_INPUT_WORKLOAD_FILE);
@@ -97,14 +97,14 @@ public class Driver {
     }
 
     // Validate input values
-    Validate.notNull(inputTaskLibraryFile, "TaskExec library file is required.");
+    Validate.notNull(inputLibraryFile, "Library file is required.");
     Validate.notNull(inputWorkloadFile, "Workload file is required.");
     Validate.notNull(inputConnectionsConfigFile, "Connections config file is required.");
     Validate.notNull(inputExperimentConfigFile, "Experiment config file is required.");
     Validate.notNull(inputTelemetryConfigFile, "Telemetry config file is required.");
 
     // Create Java objects from input files
-    final TaskLibrary taskLibrary = FileParser.loadTaskLibrary(inputTaskLibraryFile);
+    final Library library = FileParser.loadLibrary(inputLibraryFile);
     final Workload workload = FileParser.loadWorkload(inputWorkloadFile);
     final ConnectionsConfig connectionsConfig =
         FileParser.loadConnectionsConfig(inputConnectionsConfigFile);
@@ -113,12 +113,12 @@ public class Driver {
     final TelemetryConfig telemetryConfig =
         FileParser.loadTelemetryConfig(inputTelemetryConfigFile);
 
-    run(taskLibrary, workload, connectionsConfig, experimentConfig, telemetryConfig);
+    run(library, workload, connectionsConfig, experimentConfig, telemetryConfig);
   }
 
   /** Run benchmark. */
   public static void run(
-      TaskLibrary taskLibrary,
+      Library library,
       Workload workload,
       ConnectionsConfig connectionsConfig,
       ExperimentConfig experimentConfig,
@@ -151,7 +151,7 @@ public class Driver {
 
     // Create experiment configuration
     final BenchmarkConfig benchmarkConfig =
-        BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
+        BenchmarkObjectFactory.benchmarkConfig(experimentConfig, library, workload);
 
     // Run experiment
     final BenchmarkRunnable experiment =
@@ -166,10 +166,10 @@ public class Driver {
         Option.builder()
             .required()
             .option("l")
-            .longOpt(OPT_INPUT_TASK_LIBRARY_FILE)
+            .longOpt(OPT_INPUT_LIBRARY_FILE)
             .hasArg()
             .argName("arg")
-            .desc("Path to input file containing the library with task templates")
+            .desc("Path to input file containing the library with templates")
             .build();
     options.addOption(inputTaskLibraryFile);
 

@@ -23,19 +23,13 @@ phases:
         - pattern: '(?i)varchar\(.*\)|char\(.*\)'
           replacement: 'string'
 - id: multi_single_user
-  sessions:
-  - tasks:
-    - template_id: single_user
-  - tasks:
-    - template_id: single_user
-    target_endpoint: 1
+  template_id: phase_multi_single_user
 - id: multi_mixed_1
   sessions:
   - tasks:
     - template_id: single_user
     target_endpoint: 0
-  - tasks:
-    - template_id: data_maintenance
+  - template_id: session_data_maintenance
     target_endpoint: 1
 - id: multi_mixed_2
   sessions:

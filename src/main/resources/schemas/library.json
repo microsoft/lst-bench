@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "Schema for library definition file",
+  "required": [ "version", "task_templates" ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "title": "File format version"
+    },
+    "task_templates": {
+      "type": "array",
+      "title": "List of task templates",
+      "items": {
+        "$ref": "resource:/schemas/template.json#/$defs/task_template"
+      }
+    },
+    "session_templates": {
+      "type": "array",
+      "title": "List of session templates",
+      "items": {
+        "$ref": "resource:/schemas/template.json#/$defs/session_template"
+      }
+    },
+    "phase_templates": {
+      "type": "array",
+      "title": "List of phase templates",
+      "items": {
+        "$ref": "resource:/schemas/template.json#/$defs/phase_template"
+      }
+    }
+  },
+  "additionalProperties": false
+}

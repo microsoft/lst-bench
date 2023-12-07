@@ -16,24 +16,22 @@
 package com.microsoft.lst_bench.input;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
-import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
-/** POJO class meant to be used to deserialize an input phase. */
+/**
+ * A session template is a template for a session. Importantly, it references the tasks that are
+ * required to run the session.
+ */
 @Value.Immutable
 @Value.Style(jdkOnly = true)
-@JsonSerialize(as = ImmutablePhase.class)
-@JsonDeserialize(as = ImmutablePhase.class)
+@JsonSerialize(as = ImmutableSessionTemplate.class)
+@JsonDeserialize(as = ImmutableSessionTemplate.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface Phase {
+public interface SessionTemplate {
   String getId();
 
-  @JsonProperty("template_id")
-  @Nullable String getTemplateId();
-
-  @Nullable List<Session> getSessions();
+  List<Task> getTasks();
 }

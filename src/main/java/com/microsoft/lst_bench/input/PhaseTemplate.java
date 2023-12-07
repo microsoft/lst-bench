@@ -16,24 +16,22 @@
 package com.microsoft.lst_bench.input;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 import org.immutables.value.Value;
 
 /**
- * Represents an input task library containing task templates that can be instantiated to create
- * tasks.
+ * A phase template is a template for a phase. Importantly, it references the sessions that are
+ * required to run the phase.
  */
 @Value.Immutable
 @Value.Style(jdkOnly = true)
-@JsonSerialize(as = ImmutableTaskLibrary.class)
-@JsonDeserialize(as = ImmutableTaskLibrary.class)
+@JsonSerialize(as = ImmutablePhaseTemplate.class)
+@JsonDeserialize(as = ImmutablePhaseTemplate.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface TaskLibrary {
-  int getVersion();
+public interface PhaseTemplate {
+  String getId();
 
-  @JsonProperty("task_templates")
-  List<TaskTemplate> getTaskTemplates();
+  List<Session> getSessions();
 }

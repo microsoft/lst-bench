@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "title": "Schema for workload definition file",
+  "required": [ "version", "id", "phases" ],
   "properties": {
     "version": {
       "type": "integer",
@@ -15,85 +16,9 @@
       "type": "array",
       "title": "List of phases",
       "items": {
-        "type": "object",
-        "title": "Phase",
-        "required": [ "id", "sessions" ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Identifier for the phase"
-          },
-          "sessions": {
-            "type": "array",
-            "title": "List of sessions",
-            "items": {
-              "type": "object",
-              "title": "Session",
-              "required": [ "tasks" ],
-              "properties": {
-                "tasks": {
-                  "type": "array",
-                  "title": "List of tasks",
-                  "items": {
-                    "type": "object",
-                    "title": "Task",
-                    "required": [ "template_id" ],
-                    "properties": {
-                      "template_id": {
-                        "type": "string",
-                        "title": "Template identifier",
-                        "description": "Identifier of the template that this task is based on"
-                      },
-                      "permute_order": {
-                        "type": "boolean",
-                        "title": "Enable scripts order permutation",
-                        "description": "If task template specified a permutation orders path, this property can be used to specify whether the permutation should be applied or not"
-                      },
-                      "time_travel_phase_id": {
-                        "type": "string",
-                        "title": "Time travel phase identifier",
-                        "description": "If the task template supports time travel, this property can be used to specify the version of the data that will be queried by this task"
-                      },
-                      "task_executor_arguments": {
-                        "type": "object",
-                        "title": "Task executor arguments",
-                        "description": "Any arguments passed to a (custom) task executor can be defined here. Arguments set here are defined locally for a single task."
-                      },
-                      "replace_regex": {
-                        "type": "array",
-                        "title": "List of regex to match and replace",
-                        "description": "List of regex to match and corresponding replacement in the SQL scripts associated with this task",
-                        "items": {
-                          "type": "object",
-                          "title": "Regex to replace",
-                          "required": [ "pattern", "replacement" ],
-                          "properties": {
-                            "pattern": {
-                              "type": "string",
-                              "title": "Regex pattern to match"
-                            },
-                            "replacement": {
-                              "type": "string",
-                              "title": "Replacement for each match"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "target_endpoint": {
-                  "type": "integer",
-                  "title": "Target endpoint index (default: 0)",
-                  "description": "The positional index (starting from 0) of the connection manager within the connections configuration file"
-                }
-              }
-            }
-          }
-        }
+        "$ref": "resource:/schemas/instance.json#/$defs/phase"
       }
     }
   },
-  "required": [ "version", "id", "phases" ],
   "additionalProperties": false
 }

@@ -44,3 +44,14 @@ task_templates:
   - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_IN-delta.sql
   - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_NULL-delta.sql
   custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
+session_templates:
+# Data maintenance session
+- id: session_data_maintenance_delta
+  tasks:
+  - template_id: data_maintenance_delta
+  - template_id: data_maintenance_delta
+phase_templates:
+# Data maintenance phase
+- id: phase_data_maintenance_delta
+  sessions:
+  - template_id: session_data_maintenance_delta

@@ -30,7 +30,11 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableSession.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface Session {
-  List<Task> getTasks();
+
+  @JsonProperty("template_id")
+  @Nullable String getTemplateId();
+
+  @Nullable List<Task> getTasks();
 
   @JsonProperty("target_endpoint")
   @Nullable Integer getTargetEndpoint();

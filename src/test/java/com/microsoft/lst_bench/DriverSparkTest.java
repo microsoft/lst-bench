@@ -15,7 +15,7 @@
  */
 package com.microsoft.lst_bench;
 
-import com.microsoft.lst_bench.input.TaskLibrary;
+import com.microsoft.lst_bench.input.Library;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ConnectionsConfig;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
@@ -277,7 +277,7 @@ public class DriverSparkTest {
       String arg0, String arg1, String arg2, String arg3, String arg4, Path tempDir)
       throws Exception {
     // Create Java objects from input files
-    TaskLibrary taskLibrary = FileParser.loadTaskLibrary(arg0);
+    Library taskLibrary = FileParser.loadLibrary(arg0);
     Workload workload = FileParser.loadWorkload(arg1);
     ConnectionsConfig connectionsConfig = FileParser.loadConnectionsConfig(arg2);
     ExperimentConfig experimentConfig = FileParser.loadExperimentConfig(arg3);

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "Workload entity templates",
+  "$defs": {
+    "task_template": {
+      "type": "object",
+      "title": "Task template",
+      "required": [ "id", "files" ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Identifier for the task template"
+        },
+        "files": {
+          "type": "array",
+          "title": "SQL script file paths",
+          "description": "List of paths to SQL script files that will be executed as part of the task",
+          "items": {
+            "type": "string",
+            "title": "Path to SQL script file"
+          }
+        },
+        "parameter_values_file": {
+          "type": "string",
+          "title": "Parameter values file path",
+          "description": "Path to CSV file containing parameter values. Concretely, the schema of the file consists of parameter names that can be referenced in a SQL script used in the task. Row $i$ contains the values that will be used to replace the parameter names in execution $i$ of a task based on this template during the experiment"
+        },
+        "permutation_orders_path": {
+          "type": "string",
+          "title": "Permutation orders directory path",
+          "description": "Path to directory containing a list of files, each with a permutation order of the SQL scripts associated with this template. File $0$ will be used as the permutation order when 'permute_order' property for the task in the workload is either undefined or false, while file $i$ with $i>0$ will be used in execution $i-1$ of a task based on this template during the experiment when 'permute_order' property for the task in the workload is true"
+        },
+        "supports_time_travel": {
+          "type": "boolean",
+          "title": "Supports time travel",
+          "description": "Whether a task based on this template can specify a 'time_travel_phase_id' that will be used to inject time travel information into the SQL scripts executed by the task during the experiment"
+        },
+        "custom_task_executor": {
+          "type": "string",
+          "title": "Identifier for a custom task executor",
+          "description": "If the task template should be executed with a custom task executor, this property can be used to specify which executor to use"
+        }
+      },
+      "additionalProperties": false
+    },
+    "session_template": {
+      "type": "object",
+      "title": "Session template",
+      "required": [ "id", "tasks" ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Identifier for the session template"
+        },
+        "tasks": {
+          "type": "array",
+          "title": "List of tasks",
+          "items": {
+            "$ref": "resource:/schemas/instance.json#/$defs/task"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "phase_template": {
+      "type": "object",
+      "title": "Phase template",
+      "required": [ "id", "sessions" ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Identifier for the phase template"
+        },
+        "sessions": {
+          "type": "array",
+          "title": "List of sessions",
+          "items": {
+            "$ref": "resource:/schemas/instance.json#/$defs/session"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
