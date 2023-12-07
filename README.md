@@ -69,8 +69,8 @@ usage: ./launcher.sh -c <arg> -e <arg> -l <arg> -t <arg> -w <arg>
                                  connections config details
  -e,--experiment-config <arg>    [required] Path to input file containing
                                  the experiment config details
- -l,--task-library <arg>         [required] Path to input file containing
-                                 the library with task templates
+ -l,--library <arg>              [required] Path to input file containing
+                                 the library with templates
  -t,--input-log-config <arg>     [required] Path to input file containing
                                  the telemetry gathering config details
  -w,--workload <arg>             [required] Path to input file containing
@@ -121,8 +121,8 @@ In LST-Bench, the following concepts are used to define and organize SQL workloa
 
 - **Workload**: A workload is a sequence of phases, defining the complete set of tasks, sessions, and phases to be executed during the evaluation.
 
-In LST-Bench, tasks are generated using task templates predefined in the task library.
-LST-Bench includes a default task library that encompasses tasks derived from the TPC-DS benchmark, along with workload definitions representing the original TPC-DS and multiple workload patterns. These resources can be located [here](src/main/resources/config/tpcds).
+In LST-Bench, tasks are generated using task templates predefined in the library.
+LST-Bench includes a default library that encompasses tasks derived from the TPC-DS benchmark, along with workload definitions representing the original TPC-DS and multiple workload patterns. These resources can be located [here](src/main/resources/config).
 
 Although LST-Bench provides this set of tasks and workload patterns,
 users have the flexibility to incorporate additional task templates or even create a completely new task library to model specific scenarios.
