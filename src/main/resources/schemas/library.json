@@ -12,23 +12,145 @@
       "type": "array",
       "title": "List of task templates",
       "items": {
-        "$ref": "resource:/schemas/template.json#/$defs/task_template"
-      }
+        "$ref": "#/$defs/id_task_template"
+      },
+      "additionalProperties": false
     },
     "session_templates": {
       "type": "array",
       "title": "List of session templates",
       "items": {
-        "$ref": "resource:/schemas/template.json#/$defs/session_template"
-      }
+        "$ref": "#/$defs/id_session_template"
+      },
+      "additionalProperties": false
     },
     "phase_templates": {
       "type": "array",
       "title": "List of phase templates",
       "items": {
-        "$ref": "resource:/schemas/template.json#/$defs/phase_template"
+        "$ref": "#/$defs/id_phase_template"
+      },
+      "additionalProperties": false
+    },
+    "tasks": {
+      "type": "array",
+      "title": "List of tasks",
+      "items": {
+        "$ref": "#/$defs/id_task"
+      },
+      "additionalProperties": false
+    },
+    "tasks_sequences": {
+      "type": "array",
+      "title": "List of sequences of tasks",
+      "items": {
+        "type": "object",
+        "title": "Tasks sequence",
+        "required": [ "id", "tasks" ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Identifier for the tasks sequence"
+          },
+          "tasks": {
+            "type": "array",
+            "title": "List of tasks",
+            "items": {
+              "type": "object",
+              "allOf": [
+                {
+                  "$ref": "resource:/schemas/instance.json#/$defs/task"
+                }
+              ],
+              "unevaluatedProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
       }
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs" : {
+    "id_task_template": {
+      "type": "object",
+      "title": "Task template with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the task template"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/template.json#/$defs/task_template"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "id_task": {
+      "type": "object",
+      "title": "Task instance with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the task"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/instance.json#/$defs/task"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "id_session_template": {
+      "type": "object",
+      "title": "Session template with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the session template"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/template.json#/$defs/session_template"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "id_phase_template": {
+      "type": "object",
+      "title": "Phase template with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the phase template"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/template.json#/$defs/phase_template"
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
 }

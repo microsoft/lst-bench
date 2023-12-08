@@ -6,12 +6,8 @@
     "task_template": {
       "type": "object",
       "title": "Task template",
-      "required": [ "id", "files" ],
+      "required": [ "files" ],
       "properties": {
-        "id": {
-          "type": "string",
-          "title": "Identifier for the task template"
-        },
         "files": {
           "type": "array",
           "title": "SQL script file paths",
@@ -41,46 +37,47 @@
           "title": "Identifier for a custom task executor",
           "description": "If the task template should be executed with a custom task executor, this property can be used to specify which executor to use"
         }
-      },
-      "additionalProperties": false
+      }
     },
     "session_template": {
       "type": "object",
       "title": "Session template",
-      "required": [ "id", "tasks" ],
+      "required": [ "tasks" ],
       "properties": {
-        "id": {
-          "type": "string",
-          "title": "Identifier for the session template"
-        },
         "tasks": {
           "type": "array",
           "title": "List of tasks",
           "items": {
-            "$ref": "resource:/schemas/instance.json#/$defs/task"
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "resource:/schemas/instance.json#/$defs/task"
+              }
+            ],
+            "unevaluatedProperties": false
           }
         }
-      },
-      "additionalProperties": false
+      }
     },
     "phase_template": {
       "type": "object",
       "title": "Phase template",
-      "required": [ "id", "sessions" ],
+      "required": [ "sessions" ],
       "properties": {
-        "id": {
-          "type": "string",
-          "title": "Identifier for the phase template"
-        },
         "sessions": {
           "type": "array",
           "title": "List of sessions",
           "items": {
-            "$ref": "resource:/schemas/instance.json#/$defs/session"
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "resource:/schemas/instance.json#/$defs/session"
+              }
+            ],
+            "unevaluatedProperties": false
           }
         }
-      },
-      "additionalProperties": false
+      }
     }
   }
 }

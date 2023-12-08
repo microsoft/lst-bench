@@ -93,6 +93,12 @@ task_templates:
 - id: faulty_query
   files:
   - src/test/resources/scripts/faulty_test_query.sql
+tasks:
+# Task instance of execution of faulty TPC-DS query
+- id: task_faulty_query
+  template_id: faulty_query
+  task_executor_arguments:
+    skip_erroneous_query_strings: this is a nonsense string;column
 session_templates:
 # Data maintenance session
 - id: session_data_maintenance
