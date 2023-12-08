@@ -136,6 +136,10 @@ public class BenchmarkObjectFactory {
     return ImmutableWorkloadExec.of(workload.getId(), phaseExecList);
   }
 
+  /**
+   * Validates that the phases have exactly one of template ID, list of sessions, or instance ID
+   * defined.
+   */
   private static void validatePhases(List<Phase> phases) {
     for (Phase phase : phases) {
       boolean onlyOneTrue =
@@ -185,6 +189,10 @@ public class BenchmarkObjectFactory {
     return ImmutablePhaseExec.of(phase.getId(), sessionExecList);
   }
 
+  /**
+   * Validates that the sessions have exactly one of template ID, list of tasks, or instance ID
+   * defined.
+   */
   private static void validateSessions(List<Session> sessions) {
     for (Session session : sessions) {
       boolean onlyOneTrue =
@@ -238,6 +246,10 @@ public class BenchmarkObjectFactory {
         sessionId, taskExecList, ObjectUtils.defaultIfNull(session.getTargetEndpoint(), 0));
   }
 
+  /**
+   * Validates that the tasks have exactly one of template ID, tasks sequence ID, or instance ID
+   * defined.
+   */
   private static void validateTasks(List<Task> tasks) {
     for (Task task : tasks) {
       boolean onlyOneTrue =
@@ -250,6 +262,14 @@ public class BenchmarkObjectFactory {
     }
   }
 
+  /**
+   * Expands tasks sequences into a list of tasks. TODO: Nested sequences.
+   *
+   * @param tasks the tasks to expand
+   * @param internalLibrary a library with task, session, and phase templates
+   * @return a list of tasks with tasks sequences expanded
+   * @throws IllegalArgumentException if a task references an unknown tasks sequence ID
+   */
   private static List<Task> expandTasksSequences(
       List<Task> tasks, InternalLibrary internalLibrary) {
     List<Task> expandedTasks = new ArrayList<>();
