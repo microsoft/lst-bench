@@ -145,7 +145,7 @@ public class BenchmarkObjectFactory {
       boolean onlyOneTrue = phase.getTemplateId() != null ^ phase.getSessions() != null;
       if (!onlyOneTrue) {
         throw new IllegalArgumentException(
-            "Must have exactly one of template id, sessions, or instance id defined");
+            "Must have exactly one of template id or list of sessions defined");
       }
     }
   }
@@ -196,7 +196,7 @@ public class BenchmarkObjectFactory {
       boolean onlyOneTrue = session.getTemplateId() != null ^ session.getTasks() != null;
       if (!onlyOneTrue) {
         throw new IllegalArgumentException(
-            "Must have exactly one of template id, tasks, or instance id defined");
+            "Must have exactly one of template id or list of tasks defined");
       }
     }
   }
