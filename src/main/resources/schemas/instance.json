@@ -95,96 +95,68 @@
     "session": {
       "type": "object",
       "title": "Session",
-      "oneOf": [
+      "allOf": [
         {
-          "type": "object",
-          "required": [ "instance_id" ],
-          "properties": {
-            "instance_id": {
-              "type": "string",
-              "title": "Identifier of a session instance"
-            }
-          }
-        },
-        {
-          "allOf": [
+          "oneOf": [
             {
-              "oneOf": [
-                {
-                  "$ref": "resource:/schemas/template.json#/$defs/session_template"
-                },
-                {
-                  "type": "object",
-                  "required": [ "template_id" ],
-                  "properties": {
-                    "template_id": {
-                      "type": "string",
-                      "title": "Template identifier",
-                      "description": "Identifier of the template that this session is based on"
-                    }
-                  }
-                }
-              ]
+              "$ref": "resource:/schemas/template.json#/$defs/session_template"
             },
             {
               "type": "object",
+              "required": [ "template_id" ],
               "properties": {
-                "target_endpoint": {
-                  "type": "integer",
-                  "title": "Target endpoint index (default: 0)",
-                  "description": "The positional index (starting from 0) of the connection manager within the connections configuration file"
+                "template_id": {
+                  "type": "string",
+                  "title": "Template identifier",
+                  "description": "Identifier of the template that this session is based on"
                 }
               }
             }
           ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "target_endpoint": {
+              "type": "integer",
+              "title": "Target endpoint index (default: 0)",
+              "description": "The positional index (starting from 0) of the connection manager within the connections configuration file"
+            }
+          }
         }
       ]
     },
     "phase": {
       "type": "object",
       "title": "Phase",
-      "oneOf": [
+      "allOf": [
         {
-          "type": "object",
-          "required": [ "instance_id" ],
-          "properties": {
-            "instance_id": {
-              "type": "string",
-              "title": "Identifier of a phase instance"
-            }
-          }
-        },
-        {
-          "allOf": [
+          "oneOf": [
             {
-              "oneOf": [
-                {
-                  "$ref": "resource:/schemas/template.json#/$defs/phase_template"
-                },
-                {
-                  "type": "object",
-                  "required": [ "template_id" ],
-                  "properties": {
-                    "template_id": {
-                      "type": "string",
-                      "title": "Template identifier",
-                      "description": "Identifier of the template that this phase is based on"
-                    }
-                  }
-                }
-              ]
+              "$ref": "resource:/schemas/template.json#/$defs/phase_template"
             },
             {
               "type": "object",
-              "required": [ "id" ],
+              "required": [ "template_id" ],
               "properties": {
-                "id": {
+                "template_id": {
                   "type": "string",
-                  "title": "Identifier for the phase"
+                  "title": "Template identifier",
+                  "description": "Identifier of the template that this phase is based on"
                 }
               }
             }
           ]
+        },
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the phase"
+            }
+          }
         }
       ]
     }

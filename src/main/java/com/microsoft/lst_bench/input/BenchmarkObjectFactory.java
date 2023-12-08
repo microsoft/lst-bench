@@ -142,9 +142,7 @@ public class BenchmarkObjectFactory {
    */
   private static void validatePhases(List<Phase> phases) {
     for (Phase phase : phases) {
-      boolean onlyOneTrue =
-          (phase.getTemplateId() != null ^ phase.getSessions() != null)
-              ^ phase.getInstanceId() != null;
+      boolean onlyOneTrue = phase.getTemplateId() != null ^ phase.getSessions() != null;
       if (!onlyOneTrue) {
         throw new IllegalArgumentException(
             "Must have exactly one of template id, sessions, or instance id defined");
@@ -195,9 +193,7 @@ public class BenchmarkObjectFactory {
    */
   private static void validateSessions(List<Session> sessions) {
     for (Session session : sessions) {
-      boolean onlyOneTrue =
-          (session.getTemplateId() != null ^ session.getTasks() != null)
-              ^ session.getInstanceId() != null;
+      boolean onlyOneTrue = session.getTemplateId() != null ^ session.getTasks() != null;
       if (!onlyOneTrue) {
         throw new IllegalArgumentException(
             "Must have exactly one of template id, tasks, or instance id defined");

@@ -31,12 +31,6 @@ import org.immutables.value.Value;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface Session {
 
-  @JsonProperty("id")
-  @Nullable String getId();
-
-  @JsonProperty("instance_id")
-  @Nullable String getInstanceId();
-
   @JsonProperty("template_id")
   @Nullable String getTemplateId();
 
