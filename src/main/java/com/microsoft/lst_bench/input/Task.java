@@ -31,8 +31,18 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableTask.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface Task {
+
+  @JsonProperty("id")
+  @Nullable String getId();
+
+  @JsonProperty("instance_id")
+  @Nullable String getInstanceId();
+
+  @JsonProperty("tasks_sequence_id")
+  @Nullable String getTasksSequenceId();
+
   @JsonProperty("template_id")
-  String getTemplateId();
+  @Nullable String getTemplateId();
 
   @JsonProperty("permute_order")
   @Nullable Boolean isPermuteOrder();

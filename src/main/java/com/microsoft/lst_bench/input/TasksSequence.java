@@ -16,32 +16,19 @@
 package com.microsoft.lst_bench.input;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
-import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
-/** POJO class meant to be used to deserialize an input session. */
+/** Represents a sequence of tasks to be executed in order. */
 @Value.Immutable
 @Value.Style(jdkOnly = true)
-@JsonSerialize(as = ImmutableSession.class)
-@JsonDeserialize(as = ImmutableSession.class)
+@JsonSerialize(as = ImmutableTasksSequence.class)
+@JsonDeserialize(as = ImmutableTasksSequence.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface Session {
+public interface TasksSequence {
+  String getId();
 
-  @JsonProperty("id")
-  @Nullable String getId();
-
-  @JsonProperty("instance_id")
-  @Nullable String getInstanceId();
-
-  @JsonProperty("template_id")
-  @Nullable String getTemplateId();
-
-  @Nullable List<Task> getTasks();
-
-  @JsonProperty("target_endpoint")
-  @Nullable Integer getTargetEndpoint();
+  List<Task> getTasks();
 }

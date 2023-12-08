@@ -42,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.Validate;
 
 /** Factory class for creating benchmark objects from the input configuration. */
 public class BenchmarkObjectFactory {
@@ -119,10 +118,12 @@ public class BenchmarkObjectFactory {
    */
   private static ImmutableWorkloadExec createWorkloadExec(
       Workload workload, InternalLibrary internalLibrary, ExperimentConfig experimentConfig) {
+    List<Phase> phases = workload.getPhases();
+    validatePhases(phases);
     Map<String, Integer> taskTemplateIdToPermuteOrderCounter = new HashMap<>();
     Map<String, Integer> taskTemplateIdToParameterValuesCounter = new HashMap<>();
-    List<PhaseExec> phases = new ArrayList<>();
-    for (Phase phase : workload.getPhases()) {
+    List<PhaseExec> phaseExecList = new ArrayList<>();
+    for (Phase phase : phases) {
       PhaseExec phaseExec =
           createPhaseExec(
               phase,
@@ -130,9 +131,21 @@ public class BenchmarkObjectFactory {
               experimentConfig,
               taskTemplateIdToPermuteOrderCounter,
               taskTemplateIdToParameterValuesCounter);
-      phases.add(phaseExec);
+      phaseExecList.add(phaseExec);
     }
-    return ImmutableWorkloadExec.of(workload.getId(), phases);
+    return ImmutableWorkloadExec.of(workload.getId(), phaseExecList);
+  }
+
+  private static void validatePhases(List<Phase> phases) {
+    for (Phase phase : phases) {
+      boolean onlyOneTrue =
+          (phase.getTemplateId() != null ^ phase.getSessions() != null)
+              ^ phase.getInstanceId() != null;
+      if (!onlyOneTrue) {
+        throw new IllegalArgumentException(
+            "Must have exactly one of template id, sessions, or instance id defined");
+      }
+    }
   }
 
   private static PhaseExec createPhaseExec(
@@ -143,7 +156,6 @@ public class BenchmarkObjectFactory {
       Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
     List<Session> sessions;
     if (phase.getSessions() != null) {
-      Validate.isTrue(phase.getTemplateId() == null);
       sessions = phase.getSessions();
     } else if (phase.getTemplateId() != null) {
       PhaseTemplate phaseTemplate =
@@ -155,6 +167,7 @@ public class BenchmarkObjectFactory {
     } else {
       throw new IllegalArgumentException("Unknown phase type");
     }
+    validateSessions(sessions);
     List<SessionExec> sessionExecList = new ArrayList<>();
     for (int i = 0; i < sessions.size(); i++) {
       Session session = sessions.get(i);
@@ -172,6 +185,18 @@ public class BenchmarkObjectFactory {
     return ImmutablePhaseExec.of(phase.getId(), sessionExecList);
   }
 
+  private static void validateSessions(List<Session> sessions) {
+    for (Session session : sessions) {
+      boolean onlyOneTrue =
+          (session.getTemplateId() != null ^ session.getTasks() != null)
+              ^ session.getInstanceId() != null;
+      if (!onlyOneTrue) {
+        throw new IllegalArgumentException(
+            "Must have exactly one of template id, tasks, or instance id defined");
+      }
+    }
+  }
+
   private static SessionExec createSessionExec(
       String sessionId,
       Session session,
@@ -181,7 +206,6 @@ public class BenchmarkObjectFactory {
       Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
     List<Task> tasks;
     if (session.getTasks() != null) {
-      Validate.isTrue(session.getTemplateId() == null);
       tasks = session.getTasks();
     } else if (session.getTemplateId() != null) {
       SessionTemplate sessionTemplate =
@@ -194,6 +218,8 @@ public class BenchmarkObjectFactory {
     } else {
       throw new IllegalArgumentException("Unknown session type");
     }
+    validateTasks(tasks);
+    tasks = expandTasksSequences(tasks, internalLibrary);
     List<TaskExec> taskExecList = new ArrayList<>();
     for (int j = 0; j < tasks.size(); j++) {
       Task task = tasks.get(j);
@@ -212,6 +238,38 @@ public class BenchmarkObjectFactory {
         sessionId, taskExecList, ObjectUtils.defaultIfNull(session.getTargetEndpoint(), 0));
   }
 
+  private static void validateTasks(List<Task> tasks) {
+    for (Task task : tasks) {
+      boolean onlyOneTrue =
+          (task.getTemplateId() != null ^ task.getTasksSequenceId() != null)
+              ^ task.getInstanceId() != null;
+      if (!onlyOneTrue) {
+        throw new IllegalArgumentException(
+            "Must have exactly one of template id, tasks sequence id, or instance id defined");
+      }
+    }
+  }
+
+  private static List<Task> expandTasksSequences(
+      List<Task> tasks, InternalLibrary internalLibrary) {
+    List<Task> expandedTasks = new ArrayList<>();
+    for (Task task : tasks) {
+      if (task.getTasksSequenceId() != null) {
+        TasksSequence tasksSequence =
+            internalLibrary.getIdToTasksSequence().get(task.getTasksSequenceId());
+        if (tasksSequence == null) {
+          throw new IllegalArgumentException(
+              "Unknown tasks sequence id: " + task.getTasksSequenceId());
+        }
+        validateTasks(tasksSequence.getTasks());
+        expandedTasks.addAll(tasksSequence.getTasks());
+      } else {
+        expandedTasks.add(task);
+      }
+    }
+    return Collections.unmodifiableList(expandedTasks);
+  }
+
   private static TaskExec createTaskExec(
       String taskId,
       Task task,
@@ -219,6 +277,19 @@ public class BenchmarkObjectFactory {
       ExperimentConfig experimentConfig,
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
       Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
+    if (task.getInstanceId() != null) {
+      Task taskInstance = internalLibrary.getIdToTaskInstance().get(task.getInstanceId());
+      if (taskInstance == null) {
+        throw new IllegalArgumentException("Unknown task instance id: " + task.getInstanceId());
+      }
+      return createTaskExec(
+          taskId,
+          taskInstance,
+          internalLibrary,
+          experimentConfig,
+          taskTemplateIdToPermuteOrderCounter,
+          taskTemplateIdToParameterValuesCounter);
+    }
     TaskTemplate taskTemplate = internalLibrary.getIdToTaskTemplate().get(task.getTemplateId());
     if (taskTemplate == null) {
       throw new IllegalArgumentException("Unknown task template id: " + task.getTemplateId());
@@ -366,21 +437,51 @@ public class BenchmarkObjectFactory {
         idToPhaseTemplate.put(phaseTemplate.getId(), phaseTemplate);
       }
     }
-    return new InternalLibrary(idToTaskTemplate, idToSessionTemplate, idToPhaseTemplate);
+    Map<String, Task> idToTaskInstance = new HashMap<>();
+    if (library.getTasks() != null) {
+      for (Task task : library.getTasks()) {
+        if (idToTaskInstance.containsKey(task.getId())) {
+          throw new IllegalArgumentException("Duplicate task id: " + task.getId());
+        }
+        idToTaskInstance.put(task.getId(), task);
+      }
+    }
+    Map<String, TasksSequence> idToTasksSequence = new HashMap<>();
+    if (library.getTasksSequences() != null) {
+      for (TasksSequence tasksSequence : library.getTasksSequences()) {
+        if (idToTasksSequence.containsKey(tasksSequence.getId())) {
+          throw new IllegalArgumentException(
+              "Duplicate tasks sequence id: " + tasksSequence.getId());
+        }
+        idToTasksSequence.put(tasksSequence.getId(), tasksSequence);
+      }
+    }
+    return new InternalLibrary(
+        idToTaskTemplate,
+        idToSessionTemplate,
+        idToPhaseTemplate,
+        idToTaskInstance,
+        idToTasksSequence);
   }
 
   private static class InternalLibrary {
     private final Map<String, TaskTemplate> idToTaskTemplate;
     private final Map<String, SessionTemplate> idToSessionTemplate;
     private final Map<String, PhaseTemplate> idToPhaseTemplate;
+    private final Map<String, Task> idToTaskInstance;
+    private final Map<String, TasksSequence> idToTasksSequence;
 
     InternalLibrary(
         Map<String, TaskTemplate> idToTaskTemplate,
         Map<String, SessionTemplate> idToSessionTemplate,
-        Map<String, PhaseTemplate> idToPhaseTemplate) {
+        Map<String, PhaseTemplate> idToPhaseTemplate,
+        Map<String, Task> idToTaskInstance,
+        Map<String, TasksSequence> idToTasksSequence) {
       this.idToTaskTemplate = Collections.unmodifiableMap(idToTaskTemplate);
       this.idToSessionTemplate = Collections.unmodifiableMap(idToSessionTemplate);
       this.idToPhaseTemplate = Collections.unmodifiableMap(idToPhaseTemplate);
+      this.idToTaskInstance = Collections.unmodifiableMap(idToTaskInstance);
+      this.idToTasksSequence = Collections.unmodifiableMap(idToTasksSequence);
     }
 
     private Map<String, TaskTemplate> getIdToTaskTemplate() {
@@ -393,6 +494,14 @@ public class BenchmarkObjectFactory {
 
     private Map<String, PhaseTemplate> getIdToPhaseTemplate() {
       return idToPhaseTemplate;
+    }
+
+    private Map<String, Task> getIdToTaskInstance() {
+      return idToTaskInstance;
+    }
+
+    private Map<String, TasksSequence> getIdToTasksSequence() {
+      return idToTasksSequence;
     }
   }
 }

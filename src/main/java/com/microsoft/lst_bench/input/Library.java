@@ -43,4 +43,9 @@ public interface Library {
 
   @JsonProperty("phase_templates")
   @Nullable List<PhaseTemplate> getPhaseTemplates();
+
+  @Nullable List<Task> getTasks();
+
+  @JsonProperty("tasks_sequences")
+  @Nullable List<TasksSequence> getTasksSequences();
 }
