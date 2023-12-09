@@ -6,4 +6,4 @@ phases:
 - id: test
   sessions:
   - tasks:
-    - instance_id: task_faulty_query
+    - prepared_task_id: task_faulty_query

@@ -35,8 +35,8 @@ public interface Task {
   @JsonProperty("id")
   @Nullable String getId();
 
-  @JsonProperty("instance_id")
-  @Nullable String getInstanceId();
+  @JsonProperty("prepared_task_id")
+  @Nullable String getPreparedTaskId();
 
   @JsonProperty("tasks_sequence_id")
   @Nullable String getTasksSequenceId();

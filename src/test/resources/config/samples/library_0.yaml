@@ -44,7 +44,7 @@ task_templates:
   - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_IN-delta.sql
   - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_NULL-delta.sql
   custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
-tasks:
+prepared_tasks:
 # Optimize split instance of task
 - id: optimize_split_delta
   template_id: optimize_split_delta

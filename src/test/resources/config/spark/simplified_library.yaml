@@ -93,7 +93,7 @@ task_templates:
 - id: faulty_query
   files:
   - src/test/resources/scripts/faulty_test_query.sql
-tasks:
+prepared_tasks:
 # Task instance of execution of faulty TPC-DS query
 - id: task_faulty_query
   template_id: faulty_query

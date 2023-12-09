@@ -136,10 +136,7 @@ public class BenchmarkObjectFactory {
     return ImmutableWorkloadExec.of(workload.getId(), phaseExecList);
   }
 
-  /**
-   * Validates that the phases have exactly one of template ID, list of sessions, or instance ID
-   * defined.
-   */
+  /** Validates that the phases have exactly one of template ID or list of sessions defined. */
   private static void validatePhases(List<Phase> phases) {
     for (Phase phase : phases) {
       boolean onlyOneTrue = phase.getTemplateId() != null ^ phase.getSessions() != null;
@@ -187,10 +184,7 @@ public class BenchmarkObjectFactory {
     return ImmutablePhaseExec.of(phase.getId(), sessionExecList);
   }
 
-  /**
-   * Validates that the sessions have exactly one of template ID, list of tasks, or instance ID
-   * defined.
-   */
+  /** Validates that the sessions have exactly one of template ID or list of tasks defined. */
   private static void validateSessions(List<Session> sessions) {
     for (Session session : sessions) {
       boolean onlyOneTrue = session.getTemplateId() != null ^ session.getTasks() != null;
@@ -243,17 +237,17 @@ public class BenchmarkObjectFactory {
   }
 
   /**
-   * Validates that the tasks have exactly one of template ID, tasks sequence ID, or instance ID
-   * defined.
+   * Validates that the tasks have exactly one of template ID, tasks sequence ID, or prepared task
+   * ID defined.
    */
   private static void validateTasks(List<Task> tasks) {
     for (Task task : tasks) {
       boolean onlyOneTrue =
           (task.getTemplateId() != null ^ task.getTasksSequenceId() != null)
-              ^ task.getInstanceId() != null;
+              ^ task.getPreparedTaskId() != null;
       if (!onlyOneTrue) {
         throw new IllegalArgumentException(
-            "Must have exactly one of template id, tasks sequence id, or instance id defined");
+            "Must have exactly one of template id, tasks sequence id, or prepared task id defined");
       }
     }
   }
@@ -293,14 +287,14 @@ public class BenchmarkObjectFactory {
       ExperimentConfig experimentConfig,
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
       Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
-    if (task.getInstanceId() != null) {
-      Task taskInstance = internalLibrary.getIdToTaskInstance().get(task.getInstanceId());
-      if (taskInstance == null) {
-        throw new IllegalArgumentException("Unknown task instance id: " + task.getInstanceId());
+    if (task.getPreparedTaskId() != null) {
+      Task preparedTask = internalLibrary.getIdToPrepatedTask().get(task.getPreparedTaskId());
+      if (preparedTask == null) {
+        throw new IllegalArgumentException("Unknown prepared task id: " + task.getPreparedTaskId());
       }
       return createTaskExec(
           taskId,
-          taskInstance,
+          preparedTask,
           internalLibrary,
           experimentConfig,
           taskTemplateIdToPermuteOrderCounter,
@@ -453,13 +447,13 @@ public class BenchmarkObjectFactory {
         idToPhaseTemplate.put(phaseTemplate.getId(), phaseTemplate);
       }
     }
-    Map<String, Task> idToTaskInstance = new HashMap<>();
-    if (library.getTasks() != null) {
-      for (Task task : library.getTasks()) {
-        if (idToTaskInstance.containsKey(task.getId())) {
-          throw new IllegalArgumentException("Duplicate task id: " + task.getId());
+    Map<String, Task> idToPreparedTask = new HashMap<>();
+    if (library.getPreparedTasks() != null) {
+      for (Task prepatedTask : library.getPreparedTasks()) {
+        if (idToPreparedTask.containsKey(prepatedTask.getId())) {
+          throw new IllegalArgumentException("Duplicate prepared task id: " + prepatedTask.getId());
         }
-        idToTaskInstance.put(task.getId(), task);
+        idToPreparedTask.put(prepatedTask.getId(), prepatedTask);
       }
     }
     Map<String, TasksSequence> idToTasksSequence = new HashMap<>();
@@ -476,7 +470,7 @@ public class BenchmarkObjectFactory {
         idToTaskTemplate,
         idToSessionTemplate,
         idToPhaseTemplate,
-        idToTaskInstance,
+        idToPreparedTask,
         idToTasksSequence);
   }
 
@@ -484,19 +478,19 @@ public class BenchmarkObjectFactory {
     private final Map<String, TaskTemplate> idToTaskTemplate;
     private final Map<String, SessionTemplate> idToSessionTemplate;
     private final Map<String, PhaseTemplate> idToPhaseTemplate;
-    private final Map<String, Task> idToTaskInstance;
+    private final Map<String, Task> idToPreparedTask;
     private final Map<String, TasksSequence> idToTasksSequence;
 
     InternalLibrary(
         Map<String, TaskTemplate> idToTaskTemplate,
         Map<String, SessionTemplate> idToSessionTemplate,
         Map<String, PhaseTemplate> idToPhaseTemplate,
-        Map<String, Task> idToTaskInstance,
+        Map<String, Task> idToPreparedTask,
         Map<String, TasksSequence> idToTasksSequence) {
       this.idToTaskTemplate = Collections.unmodifiableMap(idToTaskTemplate);
       this.idToSessionTemplate = Collections.unmodifiableMap(idToSessionTemplate);
       this.idToPhaseTemplate = Collections.unmodifiableMap(idToPhaseTemplate);
-      this.idToTaskInstance = Collections.unmodifiableMap(idToTaskInstance);
+      this.idToPreparedTask = Collections.unmodifiableMap(idToPreparedTask);
       this.idToTasksSequence = Collections.unmodifiableMap(idToTasksSequence);
     }
 
@@ -512,8 +506,8 @@ public class BenchmarkObjectFactory {
       return idToPhaseTemplate;
     }
 
-    private Map<String, Task> getIdToTaskInstance() {
-      return idToTaskInstance;
+    private Map<String, Task> getIdToPrepatedTask() {
+      return idToPreparedTask;
     }
 
     private Map<String, TasksSequence> getIdToTasksSequence() {

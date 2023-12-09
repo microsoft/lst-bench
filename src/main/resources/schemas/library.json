@@ -32,11 +32,11 @@
       },
       "additionalProperties": false
     },
-    "tasks": {
+    "prepared_tasks": {
       "type": "array",
-      "title": "List of tasks",
+      "title": "List of prepared tasks",
       "items": {
-        "$ref": "#/$defs/id_task"
+        "$ref": "#/$defs/id_prepared_task"
       },
       "additionalProperties": false
     },
@@ -92,26 +92,6 @@
       ],
       "unevaluatedProperties": false
     },
-    "id_task": {
-      "type": "object",
-      "title": "Task instance with identifier",
-      "allOf": [
-        {
-          "type": "object",
-          "required": [ "id" ],
-          "properties": {
-            "id": {
-              "type": "string",
-              "title": "Identifier for the task"
-            }
-          }
-        },
-        {
-          "$ref": "resource:/schemas/instance.json#/$defs/task"
-        }
-      ],
-      "unevaluatedProperties": false
-    },
     "id_session_template": {
       "type": "object",
       "title": "Session template with identifier",
@@ -148,6 +128,26 @@
         },
         {
           "$ref": "resource:/schemas/template.json#/$defs/phase_template"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "id_prepared_task": {
+      "type": "object",
+      "title": "Prepared task with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the task"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/instance.json#/$defs/task"
         }
       ],
       "unevaluatedProperties": false

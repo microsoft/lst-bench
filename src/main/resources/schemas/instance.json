@@ -9,11 +9,11 @@
       "oneOf": [
         {
           "type": "object",
-          "required": [ "instance_id" ],
+          "required": [ "prepared_task_id" ],
           "properties": {
-            "instance_id": {
+            "prepared_task_id": {
               "type": "string",
-              "title": "Identifier of a task instance"
+              "title": "Identifier of a prepared task"
             }
           }
         },
