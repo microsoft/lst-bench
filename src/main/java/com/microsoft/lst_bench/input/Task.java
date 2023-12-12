@@ -64,4 +64,24 @@ public interface Task {
 
     String getReplacement();
   }
+
+  /**
+   * Validates that a task has exactly one of template ID, tasks sequence ID, or prepared task ID
+   * defined.
+   */
+  @Value.Check
+  default void check() {
+    boolean onlyOneTrue =
+        (getTemplateId() != null && getTasksSequenceId() == null && getPreparedTaskId() == null)
+            || (getTemplateId() == null
+                && getTasksSequenceId() != null
+                && getPreparedTaskId() == null)
+            || (getTemplateId() == null
+                && getTasksSequenceId() == null
+                && getPreparedTaskId() != null);
+    if (!onlyOneTrue) {
+      throw new IllegalStateException(
+          "Must have exactly one of template id, tasks sequence id, or prepared task id defined");
+    }
+  }
 }

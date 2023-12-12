@@ -36,4 +36,14 @@ public interface Phase {
   @Nullable String getTemplateId();
 
   @Nullable List<Session> getSessions();
+
+  /** Validates that a phase has exactly one of template ID or list of sessions defined. */
+  @Value.Check
+  default void check() {
+    boolean onlyOneTrue = getTemplateId() != null ^ getSessions() != null;
+    if (!onlyOneTrue) {
+      throw new IllegalStateException(
+          "Must have exactly one of template id or list of sessions defined");
+    }
+  }
 }

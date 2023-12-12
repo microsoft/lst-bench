@@ -30,8 +30,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -304,5 +306,34 @@ public class ValidationTest {
     // Try to create POJO object, which should fail at validation time
     Assertions.assertThrows(
         IllegalArgumentException.class, () -> FileParser.loadTelemetryConfig(configFilePath));
+  }
+
+  @Test
+  public void testIncorrectTaskCreation() {
+    ImmutableTask.Builder builder =
+        ImmutableTask.builder().preparedTaskId("pt_id").tasksSequenceId("ts_id").templateId("t_id");
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableTask.builder().tasksSequenceId("ts_id").templateId("t_id");
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableTask.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+  }
+
+  @Test
+  public void testIncorrectSessionCreation() {
+    ImmutableSession.Builder builder =
+        ImmutableSession.builder().templateId("t_id").tasks(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableSession.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+  }
+
+  @Test
+  public void testIncorrectPhaseCreation() {
+    ImmutablePhase.Builder builder =
+        ImmutablePhase.builder().templateId("t_id").sessions(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutablePhase.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
   }
 }

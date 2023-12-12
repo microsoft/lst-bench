@@ -38,4 +38,14 @@ public interface Session {
 
   @JsonProperty("target_endpoint")
   @Nullable Integer getTargetEndpoint();
+
+  /** Validates that a session has exactly one of template ID or list of tasks defined. */
+  @Value.Check
+  default void check() {
+    boolean onlyOneTrue = getTemplateId() != null ^ getTasks() != null;
+    if (!onlyOneTrue) {
+      throw new IllegalStateException(
+          "Must have exactly one of template id or list of tasks defined");
+    }
+  }
 }

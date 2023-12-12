@@ -119,7 +119,6 @@ public class BenchmarkObjectFactory {
   private static ImmutableWorkloadExec createWorkloadExec(
       Workload workload, InternalLibrary internalLibrary, ExperimentConfig experimentConfig) {
     List<Phase> phases = workload.getPhases();
-    validatePhases(phases);
     Map<String, Integer> taskTemplateIdToPermuteOrderCounter = new HashMap<>();
     Map<String, Integer> taskTemplateIdToParameterValuesCounter = new HashMap<>();
     List<PhaseExec> phaseExecList = new ArrayList<>();
@@ -134,17 +133,6 @@ public class BenchmarkObjectFactory {
       phaseExecList.add(phaseExec);
     }
     return ImmutableWorkloadExec.of(workload.getId(), phaseExecList);
-  }
-
-  /** Validates that the phases have exactly one of template ID or list of sessions defined. */
-  private static void validatePhases(List<Phase> phases) {
-    for (Phase phase : phases) {
-      boolean onlyOneTrue = phase.getTemplateId() != null ^ phase.getSessions() != null;
-      if (!onlyOneTrue) {
-        throw new IllegalArgumentException(
-            "Must have exactly one of template id or list of sessions defined");
-      }
-    }
   }
 
   private static PhaseExec createPhaseExec(
@@ -166,7 +154,6 @@ public class BenchmarkObjectFactory {
     } else {
       throw new IllegalArgumentException("Unknown phase type");
     }
-    validateSessions(sessions);
     List<SessionExec> sessionExecList = new ArrayList<>();
     for (int i = 0; i < sessions.size(); i++) {
       Session session = sessions.get(i);
@@ -182,17 +169,6 @@ public class BenchmarkObjectFactory {
       sessionExecList.add(sessionExec);
     }
     return ImmutablePhaseExec.of(phase.getId(), sessionExecList);
-  }
-
-  /** Validates that the sessions have exactly one of template ID or list of tasks defined. */
-  private static void validateSessions(List<Session> sessions) {
-    for (Session session : sessions) {
-      boolean onlyOneTrue = session.getTemplateId() != null ^ session.getTasks() != null;
-      if (!onlyOneTrue) {
-        throw new IllegalArgumentException(
-            "Must have exactly one of template id or list of tasks defined");
-      }
-    }
   }
 
   private static SessionExec createSessionExec(
@@ -216,7 +192,6 @@ public class BenchmarkObjectFactory {
     } else {
       throw new IllegalArgumentException("Unknown session type");
     }
-    validateTasks(tasks);
     tasks = expandTasksSequences(tasks, internalLibrary);
     List<TaskExec> taskExecList = new ArrayList<>();
     for (int j = 0; j < tasks.size(); j++) {
@@ -234,22 +209,6 @@ public class BenchmarkObjectFactory {
     }
     return ImmutableSessionExec.of(
         sessionId, taskExecList, ObjectUtils.defaultIfNull(session.getTargetEndpoint(), 0));
-  }
-
-  /**
-   * Validates that the tasks have exactly one of template ID, tasks sequence ID, or prepared task
-   * ID defined.
-   */
-  private static void validateTasks(List<Task> tasks) {
-    for (Task task : tasks) {
-      boolean onlyOneTrue =
-          (task.getTemplateId() != null ^ task.getTasksSequenceId() != null)
-              ^ task.getPreparedTaskId() != null;
-      if (!onlyOneTrue) {
-        throw new IllegalArgumentException(
-            "Must have exactly one of template id, tasks sequence id, or prepared task id defined");
-      }
-    }
   }
 
   /**
@@ -271,7 +230,6 @@ public class BenchmarkObjectFactory {
           throw new IllegalArgumentException(
               "Unknown tasks sequence id: " + task.getTasksSequenceId());
         }
-        validateTasks(tasksSequence.getTasks());
         expandedTasks.addAll(tasksSequence.getTasks());
       } else {
         expandedTasks.add(task);
