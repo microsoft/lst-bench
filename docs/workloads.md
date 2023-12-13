@@ -1,4 +1,4 @@
-# Workload Definition in LST-Bench
+# Workloads Definition in LST-Bench
 In LST-Bench, the following concepts are used to define and organize SQL workloads:
 
 - **Task**: A task is a collection of SQL statements grouped together in a sequence of files. Each file represents a step or subtask within the overall task.

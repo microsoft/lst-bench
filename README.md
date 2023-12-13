@@ -111,7 +111,7 @@ The LST-Bench code is organized into two modules:
    The Python module performs data processing, analysis, and visualization to facilitate a deeper understanding of the experimental results.
 
 ### LST-Bench Concepts
-In LST-Bench, we utilize specific concepts to define and organize SQL workloads, with a focus on maximizing flexibility and facilitating reusability across various workloads. For detailed information, refer to our [documentation](docs/workload.md).
+In LST-Bench, we utilize specific concepts to define and organize SQL workloads, with a focus on maximizing flexibility and facilitating reusability across various workloads. For detailed information, refer to our [documentation](docs/workloads.md).
 
 ### Telemetry and Metrics Processor
 LST-Bench captures execution telemetry during workload execution at multiple levels, including per experiment, phase, session, task, file, and statement.
