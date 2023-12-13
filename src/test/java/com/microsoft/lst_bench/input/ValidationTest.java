@@ -329,7 +329,12 @@ public class ValidationTest {
   @Test
   public void testIncorrectSessionCreation() {
     ImmutableSession.Builder builder =
-        ImmutableSession.builder().templateId("t_id").tasks(new ArrayList<>());
+        ImmutableSession.builder()
+            .templateId("t_id")
+            .tasksSequences(new ArrayList<>())
+            .tasks(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableSession.builder().templateId("t_id").tasks(new ArrayList<>());
     Assertions.assertThrows(IllegalStateException.class, builder::build);
     builder = ImmutableSession.builder();
     Assertions.assertThrows(IllegalStateException.class, builder::build);
