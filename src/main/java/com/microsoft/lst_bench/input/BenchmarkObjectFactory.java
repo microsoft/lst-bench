@@ -152,7 +152,7 @@ public class BenchmarkObjectFactory {
       }
       sessions = phaseTemplate.getSessions();
     } else {
-      throw new IllegalArgumentException("Unknown phase type");
+      throw new IllegalStateException("Unknown phase type");
     }
     List<SessionExec> sessionExecList = new ArrayList<>();
     for (int i = 0; i < sessions.size(); i++) {
@@ -178,21 +178,7 @@ public class BenchmarkObjectFactory {
       ExperimentConfig experimentConfig,
       Map<String, Integer> taskTemplateIdToPermuteOrderCounter,
       Map<String, Integer> taskTemplateIdToParameterValuesCounter) {
-    List<Task> tasks;
-    if (session.getTasks() != null) {
-      tasks = session.getTasks();
-    } else if (session.getTemplateId() != null) {
-      SessionTemplate sessionTemplate =
-          internalLibrary.getIdToSessionTemplate().get(session.getTemplateId());
-      if (sessionTemplate == null) {
-        throw new IllegalArgumentException(
-            "Unknown session template id: " + session.getTemplateId());
-      }
-      tasks = sessionTemplate.getTasks();
-    } else {
-      throw new IllegalArgumentException("Unknown session type");
-    }
-    tasks = expandTasksSequences(tasks, internalLibrary);
+    List<Task> tasks = getTasksFromSession(session, internalLibrary);
     List<TaskExec> taskExecList = new ArrayList<>();
     for (int j = 0; j < tasks.size(); j++) {
       Task task = tasks.get(j);
@@ -211,28 +197,53 @@ public class BenchmarkObjectFactory {
         sessionId, taskExecList, ObjectUtils.defaultIfNull(session.getTargetEndpoint(), 0));
   }
 
+  private static List<Task> getTasksFromSession(Session session, InternalLibrary internalLibrary) {
+    if (session.getTasks() != null) {
+      return session.getTasks();
+    } else if (session.getTemplateId() != null) {
+      return getTasksFromSessionTemplate(session.getTemplateId(), internalLibrary);
+    } else if (session.getTasksSequences() != null) {
+      return expandTasksSequences(session.getTasksSequences(), internalLibrary);
+    }
+    throw new IllegalStateException("Unknown session type");
+  }
+
+  private static List<Task> getTasksFromSessionTemplate(
+      String templateId, InternalLibrary internalLibrary) {
+    SessionTemplate sessionTemplate = internalLibrary.getIdToSessionTemplate().get(templateId);
+    if (sessionTemplate == null) {
+      throw new IllegalArgumentException("Unknown session template id: " + templateId);
+    }
+    if (sessionTemplate.getTasks() != null) {
+      return sessionTemplate.getTasks();
+    } else if (sessionTemplate.getTasksSequences() != null) {
+      return expandTasksSequences(sessionTemplate.getTasksSequences(), internalLibrary);
+    }
+    throw new IllegalStateException("Unknown session type");
+  }
+
   /**
    * Expands tasks sequences into a list of tasks. TODO: Nested sequences.
    *
-   * @param tasks the tasks to expand
+   * @param tasksSequences the tasks sequences to expand
    * @param internalLibrary a library with task, session, and phase templates
    * @return a list of tasks with tasks sequences expanded
    * @throws IllegalArgumentException if a task references an unknown tasks sequence ID
    */
   private static List<Task> expandTasksSequences(
-      List<Task> tasks, InternalLibrary internalLibrary) {
+      List<TasksSequence> tasksSequences, InternalLibrary internalLibrary) {
     List<Task> expandedTasks = new ArrayList<>();
-    for (Task task : tasks) {
-      if (task.getTasksSequenceId() != null) {
-        TasksSequence tasksSequence =
-            internalLibrary.getIdToTasksSequence().get(task.getTasksSequenceId());
-        if (tasksSequence == null) {
+    for (TasksSequence tasksSequence : tasksSequences) {
+      if (tasksSequence.getPreparedTasksSequenceId() != null) {
+        TasksSequence preparedTasksSequence =
+            internalLibrary.getIdToTasksSequence().get(tasksSequence.getPreparedTasksSequenceId());
+        if (preparedTasksSequence == null) {
           throw new IllegalArgumentException(
-              "Unknown tasks sequence id: " + task.getTasksSequenceId());
+              "Unknown prepared tasks sequence id: " + tasksSequence.getPreparedTasksSequenceId());
         }
-        expandedTasks.addAll(tasksSequence.getTasks());
+        expandedTasks.addAll(preparedTasksSequence.getTasks());
       } else {
-        expandedTasks.add(task);
+        expandedTasks.addAll(tasksSequence.getTasks());
       }
     }
     return Collections.unmodifiableList(expandedTasks);
@@ -407,21 +418,21 @@ public class BenchmarkObjectFactory {
     }
     Map<String, Task> idToPreparedTask = new HashMap<>();
     if (library.getPreparedTasks() != null) {
-      for (Task prepatedTask : library.getPreparedTasks()) {
-        if (idToPreparedTask.containsKey(prepatedTask.getId())) {
-          throw new IllegalArgumentException("Duplicate prepared task id: " + prepatedTask.getId());
+      for (Task preparedTask : library.getPreparedTasks()) {
+        if (idToPreparedTask.containsKey(preparedTask.getId())) {
+          throw new IllegalArgumentException("Duplicate prepared task id: " + preparedTask.getId());
         }
-        idToPreparedTask.put(prepatedTask.getId(), prepatedTask);
+        idToPreparedTask.put(preparedTask.getId(), preparedTask);
       }
     }
-    Map<String, TasksSequence> idToTasksSequence = new HashMap<>();
-    if (library.getTasksSequences() != null) {
-      for (TasksSequence tasksSequence : library.getTasksSequences()) {
-        if (idToTasksSequence.containsKey(tasksSequence.getId())) {
+    Map<String, TasksSequence> idToPreparedTasksSequence = new HashMap<>();
+    if (library.getPreparedTasksSequences() != null) {
+      for (TasksSequence preparedTasksSequence : library.getPreparedTasksSequences()) {
+        if (idToPreparedTasksSequence.containsKey(preparedTasksSequence.getId())) {
           throw new IllegalArgumentException(
-              "Duplicate tasks sequence id: " + tasksSequence.getId());
+              "Duplicate prepared tasks sequence id: " + preparedTasksSequence.getId());
         }
-        idToTasksSequence.put(tasksSequence.getId(), tasksSequence);
+        idToPreparedTasksSequence.put(preparedTasksSequence.getId(), preparedTasksSequence);
       }
     }
     return new InternalLibrary(
@@ -429,7 +440,7 @@ public class BenchmarkObjectFactory {
         idToSessionTemplate,
         idToPhaseTemplate,
         idToPreparedTask,
-        idToTasksSequence);
+        idToPreparedTasksSequence);
   }
 
   private static class InternalLibrary {

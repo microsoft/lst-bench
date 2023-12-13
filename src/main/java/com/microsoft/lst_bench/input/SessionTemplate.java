@@ -16,9 +16,11 @@
 package com.microsoft.lst_bench.input;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 /**
@@ -33,5 +35,17 @@ import org.immutables.value.Value;
 public interface SessionTemplate {
   String getId();
 
-  List<Task> getTasks();
+  @Nullable List<Task> getTasks();
+
+  @JsonProperty("tasks_sequences")
+  @Nullable List<TasksSequence> getTasksSequences();
+
+  @Value.Check
+  default void check() {
+    boolean onlyOneTrue = getTasks() != null ^ getTasksSequences() != null;
+    if (!onlyOneTrue) {
+      throw new IllegalStateException(
+          "Must have exactly one of list of tasks sequences or list of tasks defined");
+    }
+  }
 }

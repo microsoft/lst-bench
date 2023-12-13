@@ -40,33 +40,11 @@
       },
       "additionalProperties": false
     },
-    "tasks_sequences": {
+    "prepared_tasks_sequences": {
       "type": "array",
-      "title": "List of sequences of tasks",
+      "title": "List of sequences of prepared tasks",
       "items": {
-        "type": "object",
-        "title": "Tasks sequence",
-        "required": [ "id", "tasks" ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Identifier for the tasks sequence"
-          },
-          "tasks": {
-            "type": "array",
-            "title": "List of tasks",
-            "items": {
-              "type": "object",
-              "allOf": [
-                {
-                  "$ref": "resource:/schemas/instance.json#/$defs/task"
-                }
-              ],
-              "unevaluatedProperties": false
-            }
-          }
-        },
-        "additionalProperties": false
+        "$ref": "#/$defs/id_tasks_sequence"
       }
     }
   },
@@ -148,6 +126,26 @@
         },
         {
           "$ref": "resource:/schemas/instance.json#/$defs/task"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "id_tasks_sequence": {
+      "type": "object",
+      "title": "Tasks sequence with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the tasks sequence"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/instance.json#/$defs/tasks_sequence"
         }
       ],
       "unevaluatedProperties": false

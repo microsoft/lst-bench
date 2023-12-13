@@ -16,9 +16,11 @@
 package com.microsoft.lst_bench.input;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 /** Represents a sequence of tasks to be executed in order. */
@@ -28,7 +30,20 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableTasksSequence.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface TasksSequence {
-  String getId();
+  @JsonProperty("id")
+  @Nullable String getId();
 
-  List<Task> getTasks();
+  @JsonProperty("prepared_tasks_sequence_id")
+  @Nullable String getPreparedTasksSequenceId();
+
+  @Nullable List<Task> getTasks();
+
+  @Value.Check
+  default void check() {
+    boolean onlyOneTrue = getPreparedTasksSequenceId() != null ^ getTasks() != null;
+    if (!onlyOneTrue) {
+      throw new IllegalStateException(
+          "Must have exactly one of prepared tasks sequence id or list of tasks defined");
+    }
+  }
 }

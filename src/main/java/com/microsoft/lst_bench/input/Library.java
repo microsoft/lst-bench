@@ -47,6 +47,6 @@ public interface Library {
   @JsonProperty("prepared_tasks")
   @Nullable List<Task> getPreparedTasks();
 
-  @JsonProperty("tasks_sequences")
-  @Nullable List<TasksSequence> getTasksSequences();
+  @JsonProperty("prepared_tasks_sequences")
+  @Nullable List<TasksSequence> getPreparedTasksSequences();
 }

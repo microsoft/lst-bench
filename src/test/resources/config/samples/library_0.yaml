@@ -52,17 +52,20 @@ prepared_tasks:
     dependent_task_batch_size: 100
     # TODO: Remove this once #182 is fixed
     skip_erroneous_query_strings: "[DELTA_FAILED_RECOGNIZE_PREDICATE]"
-tasks_sequences:
+prepared_tasks_sequences:
 # Data maintenance session
 - id: seq_data_maintenance_delta
   tasks:
   - template_id: data_maintenance_delta
   - template_id: data_maintenance_delta
 session_templates:
-# Data maintenance session
+# Data maintenance session (combines prepared task sequence with inlined sequence of tasks)
 - id: session_data_maintenance_delta
-  tasks:
-  - tasks_sequence_id: seq_data_maintenance_delta
+  tasks_sequences:
+  - prepared_tasks_sequence_id: seq_data_maintenance_delta
+  - tasks:
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
 phase_templates:
 # Data maintenance phase
 - id: phase_data_maintenance_delta

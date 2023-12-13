@@ -18,16 +18,6 @@
           }
         },
         {
-          "type": "object",
-          "required": [ "tasks_sequence_id" ],
-          "properties": {
-            "tasks_sequence_id": {
-              "type": "string",
-              "title": "Identifier of a tasks sequence"
-            }
-          }
-        },
-        {
           "allOf": [
             {
               "oneOf": [
@@ -89,6 +79,41 @@
               }
             }
           ]
+        }
+      ]
+    },
+    "tasks_sequence": {
+      "type": "object",
+      "title": "Tasks sequence",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [ "prepared_tasks_sequence_id" ],
+          "properties": {
+            "prepared_tasks_sequence_id": {
+              "type": "string",
+              "title": "Identifier of a prepared tasks sequence"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [ "tasks" ],
+          "properties": {
+            "tasks": {
+              "type": "array",
+              "title": "List of tasks",
+              "description": "List of tasks to be executed in sequence",
+              "items": {
+                "type": "object",
+                "allOf": [
+                  {
+                    "$ref": "resource:/schemas/instance.json#/$defs/task"
+                  }
+                ]
+              }
+            }
+          }
         }
       ]
     },

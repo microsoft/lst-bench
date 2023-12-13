@@ -38,9 +38,6 @@ public interface Task {
   @JsonProperty("prepared_task_id")
   @Nullable String getPreparedTaskId();
 
-  @JsonProperty("tasks_sequence_id")
-  @Nullable String getTasksSequenceId();
-
   @JsonProperty("template_id")
   @Nullable String getTemplateId();
 
@@ -65,23 +62,13 @@ public interface Task {
     String getReplacement();
   }
 
-  /**
-   * Validates that a task has exactly one of template ID, tasks sequence ID, or prepared task ID
-   * defined.
-   */
+  /** Validates that a task has exactly one of template ID or prepared task ID defined. */
   @Value.Check
   default void check() {
-    boolean onlyOneTrue =
-        (getTemplateId() != null && getTasksSequenceId() == null && getPreparedTaskId() == null)
-            || (getTemplateId() == null
-                && getTasksSequenceId() != null
-                && getPreparedTaskId() == null)
-            || (getTemplateId() == null
-                && getTasksSequenceId() == null
-                && getPreparedTaskId() != null);
+    boolean onlyOneTrue = getTemplateId() != null ^ getPreparedTaskId() != null;
     if (!onlyOneTrue) {
       throw new IllegalStateException(
-          "Must have exactly one of template id, tasks sequence id, or prepared task id defined");
+          "Must have exactly one of template id or prepared task id defined");
     }
   }
 }

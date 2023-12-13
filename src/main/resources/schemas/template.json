@@ -42,22 +42,44 @@
     "session_template": {
       "type": "object",
       "title": "Session template",
-      "required": [ "tasks" ],
-      "properties": {
-        "tasks": {
-          "type": "array",
-          "title": "List of tasks",
-          "items": {
-            "type": "object",
-            "allOf": [
-              {
-                "$ref": "resource:/schemas/instance.json#/$defs/task"
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [ "tasks" ],
+          "properties": {
+            "tasks": {
+              "type": "array",
+              "title": "List of tasks",
+              "items": {
+                "type": "object",
+                "allOf": [
+                  {
+                    "$ref": "resource:/schemas/instance.json#/$defs/task"
+                  }
+                ]
               }
-            ],
-            "unevaluatedProperties": false
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [ "tasks_sequences" ],
+          "properties": {
+            "tasks_sequences": {
+              "type": "array",
+              "title": "List of tasks sequences",
+              "items": {
+                "type": "object",
+                "allOf": [
+                  {
+                    "$ref": "resource:/schemas/instance.json#/$defs/tasks_sequence"
+                  }
+                ]
+              }
+            }
           }
         }
-      }
+      ]
     },
     "phase_template": {
       "type": "object",

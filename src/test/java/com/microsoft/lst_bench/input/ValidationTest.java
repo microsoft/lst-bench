@@ -311,11 +311,18 @@ public class ValidationTest {
   @Test
   public void testIncorrectTaskCreation() {
     ImmutableTask.Builder builder =
-        ImmutableTask.builder().preparedTaskId("pt_id").tasksSequenceId("ts_id").templateId("t_id");
-    Assertions.assertThrows(IllegalStateException.class, builder::build);
-    builder = ImmutableTask.builder().tasksSequenceId("ts_id").templateId("t_id");
+        ImmutableTask.builder().preparedTaskId("pt_id").templateId("t_id");
     Assertions.assertThrows(IllegalStateException.class, builder::build);
     builder = ImmutableTask.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+  }
+
+  @Test
+  public void testIncorrectTasksSequenceCreation() {
+    ImmutableTasksSequence.Builder builder =
+        ImmutableTasksSequence.builder().preparedTasksSequenceId("pts_id").tasks(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableTasksSequence.builder();
     Assertions.assertThrows(IllegalStateException.class, builder::build);
   }
 
