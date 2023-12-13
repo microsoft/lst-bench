@@ -23,38 +23,29 @@ import java.util.List;
 import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
-/** POJO class meant to be used to deserialize an input session. */
+/**
+ * A session template is a template for a session. Importantly, it references the tasks that are
+ * required to run the session.
+ */
 @Value.Immutable
 @Value.Style(jdkOnly = true)
-@JsonSerialize(as = ImmutableSession.class)
-@JsonDeserialize(as = ImmutableSession.class)
+@JsonSerialize(as = ImmutableSessionTemplate.class)
+@JsonDeserialize(as = ImmutableSessionTemplate.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface Session {
-
-  @JsonProperty("template_id")
-  @Nullable String getTemplateId();
+public interface SessionTemplate {
+  String getId();
 
   @Nullable List<Task> getTasks();
 
   @JsonProperty("tasks_sequences")
   @Nullable List<TasksSequence> getTasksSequences();
 
-  @JsonProperty("target_endpoint")
-  @Nullable Integer getTargetEndpoint();
-
-  /**
-   * Validates that a session has exactly one of template ID, list of tasks, or list of tasks
-   * sequences defined.
-   */
   @Value.Check
   default void check() {
-    boolean onlyOneTrue =
-        (getTemplateId() != null && getTasks() == null && getTasksSequences() == null)
-            || (getTemplateId() == null && getTasks() != null && getTasksSequences() == null)
-            || (getTemplateId() == null && getTasks() == null && getTasksSequences() != null);
+    boolean onlyOneTrue = getTasks() != null ^ getTasksSequences() != null;
     if (!onlyOneTrue) {
       throw new IllegalStateException(
-          "Must have exactly one of template id, list of tasks, or list of tasks sequences defined");
+          "Must have exactly one of list of tasks sequences or list of tasks defined");
     }
   }
 }

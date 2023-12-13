@@ -30,8 +30,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -143,29 +145,29 @@ public class ValidationTest {
   @EnabledOnOs({OS.LINUX, OS.MAC})
   @ValueSource(
       strings = {
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
-        "src/main/resources/config/trino/tpcds/task_library.yaml",
-        "src/main/resources/config/spark/tpch/task_library.yaml"
+        "src/main/resources/config/spark/tpcds/library.yaml",
+        "src/main/resources/config/trino/tpcds/library.yaml",
+        "src/main/resources/config/spark/tpch/library.yaml"
       })
-  public void testValidationTaskLibraryUnix(String taskLibraryPath) throws IOException {
-    testValidationTaskLibrary(taskLibraryPath);
+  public void testValidationLibraryUnix(String libraryPath) throws IOException {
+    testValidationLibrary(libraryPath);
   }
 
   @ParameterizedTest
   @EnabledOnOs({OS.WINDOWS})
   @ValueSource(
       strings = {
-        "src\\main\\resources\\config\\spark\\tpcds\\task_library.yaml",
-        "src\\main\\resources\\config\\trino\\tpcds\\task_library.yaml",
-        "src\\main\\resources\\config\\spark\\tpch\\task_library.yaml"
+        "src\\main\\resources\\config\\spark\\tpcds\\library.yaml",
+        "src\\main\\resources\\config\\trino\\tpcds\\library.yaml",
+        "src\\main\\resources\\config\\spark\\tpch\\library.yaml"
       })
-  public void testValidationTaskLibraryWin(String taskLibraryPath) throws IOException {
-    testValidationTaskLibrary(taskLibraryPath);
+  public void testValidationLibraryWin(String libraryPath) throws IOException {
+    testValidationLibrary(libraryPath);
   }
 
-  private void testValidationTaskLibrary(String taskLibraryPath) throws IOException {
+  private void testValidationLibrary(String libraryPath) throws IOException {
     // Validate YAML file contents and create POJO object
-    TaskLibrary taskLibrary = FileParser.loadTaskLibrary(taskLibraryPath);
+    Library taskLibrary = FileParser.loadLibrary(libraryPath);
     // Validate YAML generated from POJO object
     ObjectMapper mapper = new YAMLMapper();
     JsonSchemaFactory factory =
@@ -173,7 +175,7 @@ public class ValidationTest {
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
-        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "task_library.json")));
+        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "library.json")));
     JsonNode jsonNodeObject = mapper.convertValue(taskLibrary, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -304,5 +306,46 @@ public class ValidationTest {
     // Try to create POJO object, which should fail at validation time
     Assertions.assertThrows(
         IllegalArgumentException.class, () -> FileParser.loadTelemetryConfig(configFilePath));
+  }
+
+  @Test
+  public void testIncorrectTaskCreation() {
+    ImmutableTask.Builder builder =
+        ImmutableTask.builder().preparedTaskId("pt_id").templateId("t_id");
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableTask.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+  }
+
+  @Test
+  public void testIncorrectTasksSequenceCreation() {
+    ImmutableTasksSequence.Builder builder =
+        ImmutableTasksSequence.builder().preparedTasksSequenceId("pts_id").tasks(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableTasksSequence.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+  }
+
+  @Test
+  public void testIncorrectSessionCreation() {
+    ImmutableSession.Builder builder =
+        ImmutableSession.builder()
+            .templateId("t_id")
+            .tasksSequences(new ArrayList<>())
+            .tasks(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableSession.builder().templateId("t_id").tasks(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableSession.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+  }
+
+  @Test
+  public void testIncorrectPhaseCreation() {
+    ImmutablePhase.Builder builder =
+        ImmutablePhase.builder().templateId("t_id").sessions(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutablePhase.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
   }
 }

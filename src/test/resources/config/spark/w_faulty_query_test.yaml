@@ -6,6 +6,4 @@ phases:
 - id: test
   sessions:
   - tasks:
-    - template_id: faulty_query
-      task_executor_arguments:
-        skip_erroneous_query_strings: this is a nonsense string;column
+    - prepared_task_id: task_faulty_query

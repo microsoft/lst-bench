@@ -18,7 +18,7 @@ package com.microsoft.lst_bench.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.microsoft.lst_bench.input.TaskLibrary;
+import com.microsoft.lst_bench.input.Library;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ConnectionsConfig;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
@@ -128,8 +128,8 @@ public class FileParser {
    * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
    * file according to the schema. Creates and returns a `TaskLibrary` object.
    */
-  public static TaskLibrary loadTaskLibrary(String filePath) throws IOException {
-    return createObject(filePath, TaskLibrary.class, SCHEMAS_PATH + "task_library.json");
+  public static Library loadLibrary(String filePath) throws IOException {
+    return createObject(filePath, Library.class, SCHEMAS_PATH + "library.json");
   }
 
   /**

@@ -23,27 +23,30 @@ import java.util.List;
 import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
-/** POJO class meant to be used to deserialize an input phase. */
+/**
+ * Represents an input task library containing task templates that can be instantiated to create
+ * tasks.
+ */
 @Value.Immutable
 @Value.Style(jdkOnly = true)
-@JsonSerialize(as = ImmutablePhase.class)
-@JsonDeserialize(as = ImmutablePhase.class)
+@JsonSerialize(as = ImmutableLibrary.class)
+@JsonDeserialize(as = ImmutableLibrary.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface Phase {
-  String getId();
+public interface Library {
+  int getVersion();
 
-  @JsonProperty("template_id")
-  @Nullable String getTemplateId();
+  @JsonProperty("task_templates")
+  List<TaskTemplate> getTaskTemplates();
 
-  @Nullable List<Session> getSessions();
+  @JsonProperty("session_templates")
+  @Nullable List<SessionTemplate> getSessionTemplates();
 
-  /** Validates that a phase has exactly one of template ID or list of sessions defined. */
-  @Value.Check
-  default void check() {
-    boolean onlyOneTrue = getTemplateId() != null ^ getSessions() != null;
-    if (!onlyOneTrue) {
-      throw new IllegalStateException(
-          "Must have exactly one of template id or list of sessions defined");
-    }
-  }
+  @JsonProperty("phase_templates")
+  @Nullable List<PhaseTemplate> getPhaseTemplates();
+
+  @JsonProperty("prepared_tasks")
+  @Nullable List<Task> getPreparedTasks();
+
+  @JsonProperty("prepared_tasks_sequences")
+  @Nullable List<TasksSequence> getPreparedTasksSequences();
 }

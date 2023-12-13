@@ -16,34 +16,22 @@
 package com.microsoft.lst_bench.input;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
-import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
-/** POJO class meant to be used to deserialize an input phase. */
+/**
+ * A phase template is a template for a phase. Importantly, it references the sessions that are
+ * required to run the phase.
+ */
 @Value.Immutable
 @Value.Style(jdkOnly = true)
-@JsonSerialize(as = ImmutablePhase.class)
-@JsonDeserialize(as = ImmutablePhase.class)
+@JsonSerialize(as = ImmutablePhaseTemplate.class)
+@JsonDeserialize(as = ImmutablePhaseTemplate.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface Phase {
+public interface PhaseTemplate {
   String getId();
 
-  @JsonProperty("template_id")
-  @Nullable String getTemplateId();
-
-  @Nullable List<Session> getSessions();
-
-  /** Validates that a phase has exactly one of template ID or list of sessions defined. */
-  @Value.Check
-  default void check() {
-    boolean onlyOneTrue = getTemplateId() != null ^ getSessions() != null;
-    if (!onlyOneTrue) {
-      throw new IllegalStateException(
-          "Must have exactly one of template id or list of sessions defined");
-    }
-  }
+  List<Session> getSessions();
 }

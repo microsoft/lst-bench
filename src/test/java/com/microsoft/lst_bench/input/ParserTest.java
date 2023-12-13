@@ -113,11 +113,11 @@ public class ParserTest {
 
   @Test
   public void testParseTaskLibrary() throws IOException {
-    TaskLibrary taskLibrary =
-        FileParser.loadTaskLibrary(CONFIG_PATH + "tpcds" + File.separator + "task_library.yaml");
-    Assertions.assertEquals(1, taskLibrary.getVersion());
-    Assertions.assertEquals(16, taskLibrary.getTaskTemplates().size());
-    for (TaskTemplate taskTemplate : taskLibrary.getTaskTemplates()) {
+    Library library =
+        FileParser.loadLibrary(CONFIG_PATH + "tpcds" + File.separator + "library.yaml");
+    Assertions.assertEquals(1, library.getVersion());
+    Assertions.assertEquals(16, library.getTaskTemplates().size());
+    for (TaskTemplate taskTemplate : library.getTaskTemplates()) {
       switch (taskTemplate.getId()) {
         case "setup":
           Assertions.assertEquals(
