@@ -78,7 +78,7 @@ These optional task parameters as well as an explanation about them can be found
 
 ## Session
 
-A _session_ refers to a sequence of tasks representing a logical unit of work or a user session, aligning with the concept of sessions in JDBC.
+A _session_ refers to a sequence of tasks representing a logical unit of work or a user session, aligning with the concept of sessions in JDBC.
 
 For instance, the following snippet illustrates a sample session executing the `single_user_simple` task template declared earlier:
 
