@@ -1,13 +1,13 @@
 # Definition of Workloads in LST-Bench
 
 In LST-Bench, workloads are defined using a YAML configuration file. 
-The schema for this configuration file can be accessed [here](src/main/resources/schemas/workload.json). 
-To facilitate the reusability of various workload components, LST-Bench enables the definition of a [library](src/main/resources/schemas/library.json). 
+The schema for this configuration file can be accessed [here](/src/main/resources/schemas/workload.json). 
+To facilitate the reusability of various workload components, LST-Bench enables the definition of a [library](/src/main/resources/schemas/library.json). 
 This library should be supplied during benchmark execution, allowing workloads to reference entities predefined within it.
 
 LST-Bench already includes libraries encompassing tasks derived from the TPC-DS and TPC-H benchmarks, along with workload definitions that represent the original workloads specified by these standards. 
 Additionally, multiple other workload patterns that are especially relevant for evaluating LSTs are also included. 
-These resources can be found [here](src/main/resources/config).
+These resources can be found [here](/src/main/resources/config).
 
 While LST-Bench provides predefined libraries and workload definitions, users have the flexibility to incorporate additional task templates or even create an entirely new task library to model specific scenarios. 
 This flexible model allows for the easy creation of diverse SQL workloads for evaluation purposes without necessitating modifications to the LST-Bench application itself.
@@ -38,7 +38,7 @@ A task template is typically defined in the library and referenced by its identi
 
 This template with the identifier `single_user_simple` comprises three SQL query files, each with a query. 
 Note that there are a couple of additional optional properties defined, namely `permutation_orders_path` and `supports_time_travel`. 
-Further information about these and other optional properties, including their descriptions, can be found [here](src/main/resources/schemas/template.json).
+Further information about these and other optional properties, including their descriptions, can be found [here](/src/main/resources/schemas/template.json).
 
 ### Task
 
@@ -61,7 +61,7 @@ A task template can also be inlined within the task instantiation if we do not w
 ```
 
 Note that tasks can also have their parameters modifying their behavior for a specific instance, e.g., `permute_order`. 
-These optional task parameters as well as an explanation about them can be found [here](src/main/resources/schemas/instance.json).
+These optional task parameters as well as an explanation about them can be found [here](/src/main/resources/schemas/instance.json).
 
 ### Custom Tasks
 
