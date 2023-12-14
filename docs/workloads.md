@@ -71,7 +71,7 @@ These optional task parameters as well as an explanation about them can be found
 
 <!--- TODO: Update this section --->
 
-##Tasks Sequences
+## Tasks Sequences
 
 <!--- TODO: Update this section --->
 
