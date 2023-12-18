@@ -23,9 +23,10 @@ A task consists of two parts: a _template_ that defines the key elements of the 
 
 ### Task Template
 
-A task template is typically defined in the library and referenced by its identifier. For example, the following snippet shows a sample template:
+A task template is typically defined in the library and referenced by its identifier. For example, the following snippet shows a sample template defined as part of the `task_templates` block in a library:
 
 ```yaml
+task_templates:
 # Execution of a few TPC-DS queries (possibly in a previous point-in-time)
 - id: single_user_simple
   files:
@@ -40,7 +41,7 @@ This template with the identifier `single_user_simple` comprises three SQL query
 Note that there are a couple of additional optional properties defined, namely `permutation_orders_path` and `supports_time_travel`. 
 Further information about these and other optional properties, including their descriptions, can be found [here](/src/main/resources/schemas/template.json).
 
-### Task
+### Task Instance
 
 If we want to instantiate a task based on the `single_user_simple` template defined above as part of an input library, we can do so as follows:
 
@@ -69,12 +70,38 @@ These optional task parameters as well as an explanation about them can be found
 
 ### Prepared Tasks
 
-<!--- TODO: Update this section --->
+A _prepared task_ is a [task instantiation](#task-template) defined as part of the input library. For example, we can define a prepared task in the `prepared_tasks` block in the library as follows:
+
+```yaml
+prepared_tasks:
+- id: prepared_single_user_simple
+  template_id: single_user_simple
+  permute_order: true
+```
+
+Then, from the workload file, we can reference the _prepared task_ declared in the library, facilitating reuse and readability of the workload file:
+
+```yaml
+- prepared_task_id: prepared_single_user_simple
+```
 
 ## Tasks Sequences
 
-<!--- TODO: Update this section --->
+A _tasks sequence_ refers to a sequence of tasks that can be combined as part of a [session](#session) definition. We can define a sequence in the `tasks_sequence` block in the library as follows:
 
+```yaml
+prepared_tasks_sequences:
+- id: seq_two_single_user_simple
+  tasks:
+  - prepared_task_id: prepared_single_user_simple
+  - prepared_task_id: prepared_single_user_simple
+```
+
+Once that is done, we can reference the sequence in the workload file:
+
+```yaml
+- prepared_tasks_sequence_id: seq_two_single_user_simple
+```
 
 ## Session
 
@@ -89,6 +116,18 @@ For instance, the following snippet illustrates a sample session executing the `
 ```
 
 If no endpoint is specified, the session is associated with a default target endpoint—the first connection declared in the connections YAML config file.
+
+Moreover, a session can also be defined using tasks sequences. For instance, the following snippet demonstrates a sample session that combines two sequences: one previously defined in the library and another inlined sequence using a `tasks` block. This session will execute a total of four `single_user_simple` tasks.
+
+```yaml
+  - tasks_sequences:
+    - prepared_tasks_sequence_id: seq_two_single_user_simple
+    - tasks:
+      - template_id: single_user_simple
+        permute_order: true
+      - template_id: single_user_simple
+        permute_order: true
+```
 
 ## Phase
 
