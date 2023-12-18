@@ -70,7 +70,7 @@ These optional task parameters as well as an explanation about them can be found
 
 ### Prepared Tasks
 
-A _prepared task_ is a [task instantiation](#task-template) defined as part of the input library. For example, we can define a prepared task in the `prepared_tasks` block in the library as follows:
+A _prepared task_ is a [task instantiation](#task-instance) defined as part of the input library. For example, we can define a prepared task in the `prepared_tasks` block in the library as follows:
 
 ```yaml
 prepared_tasks:
