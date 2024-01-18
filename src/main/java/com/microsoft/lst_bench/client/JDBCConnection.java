@@ -80,7 +80,7 @@ public class JDBCConnection implements Connection {
         if (errorCount == this.maxNumRetries) {
           // Log any pending warnings associated with this statement, useful for debugging.
           String lastErrorWarning = "Error warnings: ";
-          if (s!=null) {
+          if (s != null) {
             try {
               SQLWarning warning = s.getWarnings();
               while (warning != null) {
@@ -100,12 +100,12 @@ public class JDBCConnection implements Connection {
         }
         errorCount++;
       } finally {
-        if (s!= null) {
+        if (s != null) {
           try {
             s.close();
           } catch (Exception e) {
             LOGGER.error("Error when closing statement.");
-          } 
+          }
         }
       }
     }
