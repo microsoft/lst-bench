@@ -17,6 +17,7 @@ package com.microsoft.lst_bench.client;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.sql.Statement;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -52,7 +53,9 @@ public class JDBCConnection implements Connection {
     // Infinite retries if number of retries is set to '-1', otherwise retry count is in addition to
     // the 1 default try, thus '<='.
     while (this.maxNumRetries == -1 || errorCount <= this.maxNumRetries) {
-      try (Statement s = connection.createStatement()) {
+      Statement s = null;
+      try {
+        s = connection.createStatement();
         boolean hasResults = s.execute(sqlText);
         if (hasResults) {
           ResultSet rs = s.getResultSet();
@@ -75,6 +78,21 @@ public class JDBCConnection implements Connection {
                 + " retries) unsuccessful; stack trace: "
                 + ExceptionUtils.getStackTrace(e);
         if (errorCount == this.maxNumRetries) {
+          // Log any pending warnings associated with this statement, useful for debugging.
+          String lastErrorWarning = "Error warnings: ";
+          if (s!=null) {
+            try {
+              SQLWarning warning = s.getWarnings();
+              while (warning != null) {
+                lastErrorWarning += warning.getMessage();
+                warning = warning.getNextWarning();
+              }
+              LOGGER.error(lastErrorWarning);
+            } catch (SQLException se) {
+              LOGGER.error("Unable to retrieve statement-specific warnings.");
+            }
+          }
+          // Log execution error.
           LOGGER.error(lastErrorMsg);
           throw new ClientException(lastErrorMsg);
         } else {
