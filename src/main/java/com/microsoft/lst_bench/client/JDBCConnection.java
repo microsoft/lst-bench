@@ -68,7 +68,7 @@ public class JDBCConnection implements Connection {
             queryResult.populate(rs);
           }
         }
-        // Return here if successful
+        // Return here if successful.
         return queryResult;
       } catch (Exception e) {
         queryResult = null;
@@ -99,6 +99,14 @@ public class JDBCConnection implements Connection {
           LOGGER.warn(lastErrorMsg);
         }
         errorCount++;
+      } finally {
+        if (s!= null) {
+          try {
+            s.close();
+          } catch (Exception e) {
+            LOGGER.error("Error when closing statement.");
+          } 
+        }
       }
     }
     // Return here if max retries reached without success
