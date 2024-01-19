@@ -77,6 +77,7 @@ public class BenchmarkObjectFactory {
     return new JDBCConnectionManager(
         connectionConfig.getUrl(),
         connectionConfig.getMaxNumRetries(),
+        connectionConfig.getVerboseLogging(),
         connectionConfig.getUsername(),
         connectionConfig.getPassword());
   }

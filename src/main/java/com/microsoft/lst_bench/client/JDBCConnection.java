@@ -30,10 +30,12 @@ public class JDBCConnection implements Connection {
 
   private final java.sql.Connection connection;
   private final int maxNumRetries;
+  private final boolean verboseLogging;
 
-  public JDBCConnection(java.sql.Connection connection, int maxNumRetries) {
+  public JDBCConnection(java.sql.Connection connection, int maxNumRetries, boolean verboseLogging) {
     this.connection = connection;
     this.maxNumRetries = maxNumRetries;
+    this.verboseLogging = verboseLogging;
   }
 
   @Override
@@ -68,6 +70,10 @@ public class JDBCConnection implements Connection {
             queryResult.populate(rs);
           }
         }
+        // Log verbosely, if enabled.
+        if (this.verboseLogging) {
+          LOGGER.warn(createSQLWarningMessage(s));
+        }
         // Return here if successful.
         return queryResult;
       } catch (Exception e) {
@@ -79,19 +85,7 @@ public class JDBCConnection implements Connection {
                 + ExceptionUtils.getStackTrace(e);
         if (errorCount == this.maxNumRetries) {
           // Log any pending warnings associated with this statement, useful for debugging.
-          String lastErrorWarning = "Error warnings: ";
-          if (s != null) {
-            try {
-              SQLWarning warning = s.getWarnings();
-              while (warning != null) {
-                lastErrorWarning += warning.getMessage();
-                warning = warning.getNextWarning();
-              }
-              LOGGER.error(lastErrorWarning);
-            } catch (SQLException se) {
-              LOGGER.error("Unable to retrieve statement-specific warnings.");
-            }
-          }
+          LOGGER.error(createSQLWarningMessage(s));
           // Log execution error.
           LOGGER.error(lastErrorMsg);
           throw new ClientException(lastErrorMsg);
@@ -120,5 +114,25 @@ public class JDBCConnection implements Connection {
     } catch (SQLException e) {
       throw new ClientException(e);
     }
+  }
+
+  private String createSQLWarningMessage(Statement s) {
+    String warningString = "Warnings: ";
+
+    if (s != null) {
+      try {
+        SQLWarning warning = s.getWarnings();
+        while (warning != null) {
+          warningString += warning.getMessage();
+          warning = warning.getNextWarning();
+        }
+      } catch (SQLException se) {
+        LOGGER.error("Unable to retrieve statement-specific warnings.");
+      }
+    } else {
+      warningString = "Statement points to null value, cannot fetch warnings.";
+    }
+
+    return warningString;
   }
 }

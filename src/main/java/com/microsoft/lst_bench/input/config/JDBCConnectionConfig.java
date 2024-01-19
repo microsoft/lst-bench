@@ -37,6 +37,12 @@ public interface JDBCConnectionConfig extends ConnectionConfig {
     return 0;
   }
 
+  @JsonProperty("verbose_logging")
+  @Value.Default
+  default boolean getVerboseLogging() {
+    return false;
+  }
+
   @Nullable String getUsername();
 
   @Nullable String getPassword();
