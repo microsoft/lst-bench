@@ -37,7 +37,7 @@ public interface JDBCConnectionConfig extends ConnectionConfig {
     return 0;
   }
 
-  @JsonProperty("verbose_logging")
+  @JsonProperty("show_warnings")
   @Value.Default
   default boolean getVerboseLogging() {
     return false;

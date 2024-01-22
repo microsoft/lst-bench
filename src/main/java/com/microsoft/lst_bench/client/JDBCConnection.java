@@ -30,12 +30,12 @@ public class JDBCConnection implements Connection {
 
   private final java.sql.Connection connection;
   private final int maxNumRetries;
-  private final boolean verboseLogging;
+  private final boolean showWarnings;
 
-  public JDBCConnection(java.sql.Connection connection, int maxNumRetries, boolean verboseLogging) {
+  public JDBCConnection(java.sql.Connection connection, int maxNumRetries, boolean showWarnings) {
     this.connection = connection;
     this.maxNumRetries = maxNumRetries;
-    this.verboseLogging = verboseLogging;
+    this.showWarnings = showWarnings;
   }
 
   @Override
@@ -71,8 +71,11 @@ public class JDBCConnection implements Connection {
           }
         }
         // Log verbosely, if enabled.
-        if (this.verboseLogging) {
-          LOGGER.warn(createSQLWarningMessage(s));
+        if (this.showWarnings && LOGGER.isWarnEnabled()) {
+          String warnings = createSQLWarningMessage(s);
+          if (warnings != null) {
+            LOGGER.warn(warnings);
+          }
         }
         // Return here if successful.
         return queryResult;
@@ -85,7 +88,9 @@ public class JDBCConnection implements Connection {
                 + ExceptionUtils.getStackTrace(e);
         if (errorCount == this.maxNumRetries) {
           // Log any pending warnings associated with this statement, useful for debugging.
-          LOGGER.error(createSQLWarningMessage(s));
+          if (LOGGER.isWarnEnabled()) {
+            LOGGER.error(createSQLWarningMessage(s));
+          }
           // Log execution error.
           LOGGER.error(lastErrorMsg);
           throw new ClientException(lastErrorMsg);
@@ -98,7 +103,13 @@ public class JDBCConnection implements Connection {
           try {
             s.close();
           } catch (Exception e) {
-            LOGGER.error("Error when closing statement.");
+            String closingError = "Error when closing statement.";
+            LOGGER.error(closingError);
+            // Only throw error if it has not been thrown in the try block to avoid overwriting the
+            // error.
+            if (errorCount != this.maxNumRetries) {
+              throw new ClientException("Error when closing statement.");
+            }
           }
         }
       }
@@ -116,21 +127,21 @@ public class JDBCConnection implements Connection {
     }
   }
 
-  private String createSQLWarningMessage(Statement s) {
-    String warningString = "Warnings: ";
+  private String createSQLWarningMessage(Statement s) throws ClientException {
+    String warningString = null;
 
     if (s != null) {
+      SQLWarning warning;
+      warningString = "Warnings: ";
       try {
-        SQLWarning warning = s.getWarnings();
+        warning = s.getWarnings();
         while (warning != null) {
           warningString += warning.getMessage();
           warning = warning.getNextWarning();
         }
-      } catch (SQLException se) {
-        LOGGER.error("Unable to retrieve statement-specific warnings.");
+      } catch (SQLException e) {
+        throw new ClientException(e.getMessage());
       }
-    } else {
-      warningString = "Statement points to null value, cannot fetch warnings.";
     }
 
     return warningString;
