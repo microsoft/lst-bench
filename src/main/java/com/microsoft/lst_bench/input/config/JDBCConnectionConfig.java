@@ -39,7 +39,7 @@ public interface JDBCConnectionConfig extends ConnectionConfig {
 
   @JsonProperty("show_warnings")
   @Value.Default
-  default boolean getVerboseLogging() {
+  default boolean showWarnings() {
     return false;
   }
 

@@ -25,17 +25,17 @@ public class JDBCConnectionManager implements ConnectionManager {
 
   private final String url;
   private final int maxNumRetries;
-  private final boolean verbose;
+  private final boolean showWarnings;
 
   @Nullable private final String username;
 
   @Nullable private final String password;
 
   public JDBCConnectionManager(
-      String url, int maxNumRetries, boolean verbose, String username, String password) {
+      String url, int maxNumRetries, boolean showWarnings, String username, String password) {
     this.url = url;
     this.maxNumRetries = maxNumRetries;
-    this.verbose = verbose;
+    this.showWarnings = showWarnings;
     this.username = username;
     this.password = password;
   }
@@ -45,10 +45,10 @@ public class JDBCConnectionManager implements ConnectionManager {
     try {
       if (StringUtils.isEmpty(username)) {
         return new JDBCConnection(
-            DriverManager.getConnection(url), this.maxNumRetries, this.verbose);
+            DriverManager.getConnection(url), this.maxNumRetries, this.showWarnings);
       } else {
         return new JDBCConnection(
-            DriverManager.getConnection(url, username, password), this.maxNumRetries, this.verbose);
+            DriverManager.getConnection(url, username, password), this.maxNumRetries, this.showWarnings);
       }
     } catch (SQLException e) {
       throw new ClientException(e);

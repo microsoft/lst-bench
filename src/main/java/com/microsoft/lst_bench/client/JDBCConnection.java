@@ -19,6 +19,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.List;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,10 +74,7 @@ public class JDBCConnection implements Connection {
         }
         // Log verbosely, if enabled.
         if (this.showWarnings && LOGGER.isWarnEnabled()) {
-          String warnings = createSQLWarningMessage(s);
-          if (warnings != null) {
-            LOGGER.warn(warnings);
-          }
+          logWarnings(s);
         }
         // Return here if successful.
         return queryResult;
@@ -89,7 +88,7 @@ public class JDBCConnection implements Connection {
         if (errorCount == this.maxNumRetries) {
           // Log any pending warnings associated with this statement, useful for debugging.
           if (LOGGER.isWarnEnabled()) {
-            LOGGER.error(createSQLWarningMessage(s));
+            logWarnings(s);
           }
           // Log execution error.
           LOGGER.error(lastErrorMsg);
@@ -104,11 +103,13 @@ public class JDBCConnection implements Connection {
             s.close();
           } catch (Exception e) {
             String closingError = "Error when closing statement.";
-            LOGGER.error(closingError);
             // Only throw error if it has not been thrown in the try block to avoid overwriting the
             // error.
             if (errorCount != this.maxNumRetries) {
+              LOGGER.error(closingError);
               throw new ClientException("Error when closing statement.");
+            } else {
+              LOGGER.warn(closingError);
             }
           }
         }
@@ -127,16 +128,15 @@ public class JDBCConnection implements Connection {
     }
   }
 
-  private String createSQLWarningMessage(Statement s) throws ClientException {
-    String warningString = null;
+  private void logWarnings(Statement s) throws ClientException {
+    List<String> warningList = new ArrayList<>();
 
     if (s != null) {
       SQLWarning warning;
-      warningString = "Warnings: ";
       try {
         warning = s.getWarnings();
         while (warning != null) {
-          warningString += warning.getMessage();
+          warningList.add(warning.getMessage());
           warning = warning.getNextWarning();
         }
       } catch (SQLException e) {
@@ -144,6 +144,8 @@ public class JDBCConnection implements Connection {
       }
     }
 
-    return warningString;
+    for (String warning : warningList) {
+      LOGGER.warn(warning);
+    }
   }
 }
