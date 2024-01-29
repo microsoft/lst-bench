@@ -5,90 +5,90 @@ task_templates:
 # Create external tables needed for benchmark
 - id: setup
   files:
-  - src/main/resources/scripts/tpcds/setup/spark/ddl-external-tables.sql
+  - run/spark-3.3.1/scripts/tpcds/setup/ddl-external-tables.sql
 # Create data maintenance external tables needed for benchmark
 - id: setup_data_maintenance
   files:
-  - src/main/resources/scripts/tpcds/setup_data_maintenance/spark/ddl-external-tables-refresh.sql
-  parameter_values_file: src/main/resources/auxiliary/tpcds/setup_data_maintenance/parameter_values.dat
+  - run/spark-3.3.1/scripts/tpcds/setup_data_maintenance/ddl-external-tables-refresh.sql
+  parameter_values_file: run/auxiliary/tpcds/setup_data_maintenance/parameter_values.dat
 # Create schema and drop existing tables
 - id: init
   files:
-  - src/main/resources/scripts/tpcds/init/spark/init.sql
+  - run/spark-3.3.1/scripts/tpcds/init/init.sql
 # Create benchmark tables and load data into them
 - id: build
   files:
-  - src/main/resources/scripts/tpcds/build/spark/1_create_call_center.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_catalog_page.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_catalog_returns.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_catalog_sales.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_customer.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_customer_address.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_customer_demographics.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_date_dim.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_household_demographics.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_income_band.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_inventory.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_item.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_promotion.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_reason.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_ship_mode.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_store.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_store_returns.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_store_sales.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_time_dim.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_warehouse.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_web_page.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_web_returns.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_web_sales.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_web_site.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_call_center.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_catalog_page.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_catalog_returns.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_catalog_sales.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_customer.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_customer_address.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_customer_demographics.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_date_dim.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_household_demographics.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_income_band.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_inventory.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_item.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_promotion.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_reason.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_ship_mode.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_store.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_store_returns.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_store_sales.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_time_dim.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_warehouse.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_web_page.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_web_returns.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_web_sales.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_web_site.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_call_center.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_catalog_page.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_catalog_returns.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_catalog_sales.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_customer.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_customer_address.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_customer_demographics.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_date_dim.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_household_demographics.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_income_band.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_inventory.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_item.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_promotion.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_reason.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_ship_mode.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_store.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_store_returns.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_store_sales.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_time_dim.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_warehouse.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_web_page.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_web_returns.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_web_sales.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_web_site.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_call_center.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_catalog_page.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_catalog_returns.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_catalog_sales.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_customer.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_customer_address.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_customer_demographics.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_date_dim.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_household_demographics.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_income_band.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_inventory.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_item.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_promotion.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_reason.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_ship_mode.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_store.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_store_returns.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_store_sales.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_time_dim.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_warehouse.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_web_page.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_web_returns.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_web_sales.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_web_site.sql
 # Execution of TPC-DS queries (possibly in a previous point-in-time)
 - id: single_user
   files:
-  - src/main/resources/scripts/tpcds/single_user/spark/query7.sql
-  - src/main/resources/scripts/tpcds/single_user/spark/query15.sql
+  - run/spark-3.3.1/scripts/tpcds/single_user/query7.sql
+  - run/spark-3.3.1/scripts/tpcds/single_user/query15.sql
   supports_time_travel: true
 # Execution of TPC-DS data maintenance queries
 - id: data_maintenance
   files:
-  - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_CS.sql
-  parameter_values_file: src/main/resources/auxiliary/tpcds/data_maintenance/parameter_values.dat
+  - run/spark-3.3.1/scripts/tpcds/data_maintenance/LF_CS.sql
+  parameter_values_file: run/auxiliary/tpcds/data_maintenance/parameter_values.dat
 # Execution of optimize (Delta)
 - id: optimize_delta
   files:
-  - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-delta.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_ship_mode-delta.sql
 # Execution of optimize (Iceberg)
 - id: optimize_iceberg
   files:
-  - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-iceberg.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_ship_mode-iceberg.sql
 # Execution of optimize (Hudi)
 - id: optimize_hudi
   files:
-  - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-hudi.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_ship_mode-hudi.sql
 # Execution of faulty TPC-DS query
 - id: faulty_query
   files:
