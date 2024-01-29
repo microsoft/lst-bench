@@ -5,44 +5,44 @@ task_templates:
 # Create external tables needed for benchmark
 - id: setup
   files:
-  - src/main/resources/scripts/tpcds/setup/spark/ddl-external-tables.sql
+  - run/spark-3.3.1/scripts/tpcds/setup/ddl-external-tables.sql
 # Create data maintenance external tables needed for benchmark
 - id: setup_data_maintenance
   files:
-  - src/main/resources/scripts/tpcds/setup_data_maintenance/spark/ddl-external-tables-refresh.sql
-  parameter_values_file: src/main/resources/auxiliary/tpcds/setup_data_maintenance/parameter_values.dat
+  - run/spark-3.3.1/scripts/tpcds/setup_data_maintenance/ddl-external-tables-refresh.sql
+  parameter_values_file: run/auxiliary/tpcds/setup_data_maintenance/parameter_values.dat
 # Create schema and drop existing tables
 - id: init
   files:
-  - src/main/resources/scripts/tpcds/init/spark/init.sql
+  - run/spark-3.3.1/scripts/tpcds/init/init.sql
 # Create benchmark tables and load data into them
 - id: build
   files:
-  - src/main/resources/scripts/tpcds/build/spark/1_create_call_center.sql
-  - src/main/resources/scripts/tpcds/build/spark/1_create_catalog_page.sql
-  - src/main/resources/scripts/tpcds/build/spark/2_load_customer.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_call_center.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_catalog_page.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_customer.sql
 # Execution of TPC-DS queries (possibly in a previous point-in-time)
 - id: single_user
   files:
-  - src/main/resources/scripts/tpcds/single_user/spark/query7.sql
-  - src/main/resources/scripts/tpcds/single_user/spark/query15.sql
+  - run/spark-3.3.1/scripts/tpcds/single_user/query7.sql
+  - run/spark-3.3.1/scripts/tpcds/single_user/query15.sql
   supports_time_travel: true
 # Execution of TPC-DS data maintenance queries (Delta)
 - id: data_maintenance_delta
   files:
-  - src/main/resources/scripts/tpcds/data_maintenance/spark/LF_CS.sql
+  - run/spark-3.3.1/scripts/tpcds/data_maintenance/LF_CS.sql
 - id: data_maintenance_dependent
   files:
-  - src/main/resources/scripts/tpcds/data_maintenance_dependent/spark/DF_CR_1.sql
+  - run/spark-3.3.1/scripts/tpcds/data_maintenance_dependent/DF_CR_1.sql
   custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
 - id: optimize_delta
   files:
-  - src/main/resources/scripts/tpcds/optimize/spark/o_ship_mode-delta.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_ship_mode-delta.sql
 - id: optimize_split_delta
   files:
-  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_SELECT.sql
-  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_IN-delta.sql
-  - src/main/resources/scripts/tpcds/optimize_split/spark/o_catalog_returns_NULL-delta.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_returns_SELECT.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_returns_IN-delta.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_returns_NULL-delta.sql
   custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
 prepared_tasks:
 # Optimize split instance of task
