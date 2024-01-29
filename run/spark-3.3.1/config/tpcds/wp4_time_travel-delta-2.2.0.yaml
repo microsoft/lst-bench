@@ -1,25 +1,8 @@
-# Description: WP1: Longevity
+# Description: WP4: Time travel
 ---
 version: 1
-id: wp1_longevity
+id: wp4_time_travel
 phases:
-- id: setup
-  sessions:
-  - tasks:
-    - template_id: setup
-- id: setup_data_maintenance
-  sessions:
-  - tasks:
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
 - id: init
   sessions:
   - tasks:
@@ -28,52 +11,73 @@ phases:
   sessions:
   - tasks:
     - template_id: build
-- id: single_user_1
-  sessions:
-  - tasks:
-    - template_id: single_user
 - id: data_maintenance_1
   sessions:
   - tasks:
     - template_id: data_maintenance_delta
     - template_id: data_maintenance_delta
-- id: single_user_2
+- id: single_user_2_0
   sessions:
   - tasks:
     - template_id: single_user
+      time_travel_phase_id: build
 - id: data_maintenance_2
   sessions:
   - tasks:
     - template_id: data_maintenance_delta
     - template_id: data_maintenance_delta
-- id: single_user_3
+- id: single_user_3_1
   sessions:
   - tasks:
     - template_id: single_user
+      time_travel_phase_id: data_maintenance_1
+- id: single_user_3_0
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: build
 - id: data_maintenance_3
   sessions:
   - tasks:
     - template_id: data_maintenance_delta
     - template_id: data_maintenance_delta
-- id: single_user_4
+- id: single_user_4_2
   sessions:
   - tasks:
     - template_id: single_user
+      time_travel_phase_id: data_maintenance_2
+- id: single_user_4_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: data_maintenance_1
+- id: single_user_4_0
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: build
 - id: data_maintenance_4
   sessions:
   - tasks:
     - template_id: data_maintenance_delta
     - template_id: data_maintenance_delta
-- id: single_user_5
+- id: single_user_5_3
   sessions:
   - tasks:
     - template_id: single_user
-- id: data_maintenance_5
-  sessions:
-  - tasks:
-    - template_id: data_maintenance_delta
-    - template_id: data_maintenance_delta
-- id: single_user_6
+      time_travel_phase_id: data_maintenance_3
+- id: single_user_5_2
   sessions:
   - tasks:
     - template_id: single_user
+      time_travel_phase_id: data_maintenance_2
+- id: single_user_5_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: data_maintenance_1
+- id: single_user_5_0
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: build

@@ -1,7 +1,7 @@
 # Description: W0: Original TPC-DS sequence
 ---
 version: 1
-id: w0_tpcds_iceberg
+id: w0_tpcds
 phases:
 - id: setup
   sessions:
@@ -22,6 +22,9 @@ phases:
   sessions:
   - tasks:
     - template_id: build
+      replace_regex:
+      - pattern: '(?i)varchar\(.*\)|char\(.*\)'
+        replacement: 'string'
 - id: single_user
   sessions:
   - tasks:
@@ -43,8 +46,8 @@ phases:
 - id: data_maintenance_1
   sessions:
   - tasks:
-    - template_id: data_maintenance_iceberg
-    - template_id: data_maintenance_iceberg
+    - template_id: data_maintenance_hudi
+    - template_id: data_maintenance_hudi
 - id: throughput_2
   sessions:
   - tasks:
@@ -62,5 +65,5 @@ phases:
 - id: data_maintenance_2
   sessions:
   - tasks:
-    - template_id: data_maintenance_iceberg
-    - template_id: data_maintenance_iceberg
+    - template_id: data_maintenance_hudi
+    - template_id: data_maintenance_hudi
