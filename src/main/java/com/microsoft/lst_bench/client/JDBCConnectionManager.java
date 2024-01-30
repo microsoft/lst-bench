@@ -48,7 +48,9 @@ public class JDBCConnectionManager implements ConnectionManager {
             DriverManager.getConnection(url), this.maxNumRetries, this.showWarnings);
       } else {
         return new JDBCConnection(
-            DriverManager.getConnection(url, username, password), this.maxNumRetries, this.showWarnings);
+            DriverManager.getConnection(url, username, password),
+            this.maxNumRetries,
+            this.showWarnings);
       }
     } catch (SQLException e) {
       throw new ClientException(e);
