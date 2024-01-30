@@ -1,0 +1,7 @@
+# Description: Connections Configuration
+---
+version: 1
+connections:
+- id: spark_0
+  driver: org.apache.hive.jdbc.HiveDriver
+  url: jdbc:hive2://${SPARK_MASTER_HOST}:10000

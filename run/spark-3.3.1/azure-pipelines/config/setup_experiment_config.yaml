@@ -1,0 +1,20 @@
+# Description: Experiment Configuration
+---
+version: 1
+id: setup_experiment
+repetitions: 1
+# Metadata accepts any key-value that we want to register together with the experiment run.
+metadata:
+  system: spark
+  system_version: 3.3.1
+  scale_factor: "${EXP_SCALE_FACTOR}"
+  machine: "${EXP_MACHINE}"
+  cluster_size: "${EXP_CLUSTER_SIZE}"
+# The following parameter values will be used to replace the variables in the workload statements.
+parameter_values:
+  external_catalog: spark_catalog
+  external_database: "external_tpcds_sf_${EXP_SCALE_FACTOR}"
+  external_table_format: csv
+  external_data_path: "abfss://azure-pipelines@lstbenchdatasets.dfs.core.windows.net/tpc-ds/csv/sf_${EXP_SCALE_FACTOR}/"
+  external_options_suffix: ',header="true"'
+  external_tblproperties_suffix: ''
