@@ -1,7 +1,7 @@
 # Description: WP1: Longevity
 ---
 version: 1
-id: wp1_longevity
+id: wp1_longevity_trickle
 phases:
 - id: setup
   sessions:

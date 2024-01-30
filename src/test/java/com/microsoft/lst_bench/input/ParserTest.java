@@ -175,9 +175,9 @@ public class ParserTest {
 
   @Test
   public void testParseW0Delta() throws IOException {
-    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "w0_tpcds-delta.yaml");
+    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "w0_tpcds-delta-2.2.0.yaml");
     Assertions.assertEquals(1, workload.getVersion());
-    Assertions.assertEquals("w0_tpcds_delta", workload.getId());
+    Assertions.assertEquals("w0_tpcds", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
     for (Phase phase : workload.getPhases()) {
       switch (phase.getId()) {
@@ -235,9 +235,9 @@ public class ParserTest {
 
   @Test
   public void testParseW0Hudi() throws IOException {
-    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "w0_tpcds-hudi.yaml");
+    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "w0_tpcds-hudi-0.12.2.yaml");
     Assertions.assertEquals(1, workload.getVersion());
-    Assertions.assertEquals("w0_tpcds_hudi", workload.getId());
+    Assertions.assertEquals("w0_tpcds", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
     for (Phase phase : workload.getPhases()) {
       switch (phase.getId()) {
@@ -310,9 +310,9 @@ public class ParserTest {
 
   @Test
   public void testParseW0Iceberg() throws IOException {
-    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "w0_tpcds-iceberg.yaml");
+    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "w0_tpcds-iceberg-1.1.0.yaml");
     Assertions.assertEquals(1, workload.getVersion());
-    Assertions.assertEquals("w0_tpcds_iceberg", workload.getId());
+    Assertions.assertEquals("w0_tpcds", workload.getId());
     Assertions.assertEquals(9, workload.getPhases().size());
     for (Phase phase : workload.getPhases()) {
       switch (phase.getId()) {
@@ -370,22 +370,20 @@ public class ParserTest {
 
   @Test
   public void testParseWP1Longevity() throws IOException {
-    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "wp1_longevity.yaml");
+    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "wp1_longevity-delta-2.2.0.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp1_longevity", workload.getId());
-    Assertions.assertEquals(15, workload.getPhases().size());
+    Assertions.assertEquals(13, workload.getPhases().size());
   }
 
   @Test
   public void testParseWP2Resilience() throws IOException {
-    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "wp2_resilience.yaml");
+    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "wp2_resilience-delta-2.2.0.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp2_resilience", workload.getId());
-    Assertions.assertEquals(17, workload.getPhases().size());
+    Assertions.assertEquals(15, workload.getPhases().size());
     for (Phase phase : workload.getPhases()) {
       switch (phase.getId()) {
-        case "setup":
-        case "setup_data_maintenance":
         case "init":
         case "build":
         case "single_user_1":
@@ -411,10 +409,10 @@ public class ParserTest {
 
   @Test
   public void testParseWP3RWConcurrency() throws IOException {
-    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "wp3_rw_concurrency.yaml");
+    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "wp3_rw_concurrency-delta-2.2.0.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp3_rw_concurrency", workload.getId());
-    Assertions.assertEquals(10, workload.getPhases().size());
+    Assertions.assertEquals(8, workload.getPhases().size());
     for (Phase phase : workload.getPhases()) {
       switch (phase.getId()) {
         case "single_user_1_data_maintenance_1":
@@ -458,8 +456,6 @@ public class ParserTest {
             Assertions.assertNull(taskO.getTimeTravelPhaseId());
           }
           break;
-        case "setup":
-        case "setup_data_maintenance":
         case "init":
         case "build":
         case "single_user_2o_data_maintenance_2":
@@ -476,7 +472,8 @@ public class ParserTest {
 
   @Test
   public void testParseWP3RWConcurrencyMulti() throws IOException {
-    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "wp3_rw_concurrency_multi.yaml");
+    Workload workload =
+        FileParser.loadWorkload(TPCDS_PATH + "wp3_rw_concurrency_multi-delta-2.2.0.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp3_rw_concurrency_multi", workload.getId());
     Assertions.assertEquals(10, workload.getPhases().size());
@@ -518,10 +515,10 @@ public class ParserTest {
 
   @Test
   public void testParseWP4TimeTravel() throws IOException {
-    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "wp4_time_travel.yaml");
+    Workload workload = FileParser.loadWorkload(TPCDS_PATH + "wp4_time_travel-delta-2.2.0.yaml");
     Assertions.assertEquals(1, workload.getVersion());
     Assertions.assertEquals("wp4_time_travel", workload.getId());
-    Assertions.assertEquals(18, workload.getPhases().size());
+    Assertions.assertEquals(16, workload.getPhases().size());
     for (Phase phase : workload.getPhases()) {
       switch (phase.getId()) {
         case "single_user_2_0":
@@ -546,15 +543,6 @@ public class ParserTest {
             Assertions.assertNotNull(task.getTimeTravelPhaseId());
           }
           break;
-        case "setup_data_maintenance":
-          {
-            List<Session> sessions = phase.getSessions();
-            Assertions.assertEquals(1, sessions.size());
-            List<Task> tasks = sessions.get(0).getTasks();
-            Assertions.assertEquals(8, tasks.size());
-          }
-          break;
-        case "setup":
         case "init":
         case "build":
         case "data_maintenance_1":

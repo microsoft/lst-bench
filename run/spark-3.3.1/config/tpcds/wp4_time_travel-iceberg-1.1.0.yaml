@@ -3,21 +3,6 @@
 version: 1
 id: wp4_time_travel
 phases:
-- id: setup
-  sessions:
-  - tasks:
-    - template_id: setup
-- id: setup_data_maintenance
-  sessions:
-  - tasks:
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
 - id: init
   sessions:
   - tasks:
@@ -29,8 +14,8 @@ phases:
 - id: data_maintenance_1
   sessions:
   - tasks:
-    - template_id: data_maintenance_delta
-    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_iceberg
+    - template_id: data_maintenance_iceberg
 - id: single_user_2_0
   sessions:
   - tasks:
@@ -39,8 +24,8 @@ phases:
 - id: data_maintenance_2
   sessions:
   - tasks:
-    - template_id: data_maintenance_delta
-    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_iceberg
+    - template_id: data_maintenance_iceberg
 - id: single_user_3_1
   sessions:
   - tasks:
@@ -54,8 +39,8 @@ phases:
 - id: data_maintenance_3
   sessions:
   - tasks:
-    - template_id: data_maintenance_delta
-    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_iceberg
+    - template_id: data_maintenance_iceberg
 - id: single_user_4_2
   sessions:
   - tasks:
@@ -74,8 +59,8 @@ phases:
 - id: data_maintenance_4
   sessions:
   - tasks:
-    - template_id: data_maintenance_delta
-    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_iceberg
+    - template_id: data_maintenance_iceberg
 - id: single_user_5_3
   sessions:
   - tasks:
