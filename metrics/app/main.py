@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from textwrap import wrap
 
 import altair as alt
 import collections
@@ -227,7 +226,17 @@ def get_experiments_data(experiments_df: pd.DataFrame, target_granularity: str) 
     return df
 
 
-st.set_page_config(layout="wide")
+st.set_page_config(
+    page_title="LST-Bench - Dashboard",
+    page_icon=":bar_chart:",
+    layout="wide")
+st.title('LST-Bench - Dashboard')
+st.write("[Project Page](https://github.com/microsoft/lst-bench/) | "
+         "[Technical Report](https://arxiv.org/abs/2305.01120) | "
+         "Add a System")
+
+workloads = get_workloads()
+workload_selected = st.sidebar.selectbox('Workload', workloads, index=0)
 
 systems = get_systems()
 systems_selected = st.sidebar.multiselect('System', systems, default=systems)
@@ -244,18 +253,15 @@ cluster_sizes_selected = st.sidebar.multiselect('Cluster Size', cluster_sizes, d
 machines = get_machines()
 machines_selected = st.sidebar.multiselect('Machine', machines, default=machines)
 
-workloads = get_workloads()
-workload_selected = st.sidebar.selectbox('Workload', workloads, index=0)
-
 scale_factors = get_scale_factors()
 scale_factors_selected = st.sidebar.multiselect('Scale Factor', scale_factors, default=scale_factors)
 
-
-# Create title
-st.title('LST-Bench - Dashboard')
-st.write("[Project Page](https://github.com/microsoft/lst-bench/) | "
-         "[Technical Report](https://arxiv.org/abs/2305.01120) | "
-         "Add a System")
+# Bail out if any of the dimensions if empty
+if any(len(arr) == 0 for arr in [systems_selected, table_formats_selected,
+                                 modes_selected, cluster_sizes_selected,
+                                 machines_selected, scale_factors_selected]):
+    st.error("Please ensure you have selected at least one option for each dimension.")
+    st.stop()
 
 # Create tabs for current selection
 exec_time_tab = None
