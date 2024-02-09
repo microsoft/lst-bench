@@ -95,7 +95,7 @@ phases:
 - id: data_maintenance_dependent_5
   sessions:
   - tasks:
-    - template_id: template_id: data_maintenance_dependent
+    - template_id: data_maintenance_dependent
       custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
       task_executor_arguments:
         dependent_task_batch_size: 1000
