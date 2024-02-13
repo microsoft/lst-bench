@@ -171,7 +171,7 @@ def get_experiments_selected(
               AND cast(json(event_data)->>'cluster_size' AS VARCHAR) IN ({', '.join(["'" + cluster_size + "'" for cluster_size in _cluster_sizes_selected])}) 
               AND cast(json(event_data)->>'machine' AS VARCHAR) IN ({', '.join(["'" + machine + "'" for machine in _machines_selected])}) 
               AND cast(json(event_data)->>'scale_factor' AS VARCHAR) IN ({', '.join(["'" + scale_factor + "'" for scale_factor in _scale_factors_selected])}) 
-        ORDER BY event_start_time ASC;
+        ORDER BY cast(event_start_time AS TIMESTAMP) ASC;
         """
     ).df()
     logging.debug(df)
@@ -198,8 +198,8 @@ def get_experiments_data(experiments_df: pd.DataFrame, target_granularity: str) 
                        concat_ws('/', CASE WHEN event_type = 'EXEC_PHASE' THEN NULL ELSE '{event_id}' END, regexp_replace(event_id, '(_delta|_iceberg|_hudi)', '')) AS event_id 
                 FROM combined_experiment_telemetry 
                 WHERE run_id = ? AND event_type = ? AND event_status='SUCCESS' 
-                      AND event_start_time >= ? AND event_end_time <= ? 
-                ORDER BY event_start_time ASC;
+                      AND cast(event_start_time AS TIMESTAMP) >= ? AND cast(event_end_time AS TIMESTAMP) <= ? 
+                ORDER BY cast(event_start_time AS TIMESTAMP) ASC;
                 """,
                 [run_id, granularities.get(granularity), event_start_time, event_end_time]).df()
             new_experiment_data_df["system"] = system
@@ -233,7 +233,8 @@ st.set_page_config(
 st.title('LST-Bench - Dashboard')
 st.write("[Project Page](https://github.com/microsoft/lst-bench/) | "
          "[Technical Report](https://arxiv.org/abs/2305.01120) | "
-         "Add a System")
+         "[Evaluation](https://github.com/microsoft/lst-bench/tree/main/metrics/app#evaluation) | "
+         "[Adding a New Result](https://github.com/microsoft/lst-bench/tree/main/metrics/app#adding-a-new-result)")
 
 workloads = get_workloads()
 workload_selected = st.sidebar.selectbox('Workload', workloads, index=0)
@@ -289,6 +290,12 @@ if exec_time_tab is not None:
                                                        scale_factors_selected)
     experiments_data_df = get_experiments_data(experiments_selected_df, granularity_selected)
     experiments_data_df = experiments_data_df[experiments_data_df['event_id'].str.contains(regex, regex=True)]
+
+    if len(experiments_data_df) > 3000:
+        st.error(
+            "Too many rows in the result. "
+            "Please refine your dimension selection or apply a regex filter to narrow down the results.")
+        st.stop()
 
     # --- Plot the data --- #
     chart = (
