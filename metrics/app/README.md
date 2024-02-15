@@ -55,8 +55,6 @@ Once the virtual environment is created, activate it by executing:
 source venv/bin/activate
 ```
 
-This will ensure that any Python packages installed are isolated within this environment.
-
 ### 3. Install Dependencies
 Install the the necessary packages specified in the requirements.txt using pip:
 
