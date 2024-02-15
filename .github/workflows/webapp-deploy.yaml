@@ -19,10 +19,10 @@
 name: Build and deploy Web App - lst-bench
 
 on:
-  pull_request:
   push:
     paths:
       - metrics/**
+      - run/**
     branches:
       - main
   workflow_dispatch:
