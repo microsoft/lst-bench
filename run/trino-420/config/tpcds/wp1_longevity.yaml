@@ -3,23 +3,6 @@
 version: 1
 id: wp1_longevity
 phases:
-- id: setup
-  sessions:
-  - tasks:
-    - template_id: setup
-- id: setup_data_maintenance
-  sessions:
-  - tasks:
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
 - id: init
   sessions:
   - tasks:

@@ -3,25 +3,6 @@
 version: 1
 id: wp3_rw_concurrency
 phases:
-- id: setup
-  sessions:
-  - tasks:
-    - template_id: setup
-- id: setup_data_maintenance
-  sessions:
-  - tasks:
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
 - id: init
   sessions:
   - tasks:
@@ -42,7 +23,9 @@ phases:
   - tasks:
     - template_id: single_user
   - tasks:
-    - template_id: optimize
+    - template_id: optimize_split
+      task_executor_arguments:
+        dependent_task_batch_size: 100
 - id: single_user_2o_data_maintenance_2
   sessions:
   - tasks:
@@ -57,7 +40,9 @@ phases:
   - tasks:
     - template_id: single_user
   - tasks:
-    - template_id: optimize
+    - template_id: optimize_split
+      task_executor_arguments:
+        dependent_task_batch_size: 100
 - id: single_user_3o_data_maintenance_3
   sessions:
   - tasks:
@@ -74,4 +59,6 @@ phases:
   - tasks:
     - template_id: single_user
   - tasks:
-    - template_id: optimize
+    - template_id: optimize_split
+      task_executor_arguments:
+        dependent_task_batch_size: 100
