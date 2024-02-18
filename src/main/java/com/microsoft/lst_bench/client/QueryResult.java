@@ -31,11 +31,13 @@ import java.util.stream.Collectors;
  */
 public class QueryResult {
 
+  private final Map<String, Integer> columnTypes;
   private final Map<String, List<Object>> valueList;
 
   private static final String RESULT = "Result";
 
   public QueryResult() {
+    this.columnTypes = new HashMap<>();
     this.valueList = new HashMap<>();
   }
 
@@ -45,6 +47,7 @@ public class QueryResult {
     ResultSetMetaData rsmd = rs.getMetaData();
 
     for (int j = 1; j <= rsmd.getColumnCount(); j++) {
+      columnTypes.put(rsmd.getColumnName(j), rsmd.getColumnType(j));
       valueList.put(rsmd.getColumnName(j), new ArrayList<>());
     }
 
@@ -65,24 +68,34 @@ public class QueryResult {
   }
 
   public boolean containsEmptyResultColumnOnly() {
-    if (valueList.keySet().size() == 1
+    return valueList.keySet().size() == 1
         && valueList.containsKey(RESULT)
-        && valueList.get(RESULT).size() == 0) {
-      return true;
-    }
-    return false;
+        && valueList.get(RESULT).isEmpty();
   }
 
-  public Map<String, Object> getStringMappings(int listMin, int listMax) {
+  public Map<String, Object> getStringMappings(int listMin, int listMax) throws ClientException {
     Map<String, Object> result = new HashMap<>();
-    for (String key : this.valueList.keySet()) {
+    for (String key : valueList.keySet()) {
       List<String> localList =
-          this.valueList.get(key).subList(listMin, listMax).stream()
-              .map(s -> s.toString())
+          valueList.get(key).subList(listMin, listMax).stream()
+              .map(Object::toString)
               .collect(Collectors.toUnmodifiableList());
-      // TODO: This assumes a VARCHAR type (or implicit casting by the engine),
-      //       we should probably handle it more generically using data types.
-      result.put(key, "'" + String.join("','", localList) + "'");
+      // TODO: Support additional data types.
+      switch (columnTypes.get(key)) {
+        case java.sql.Types.VARCHAR:
+        case java.sql.Types.CHAR:
+          result.put(key, "'" + String.join("','", localList) + "'");
+          break;
+        case java.sql.Types.BIGINT:
+        case java.sql.Types.INTEGER:
+        case java.sql.Types.SMALLINT:
+        case java.sql.Types.TINYINT:
+          result.put(key, String.join(",", localList));
+          break;
+        default:
+          throw new ClientException(
+              "Unsupported data type for string mapping: " + columnTypes.get(key));
+      }
     }
     return result;
   }
