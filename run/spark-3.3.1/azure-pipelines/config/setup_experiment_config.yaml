@@ -15,6 +15,6 @@ parameter_values:
   external_catalog: spark_catalog
   external_database: "external_tpcds_sf_${EXP_SCALE_FACTOR}"
   external_table_format: csv
-  external_data_path: "abfss://azure-pipelines@lstbenchdatasets.dfs.core.windows.net/tpc-ds/csv/sf_${EXP_SCALE_FACTOR}/"
+  external_data_path: "abfss://${DATA_STORAGE_ACCOUNT_CONTAINER}@${DATA_STORAGE_ACCOUNT}.dfs.core.windows.net/tpc-ds/csv/sf_${EXP_SCALE_FACTOR}/"
   external_options_suffix: ',header="true"'
   external_tblproperties_suffix: ''

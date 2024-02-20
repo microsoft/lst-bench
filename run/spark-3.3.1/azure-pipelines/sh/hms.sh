@@ -5,6 +5,10 @@ if [ "$#" -ne 7 ]; then
 fi
 
 source env.sh
+if [ -z "${HADOOP_HOME}" ]; then
+    echo "ERROR: HADOOP_HOME is not defined."
+    exit 1
+fi
 if [ -z "${SPARK_HOME}" ]; then
     echo "ERROR: SPARK_HOME is not defined."
     exit 1

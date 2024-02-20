@@ -4,6 +4,11 @@ if [ "$#" -ne 3 ]; then
     exit 1
 fi
 
+if [ -z "${USER}" ]; then
+    echo "ERROR: USER is not defined."
+    exit 1
+fi
+
 export SPARK_MASTER_HOST=$1
 export SPARK_HOME=/home/$USER/spark
 export HADOOP_HOME=/home/$USER/hadoop

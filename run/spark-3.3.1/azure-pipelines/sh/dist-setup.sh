@@ -1,5 +1,9 @@
 #!/bin/bash -e
 source env.sh
+if [ -z "${HOME}" ]; then
+    echo "ERROR: HOME is not defined."
+    exit 1
+fi
 if [ -z "${SPARK_HOME}" ]; then
     echo "ERROR: SPARK_HOME is not defined."
     exit 1
