@@ -32,10 +32,11 @@ This directory comprises the necessary tooling for executing LST-Bench on Apache
   - A VMSS cluster, that will serve as the Spark worker nodes, within the same VNet as the head node.
   - An Azure Storage Account accessible by both the VMSS and head node.
   - An Azure SQL Database (or SQL Server flavored RDBMS) that will be running Hive Metastore.
-    The Hive Metastore schema for version 2.3.0 should already be installed in the instance.
+    The Hive Metastore schema for version 2.3.9 should already be installed in the instance.
 - Prior to running the pipeline, several variables need definition in your Azure Pipeline:
   - `data_storage_account`: Name of the Azure Blob Storage account where the source data for the experiment is stored.
   - `data_storage_account_shared_key` (secret): Shared key for the Azure Blob Storage account where the source data for the experiment is stored.
+  - `data_storage_account_container`: Name of the container in the Azure Blob Storage account where the source data for the experiment is stored.
   - `hms_jdbc_driver`: JDBC driver for the Hive Metastore.
   - `hms_jdbc_url`: JDBC URL for the Hive Metastore.
   - `hms_jdbc_user`: Username for the Hive Metastore.
