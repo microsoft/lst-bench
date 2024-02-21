@@ -88,7 +88,7 @@ public class QueryResult {
           result.put(key, String.join(",", localList));
           break;
         default:
-          // Currently interpret all others as String
+          // Currently assumes String for all other types.
           // TODO: Better handling and testing of data types across engines.
           result.put(key, "'" + String.join("','", localList) + "'");
       }
