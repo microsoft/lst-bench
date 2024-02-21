@@ -73,19 +73,14 @@ public class QueryResult {
         && valueList.get(RESULT).isEmpty();
   }
 
-  public Map<String, Object> getStringMappings(int listMin, int listMax) throws ClientException {
+  public Map<String, Object> getStringMappings(int listMin, int listMax) {
     Map<String, Object> result = new HashMap<>();
     for (String key : valueList.keySet()) {
       List<String> localList =
           valueList.get(key).subList(listMin, listMax).stream()
               .map(Object::toString)
               .collect(Collectors.toUnmodifiableList());
-      // TODO: Support additional data types.
       switch (columnTypes.get(key)) {
-        case java.sql.Types.VARCHAR:
-        case java.sql.Types.CHAR:
-          result.put(key, "'" + String.join("','", localList) + "'");
-          break;
         case java.sql.Types.BIGINT:
         case java.sql.Types.INTEGER:
         case java.sql.Types.SMALLINT:
@@ -93,8 +88,9 @@ public class QueryResult {
           result.put(key, String.join(",", localList));
           break;
         default:
-          throw new ClientException(
-              "Unsupported data type for string mapping: " + columnTypes.get(key));
+          // Currently interpret all others as String
+          // TODO: Better handling and testing of data types across engines.
+          result.put(key, "'" + String.join("','", localList) + "'");
       }
     }
     return result;

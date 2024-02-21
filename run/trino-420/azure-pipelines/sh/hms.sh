@@ -4,6 +4,11 @@ if [ "$#" -ne 7 ]; then
     exit 1
 fi
 
+if [ -z "${USER}" ]; then
+    echo "ERROR: USER is not defined."
+    exit 1
+fi
+
 export HMS_JDBC_DRIVER=$1
 export HMS_JDBC_URL=$2
 export HMS_JDBC_USER=$3

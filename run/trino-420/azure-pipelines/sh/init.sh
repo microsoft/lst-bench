@@ -4,6 +4,11 @@ if [ "$#" -ne 4 ]; then
     exit 1
 fi
 
+if [ -z "${USER}" ]; then
+    echo "ERROR: USER is not defined."
+    exit 1
+fi
+
 export HOSTNAME=$(hostname)
 export IS_COORDINATOR=$1
 export TRINO_MASTER_HOST=$2

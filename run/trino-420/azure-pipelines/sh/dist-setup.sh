@@ -1,4 +1,8 @@
 #!/bin/bash -e
+if [ -z "${HOME}" ]; then
+    echo "ERROR: HOME is not defined."
+    exit 1
+fi
 
 # Install packages
 sudo apt install -y net-tools nmap
