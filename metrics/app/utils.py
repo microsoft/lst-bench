@@ -29,6 +29,24 @@ def time_diff_in_minutes(time_str1, time_str2):
 
 # -------- PERFORMANCE DEGRADATION -------- #
 def performance_degradation(values: pd.DataFrame) -> float:
+    """
+    Performance degradation is measured as the average rate of change between consecutive values.
+
+    Formula:
+    degradation_rate = (Σ((M[i] - M[i-1]) / M[i-1])) / (n - 1)
+
+    Where:
+    - M[i] is the current value
+    - M[i-1] is the previous value
+    - n is the number of observations
+
+    Args:
+    - values (pd.DataFrame): A DataFrame containing the values for which performance degradation is measured.
+
+    Returns:
+    - float: The average rate of performance degradation.
+    """
+
     # Calculate the difference between each value and its previous value
     diffs = values.diff()
     # Remove the first row as it will be NaN
@@ -37,4 +55,8 @@ def performance_degradation(values: pd.DataFrame) -> float:
     diffs = diffs.div(values.shift(1))
     # Calculate the average rate of change
     degradation_rate = diffs.mean()
+
+    # TODO: Consider incorporating variance to understand the variability in performance degradation.
+    # TODO: Handle multiple runs for more comprehensive analysis.
+
     return degradation_rate

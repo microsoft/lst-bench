@@ -265,12 +265,12 @@ if any(len(arr) == 0 for arr in [systems_selected, table_formats_selected,
     st.stop()
 
 # Create tabs for current selection
-exec_time_tab = None
-performance_degradation_tab = None
+exec_time_tab = None  # This tab shows execution time.
+performance_degradation_tab = None  # This tab shows degradation rate.
 # TODO
-io_tab = None
-io_api_calls_tab = None
-cpu_utilization_tab = None
+io_tab = None  # This tab will show I/O metrics, such as bytes read/written.
+io_api_calls_tab = None  # This tab will show I/O API call metrics.
+cpu_utilization_tab = None  # This tab will show CPU utilization metrics.
 
 if workload_selected == 'wp1_longevity':
     exec_time_tab, performance_degradation_tab = st.tabs(['Execution Time', 'Performance Degradation'])
@@ -304,7 +304,8 @@ if exec_time_tab is not None:
         .encode(
             alt.X("configuration:N", axis=None, title='Configuration', stack=None),
             alt.Y("time_diff_in_mins:Q", title='Latency (mins)', axis=alt.Axis(titleFontWeight='bold')),
-            alt.Color("configuration:N", legend=alt.Legend(titleFontWeight='bold', labelLimit=400), title='Configuration'),
+            alt.Color("configuration:N", legend=alt.Legend(titleFontWeight='bold', labelLimit=400),
+                      title='Configuration'),
             alt.Column("event_id:N", title="",
                        header=alt.Header(orient='bottom', labelFontWeight='bold', labelAlign='right',
                                          labelAngle=-45, labelPadding=20),
@@ -341,7 +342,8 @@ if performance_degradation_tab is not None:
         alt.Chart(grouped_df)
         .encode(
             alt.X("phase_type:N", title='', axis=alt.Axis(labelFontWeight='bold', labelAngle=-45)),
-            alt.Y("configuration:N", title='Configuration', axis=alt.Axis(titleFontWeight='bold', maxExtent=430, labelLimit=400))
+            alt.Y("configuration:N", title='Configuration',
+                  axis=alt.Axis(titleFontWeight='bold', maxExtent=430, labelLimit=400))
         )
     )
     heatmap = (
@@ -365,4 +367,4 @@ if performance_degradation_tab is not None:
         )
     )
     performance_degradation_tab.markdown('#')
-    performance_degradation_tab.altair_chart(heatmap+text, theme=None)
+    performance_degradation_tab.altair_chart(heatmap + text, theme=None)
