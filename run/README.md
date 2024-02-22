@@ -24,9 +24,9 @@ This folder contains configurations for running LST-Bench on various systems as 
   - [x] Delta Lake 2.2.0
   - [x] Apache Hudi 0.12.2
   - [x] Apache Iceberg 1.1.0
-- [ ] Trino 420
-  - [ ] Delta Lake
-  - [ ] Apache Iceberg
+- [x] Trino 420
+  - [x] Delta Lake
+  - [x] Apache Iceberg
 
 ## Folder Structure
 While the folder for each engine may have a slightly different structure, they generally contain the following:

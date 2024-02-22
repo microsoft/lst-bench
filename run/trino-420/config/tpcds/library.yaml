@@ -241,6 +241,7 @@ task_templates:
 # Execution of optimize on all benchmark tables but splitting optimization
 # of partitioned tables into batches by relying on dependent task executor
 - id: optimize_split
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
   files:
   - run/trino-420/scripts/tpcds/optimize/o_call_center.sql
   - run/trino-420/scripts/tpcds/optimize/o_catalog_page.sql

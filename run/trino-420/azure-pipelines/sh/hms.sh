@@ -4,17 +4,8 @@ if [ "$#" -ne 7 ]; then
     exit 1
 fi
 
-source env.sh
 if [ -z "${USER}" ]; then
     echo "ERROR: USER is not defined."
-    exit 1
-fi
-if [ -z "${HADOOP_HOME}" ]; then
-    echo "ERROR: HADOOP_HOME is not defined."
-    exit 1
-fi
-if [ -z "${SPARK_HOME}" ]; then
-    echo "ERROR: SPARK_HOME is not defined."
     exit 1
 fi
 
@@ -25,7 +16,14 @@ export HMS_JDBC_PASSWORD=$4
 export HMS_STORAGE_ACCOUNT=$5
 export HMS_STORAGE_ACCOUNT_SHARED_KEY=$6
 export HMS_STORAGE_ACCOUNT_CONTAINER=$7
+export HADOOP_HOME=/home/$USER/hadoop
 export HIVE_HOME=/home/$USER/hive
+
+# Install Hadoop
+rm -rf hadoop-3.3.1
+wget -nv -N https://archive.apache.org/dist/hadoop/common/hadoop-3.3.1/hadoop-3.3.1.tar.gz
+tar -xzf hadoop-3.3.1.tar.gz
+ln -sf $(pwd)/hadoop-3.3.1 $HADOOP_HOME
 
 # Install Hive (needed for HMS)
 rm -rf apache-hive-2.3.9-bin
@@ -35,15 +33,15 @@ ln -sf $(pwd)/apache-hive-2.3.9-bin $HIVE_HOME
 
 # Configure HMS
 envsubst < "hive-site.xml.template" > "$HIVE_HOME/conf/hive-site.xml"
-ln -sf $HIVE_HOME/conf/hive-site.xml $SPARK_HOME/conf/hive-site.xml
 
 # Copy Azure dependencies to Hive classpath
 cp $HADOOP_HOME/share/hadoop/tools/lib/hadoop-azure* $HIVE_HOME/lib/
 
 # Install MSSQL driver
 wget -nv -N https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/6.2.1.jre8/mssql-jdbc-6.2.1.jre8.jar
-ln -sf $(pwd)/mssql-jdbc-6.2.1.jre8.jar $SPARK_HOME/jars/mssql-jdbc.jar
+ln -sf $(pwd)/mssql-jdbc-6.2.1.jre8.jar $HIVE_HOME/lib/mssql-jdbc.jar
 
 # Push to environment
-echo "export HIVE_HOME=${HIVE_HOME}" >> env.sh
+echo "export HADOOP_HOME=${HADOOP_HOME}
+export HIVE_HOME=${HIVE_HOME}" >> env.sh
 echo "source $(pwd)/env.sh" >> ~/.bashrc

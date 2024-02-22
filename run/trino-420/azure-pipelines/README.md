@@ -16,21 +16,21 @@ limitations under the License.
 {% endcomment %}
 -->
 
-# Azure Pipelines Deployment for LST-Bench on Apache Spark 3.3.1
-This directory comprises the necessary tooling for executing LST-Bench on Apache Spark 3.3.1 with different LSTs using Azure Pipelines. The included tooling consists of:
+# Azure Pipelines Deployment for LST-Bench on Trino 420
+This directory comprises the necessary tooling for executing LST-Bench on Trino 420 with different LSTs using Azure Pipelines. The included tooling consists of:
 - `run-lst-bench.yml`:
-  An Azure Pipelines script designed to deploy Apache Spark with various LSTs and execute LST-Bench.
+  An Azure Pipelines script designed to deploy Trino and execute LST-Bench.
 - `sh/`:
-  A directory containing shell scripts and engine configuration files supporting the deployment of Spark with different LSTs and the execution of experiments.
+  A directory containing shell scripts and engine configuration files supporting the deployment of Trino and the execution of experiments.
 - `config/`:
   A directory with LST-Bench configuration files necessary for executing the experiments that are part of the results.
 
 ## Prerequisites
 - Automation for deploying the infrastructure in Azure to run LST-Bench is not implemented. As a result, the Azure Pipeline script expects the following setup:
   - A VM named 'lst-bench-client' connected to the pipeline environment to run the LST-Bench client.
-  - A VM named 'lst-bench-head' to run the head node of the Spark cluster, also connected to the pipeline environment.
-  - A VMSS cluster, that will serve as the Spark worker nodes, within the same VNet as the head node.
-  - An Azure Storage Account accessible by both the VMSS and head node.
+  - A VM named 'lst-bench-head' to run the coordinator node of the Trino cluster, also connected to the pipeline environment.
+  - A VMSS cluster, that will serve as the Trino worker nodes, within the same VNet as the coordinator node.
+  - An Azure Storage Account accessible by both the VMSS and coordinator node.
   - An Azure SQL Database (or SQL Server flavored RDBMS) that will be running Hive Metastore.
     The Hive Metastore schema for version 2.3.9 should already be installed in the instance.
 - Prior to running the pipeline, several variables need definition in your Azure Pipeline:
@@ -44,8 +44,13 @@ This directory comprises the necessary tooling for executing LST-Bench on Apache
   - `hms_storage_account`: Name of the Azure Blob Storage account where the Hive Metastore will store data associated with the catalog (can be the same as the data_storage_account).
   - `hms_storage_account_shared_key` (secret): Shared key for the Azure Blob Storage account where the Hive Metastore will store data associated with the catalog.
   - `hms_storage_account_container`: Name of the container in the Azure Blob Storage account where the Hive Metastore will store data associated with the catalog.
-- The versions and configurations of LSTs to run can be modified via input parameters for the pipelines in the Azure Pipelines YAML file or from the Web UI.
-  Default values are assigned to these parameters. 
-  Parameters also include experiment scale factor, machine type, and cluster size. 
-  Note that these parameters are not used to deploy the data or the infrastructure, as this process is not automated in the pipeline. 
+- The LSTs to run experiments on can be modified via input parameters for the pipelines in the Azure Pipelines YAML file or from the Web UI.
+  Default values are assigned to these parameters.
+  Parameters also include experiment scale factor, machine type, and cluster size.
+  Note that these parameters are not used to deploy the data or the infrastructure, as this process is not automated in the pipeline.
   Instead, they are recorded in the experiment telemetry for proper categorization and visualization of results later on.
+
+## Additional Notes
+For workloads within LST-Bench that include an `optimize` step, particularly those involving partitioned tables, a [custom task](/docs/workloads.md#custom-tasks) is used to execute this step. 
+The task divides the `optimize` operation into batches, each containing up to 100 partitions (the parameter value is configurable). 
+This approach was implemented to address issues where Trino would crash if the optimization step were applied to the entire table.

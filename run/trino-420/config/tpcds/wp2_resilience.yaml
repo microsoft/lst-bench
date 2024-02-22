@@ -3,25 +3,6 @@
 version: 1
 id: wp2_resilience
 phases:
-- id: setup
-  sessions:
-  - tasks:
-    - template_id: setup
-- id: setup_data_maintenance
-  sessions:
-  - tasks:
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
 - id: init
   sessions:
   - tasks:
@@ -46,7 +27,9 @@ phases:
 - id: optimize_1
   sessions:
   - tasks:
-    - template_id: optimize
+    - template_id: optimize_split
+      task_executor_arguments:
+        dependent_task_batch_size: 100
 - id: single_user_2o
   sessions:
   - tasks:
@@ -65,7 +48,9 @@ phases:
 - id: optimize_2
   sessions:
   - tasks:
-    - template_id: optimize
+    - template_id: optimize_split
+      task_executor_arguments:
+        dependent_task_batch_size: 100
 - id: single_user_3o
   sessions:
   - tasks:
@@ -86,7 +71,9 @@ phases:
 - id: optimize_3
   sessions:
   - tasks:
-    - template_id: optimize
+    - template_id: optimize_split
+      task_executor_arguments:
+        dependent_task_batch_size: 100
 - id: single_user_4o
   sessions:
   - tasks:

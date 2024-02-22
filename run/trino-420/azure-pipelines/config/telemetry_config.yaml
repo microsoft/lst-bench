@@ -1,0 +1,13 @@
+# Description: Telemetry Configuration
+---
+version: 1
+connection:
+  id: duckdb_0
+  driver: org.duckdb.DuckDBDriver
+  url: jdbc:duckdb:./telemetry-trino-420
+execute_ddl: true
+ddl_file: 'src/main/resources/scripts/logging/duckdb/ddl.sql'
+insert_file: 'src/main/resources/scripts/logging/duckdb/insert.sql'
+# The following parameter values will be used to replace the variables in the logging statements.
+parameter_values:
+  data_path: ''

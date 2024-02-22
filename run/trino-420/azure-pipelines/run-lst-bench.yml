@@ -1,0 +1,249 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+trigger: none
+
+parameters:
+- name: lsts
+  type: object
+  default:
+    - table_format: "delta"
+      mode: "cow"
+    - table_format: "iceberg"
+      mode: "mor"
+- name: workloads
+  type: object
+  default:
+    - "wp1_longevity"
+    - "wp2_resilience"
+    - "wp3_rw_concurrency"
+- name: exp_scale_factor
+  type: number
+  default: 100
+- name: exp_machine
+  type: string
+  default: "Standard_E8s_v5"
+- name: exp_cluster_size
+  type: number
+  default: 8
+
+variables:
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+  MAVEN_OPTS: '-ntp -B -Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+  EXP_SCALE_FACTOR: ${{ parameters.exp_scale_factor }}
+  EXP_MACHINE: ${{ parameters.exp_machine }}
+  EXP_CLUSTER_SIZE: ${{ parameters.exp_cluster_size }}
+
+stages:
+# Build LST-Bench and create artifact to deploy to target VM
+- stage: build
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Cache@2
+      displayName: Cache Maven local repo
+      inputs:
+        key: 'maven | "$(Agent.OS)" | **/pom.xml'
+        restoreKeys: |
+          maven | "$(Agent.OS)"
+          maven
+        path: $(MAVEN_CACHE_FOLDER)
+    - task: Maven@4
+      inputs:
+        mavenPomFile: 'pom.xml'
+        options: $(MAVEN_OPTS)
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.11'
+        publishJUnitResults: false
+        goals: 'package -DskipTests -Ptrino-jdbc'
+    - task: CopyFiles@2
+      displayName: 'Copy Artifacts to: $(TargetFolder)'
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)'
+        TargetFolder: '$(System.DefaultWorkingDirectory)/pipeline-artifacts/'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)/pipeline-artifacts/'
+        artifact: lst-bench-0.1-SNAPSHOT
+
+# Set up engine and deploy LST-Bench
+- stage: deploy
+  jobs:
+  - deployment: EngineDeploy
+    displayName: 'Deploying engine'
+    workspace:
+      clean: all
+    environment:
+      name: 'lst-bench-github'
+      resourceType: VirtualMachine
+      resourceName: 'lst-bench-head'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - bash: |
+              echo 'Deploy engine'
+              mkdir -p ~/trino-420
+              cp $(Pipeline.Workspace)/lst-bench-0.1-SNAPSHOT/run/trino-420/azure-pipelines/sh/* ~/trino-420/
+              cd ~/trino-420
+              chmod +x ./*
+              trino_head_node=$(ip addr show eth0 | sed -n 's/ *inet [^0-9]*\([0-9\.]\+\).*/\1/p')
+              ./init.sh 'true' "${trino_head_node}" "$(data_storage_account)" "$(data_storage_account_shared_key)"
+              ./hms.sh "$(hms_jdbc_driver)" "$(hms_jdbc_url)" "$(hms_jdbc_user)" "$(hms_jdbc_password)" "$(hms_storage_account)" "$(hms_storage_account_shared_key)" "$(hms_storage_account_container)"
+              ./dist-setup.sh
+              ./dist-exec.sh trino-420 init.sh 'false' "${trino_head_node}" "$(data_storage_account)" "$(data_storage_account_shared_key)"
+  - deployment: ClientDeploy
+    displayName: 'Deploying LST-Bench client'
+    workspace:
+      clean: all
+    environment:
+      name: 'lst-bench-github'
+      resourceType: VirtualMachine
+      resourceName: 'lst-bench-client'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - bash: |
+              echo 'Deploy LST-Bench client'
+              sudo apt install -y openjdk-11-jdk
+              mkdir -p ~/lst-bench-0.1-SNAPSHOT
+              cp -rf $(Pipeline.Workspace)/lst-bench-0.1-SNAPSHOT/* ~/lst-bench-0.1-SNAPSHOT/
+              chmod +x ~/lst-bench-0.1-SNAPSHOT/launcher.sh
+
+# Run LST-Bench (setup external tables)
+- stage: setup_experiment
+  jobs:
+  - deployment: StartEngine
+    displayName: "Starting Engine"
+    environment:
+      name: 'lst-bench-github'
+      resourceType: VirtualMachine
+      resourceName: 'lst-bench-head'
+    variables:
+      process.clean: false
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: none
+          - bash: |
+              cd ~/trino-420
+              ./stop-cluster.sh && ./start-cluster.sh
+              sleep 20
+              trino_head_node=$(ip addr show eth0 | sed -n 's/ *inet [^0-9]*\([0-9\.]\+\).*/\1/p')
+              echo "##vso[task.setvariable variable=trino_head_node;isOutput=true]${trino_head_node}"
+            name: engine_start_step
+  - deployment: RunSetupExperiment
+    dependsOn: StartEngine
+    displayName: "Setup Experiment"
+    environment:
+      name: 'lst-bench-github'
+      resourceType: VirtualMachine
+      resourceName: 'lst-bench-client'
+    variables:
+      trino_master_host: $[ dependencies.StartEngine.outputs['deploy_lst-bench-head.engine_start_step.trino_head_node'] ]
+    timeoutInMinutes: 0
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: none
+          - bash: |
+              cd ~/lst-bench-0.1-SNAPSHOT
+              ./launcher.sh -c run/trino-420/azure-pipelines/config/connections_config.yaml \
+                            -e run/trino-420/azure-pipelines/config/setup_experiment_config.yaml \
+                            -t run/trino-420/azure-pipelines/config/telemetry_config.yaml \
+                            -l run/trino-420/config/tpcds/library.yaml \
+                            -w run/trino-420/config/tpcds/setup_experiment.yaml
+  - deployment: StopEngine
+    dependsOn: RunSetupExperiment
+    displayName: "Stopping Engine"
+    environment:
+      name: 'lst-bench-github'
+      resourceType: VirtualMachine
+      resourceName: 'lst-bench-head'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: none
+          - bash: |
+              cd ~/trino-420
+              ./stop-cluster.sh
+
+# Run LST-Bench
+- ${{ each lst in parameters.lsts }}:
+  - ${{ each workload in parameters.workloads }}:
+    - stage: test_${{ lst.mode }}_${{ lst.table_format }}_${{ workload }}
+      jobs:
+      - deployment: StartEngine
+        displayName: "Starting Engine (${{ lst.mode }}, ${{ lst.table_format }}, ${{ workload }})"
+        environment:
+          name: 'lst-bench-github'
+          resourceType: VirtualMachine
+          resourceName: 'lst-bench-head'
+        variables:
+          process.clean: false
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - download: none
+              - bash: |
+                  cd ~/trino-420
+                  ./stop-cluster.sh && ./start-cluster.sh ${{ lst.table_format }}
+                  sleep 20
+                  trino_head_node=$(ip addr show eth0 | sed -n 's/ *inet [^0-9]*\([0-9\.]\+\).*/\1/p')
+                  echo "##vso[task.setvariable variable=trino_head_node;isOutput=true]${trino_head_node}"
+                name: engine_start_step
+      - deployment: RunExperiment
+        dependsOn: StartEngine
+        displayName: "Running Experiment (${{ lst.mode }}, ${{ lst.table_format }}, ${{ workload }})"
+        environment:
+          name: 'lst-bench-github'
+          resourceType: VirtualMachine
+          resourceName: 'lst-bench-client'
+        variables:
+          trino_master_host: $[ dependencies.StartEngine.outputs['deploy_lst-bench-head.engine_start_step.trino_head_node'] ]
+        timeoutInMinutes: 0
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - download: none
+              - bash: |
+                  cd ~/lst-bench-0.1-SNAPSHOT
+                  echo "${{ workload }}"
+                  export EXP_NAME="${{ workload }}"
+                  ./launcher.sh -c run/trino-420/azure-pipelines/config/connections_config.yaml \
+                                -e run/trino-420/azure-pipelines/config/experiment_config-${{ lst.mode }}-${{ lst.table_format }}.yaml \
+                                -t run/trino-420/azure-pipelines/config/telemetry_config.yaml \
+                                -l run/trino-420/config/tpcds/library.yaml \
+                                -w run/trino-420/config/tpcds/${{ workload }}.yaml
+      - deployment: StopEngine
+        dependsOn: RunExperiment
+        displayName: "Stopping Engine (${{ lst.mode }}, ${{ lst.table_format }}, ${{ workload }})"
+        environment:
+          name: 'lst-bench-github'
+          resourceType: VirtualMachine
+          resourceName: 'lst-bench-head'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - download: none
+              - bash: |
+                  cd ~/trino-420
+                  ./stop-cluster.sh

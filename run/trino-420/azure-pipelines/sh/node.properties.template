@@ -1,0 +1,3 @@
+node.environment=production
+node.id=$HOSTNAME
+node.data-dir=/mnt/local_resource/trino_data
