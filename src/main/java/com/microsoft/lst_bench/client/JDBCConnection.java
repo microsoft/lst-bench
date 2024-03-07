@@ -91,7 +91,7 @@ public class JDBCConnection implements Connection {
                 + " unsuccessful, will retry "
                 + (this.maxNumRetries - errorCount)
                 + " more times; "
-                + createWarningString(s, /* prefix= */ "Failed query")
+                + createWarningString(s, /* prefix= */ "")
                 + "stack trace: "
                 + ExceptionUtils.getStackTrace(e);
 
