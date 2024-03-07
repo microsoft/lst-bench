@@ -77,7 +77,7 @@ public class JDBCConnection implements Connection {
           LOGGER.warn(
               createWarningString(
                   s,
-                  /* logPrefix= */ errorCount > 0
+                  /* prefix= */ errorCount > 0
                       ? ("Retried query, error count: " + errorCount)
                       : ""));
         }
@@ -91,7 +91,7 @@ public class JDBCConnection implements Connection {
                 + " unsuccessful, will retry "
                 + (this.maxNumRetries - errorCount)
                 + " more times; "
-                + createWarningString(s, /* logPrefix= */ "Failed query")
+                + createWarningString(s, /* prefix= */ "Failed query")
                 + "stack trace: "
                 + ExceptionUtils.getStackTrace(e);
 
@@ -134,7 +134,7 @@ public class JDBCConnection implements Connection {
     }
   }
 
-  private String createWarningString(Statement s, String logPrefix) throws ClientException {
+  private String createWarningString(Statement s, String prefix) throws ClientException {
     List<String> warningList = new ArrayList<>();
 
     if (s != null) {
@@ -150,6 +150,6 @@ public class JDBCConnection implements Connection {
       }
     }
 
-    return logPrefix + ";" + String.join("; ", warningList);
+    return prefix + ";" + String.join("; ", warningList);
   }
 }
