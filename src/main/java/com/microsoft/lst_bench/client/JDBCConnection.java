@@ -95,6 +95,8 @@ public class JDBCConnection implements Connection {
                 + "stack trace: "
                 + ExceptionUtils.getStackTrace(e);
 
+        // Log execution error and any pending warnings associated with this statement, useful for
+        // debugging.
         if (errorCount == this.maxNumRetries) {
           // Log execution error.
           LOGGER.error(lastErrorMsg);
