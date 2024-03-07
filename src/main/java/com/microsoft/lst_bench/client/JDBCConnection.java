@@ -74,21 +74,25 @@ public class JDBCConnection implements Connection {
         }
         // Log verbosely, if enabled.
         if (this.showWarnings && LOGGER.isWarnEnabled()) {
-          logWarnings(s);
+          logWarnings(
+              s,
+              /* logPrefix= */ errorCount > 0 ? ("Retried query, error count: " + errorCount) : "");
         }
         // Return here if successful.
         return queryResult;
       } catch (Exception e) {
         queryResult = null;
         String lastErrorMsg =
-            "Query execution ("
-                + this.maxNumRetries
-                + " retries) unsuccessful; stack trace: "
+            "Query execution attempt "
+                + (errorCount + 1)
+                + " unsuccessful, will retry "
+                + (this.maxNumRetries - errorCount)
+                + " more times; stack trace: "
                 + ExceptionUtils.getStackTrace(e);
         if (errorCount == this.maxNumRetries) {
           // Log any pending warnings associated with this statement, useful for debugging.
           if (LOGGER.isWarnEnabled()) {
-            logWarnings(s);
+            logWarnings(s, /* logPrefix= */ "Retries exceeded, error warnings");
           }
           // Log execution error.
           LOGGER.error(lastErrorMsg);
@@ -128,7 +132,7 @@ public class JDBCConnection implements Connection {
     }
   }
 
-  private void logWarnings(Statement s) throws ClientException {
+  private void logWarnings(Statement s, String logPrefix) throws ClientException {
     List<String> warningList = new ArrayList<>();
 
     if (s != null) {
@@ -145,7 +149,7 @@ public class JDBCConnection implements Connection {
     }
 
     for (String warning : warningList) {
-      LOGGER.warn(warning);
+      LOGGER.warn(logPrefix + ";" + warning);
     }
   }
 }
