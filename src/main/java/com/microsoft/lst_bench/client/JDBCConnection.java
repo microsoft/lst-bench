@@ -98,7 +98,6 @@ public class JDBCConnection implements Connection {
         // Log execution error and any pending warnings associated with this statement, useful for
         // debugging.
         if (errorCount == this.maxNumRetries) {
-          // Log execution error.
           LOGGER.error(lastErrorMsg);
           throw new ClientException(lastErrorMsg);
         } else {
