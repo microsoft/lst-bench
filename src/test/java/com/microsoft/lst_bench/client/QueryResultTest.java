@@ -31,18 +31,17 @@ public class QueryResultTest {
     List<String> columnNames = Collections.singletonList("ColumnName");
     List<Integer> columnTypes = Collections.singletonList(java.sql.Types.VARCHAR);
     List<List<Object>> valueList =
-        Arrays.asList(
-            Arrays.asList("Value1", "Value2", "Value3"),
-            Arrays.asList("Value4", "Value5", "Value6"),
-            Arrays.asList("Value7", "Value8", "Value9"));
+        List.of(
+            Arrays.asList(
+                "Value1", "Value2", "Value3", "Value4", "Value5", "Value6", "Value7", "Value8"));
     QueryResult queryResult = new QueryResult(columnNames, columnTypes, valueList);
 
     // When
-    Pair<String, Object> result = queryResult.getStringMappings(0, 3);
+    Pair<String, Object> result = queryResult.getStringMappings(0, 4);
 
     // Then
     assertEquals("ColumnName", result.getKey());
-    assertEquals("'Value1','Value2','Value3'", result.getValue());
+    assertEquals("'Value1','Value2','Value3','Value4'", result.getValue());
   }
 
   @Test
