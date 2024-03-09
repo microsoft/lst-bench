@@ -40,8 +40,7 @@ public class QueryResult {
     this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
   }
 
-  protected QueryResult(
-      List<String> columnNames, List<Integer> columnTypes, List<List<Object>> valueList) {
+  QueryResult(List<String> columnNames, List<Integer> columnTypes, List<List<Object>> valueList) {
     this.columnNames = columnNames;
     this.columnTypes = columnTypes;
     this.valueList = valueList;
