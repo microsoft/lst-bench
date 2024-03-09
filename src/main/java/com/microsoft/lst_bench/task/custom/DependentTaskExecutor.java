@@ -29,6 +29,7 @@ import com.microsoft.lst_bench.util.TaskExecutorArgumentsParser;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +89,8 @@ public class DependentTaskExecutor extends TaskExecutor {
           for (int j = 0; j < size; j += batchSize) {
             int localMax = (j + batchSize) > size ? size : (j + batchSize);
             Map<String, Object> localValues = new HashMap<>(values);
-            localValues.putAll(queryResult.getStringMappings(j, localMax));
+            Pair<String, Object> batch = queryResult.getStringMappings(j, localMax);
+            localValues.put(batch.getKey(), batch.getValue());
             executeStatement(connection, statement, localValues, true);
           }
           // Reset query result.
