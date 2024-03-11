@@ -24,8 +24,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * Represents the query result of a query issued against a source. Query result entries should be
- * mapped to column name -> list of column values.
+ * Represents the result of a query issued against a data source.
+ * If the query result contains a single column, the entries will be mapped to the column name.
+ * Otherwise, the entries will be mapped to a special key "multi_values_clause" which is used to
+ * represent a multi-column result.
  */
 public class QueryResult {
 
