@@ -19,26 +19,33 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * Represents the query result of a query issued against a source. Query result entries should be
- * mapped to column name -> list of column values.
+ * Represents the result of a query issued against a data source.
+ * If the query result contains a single column, the entries will be mapped to the column name.
+ * Otherwise, the entries will be mapped to a special key "multi_values_clause" which is used to
+ * represent a multi-column result.
  */
 public class QueryResult {
 
-  private final Map<String, Integer> columnTypes;
-  private final Map<String, List<Object>> valueList;
+  private final List<String> columnNames;
+  private final List<Integer> columnTypes;
+  private final List<List<Object>> valueList;
 
+  private static final String MULTI_VALUES_KEY = "multi_values_clause";
   private static final String RESULT = "Result";
 
   public QueryResult() {
-    this.columnTypes = new HashMap<>();
-    this.valueList = new HashMap<>();
+    this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+  }
+
+  QueryResult(List<String> columnNames, List<Integer> columnTypes, List<List<Object>> valueList) {
+    this.columnNames = columnNames;
+    this.columnTypes = columnTypes;
+    this.valueList = valueList;
   }
 
   // TODO: Determine whether this can be done lazily i.e., after the statement has finished
@@ -47,52 +54,70 @@ public class QueryResult {
     ResultSetMetaData rsmd = rs.getMetaData();
 
     for (int j = 1; j <= rsmd.getColumnCount(); j++) {
-      columnTypes.put(rsmd.getColumnName(j), rsmd.getColumnType(j));
-      valueList.put(rsmd.getColumnName(j), new ArrayList<>());
+      columnNames.add(rsmd.getColumnName(j));
+      columnTypes.add(rsmd.getColumnType(j));
+      valueList.add(new ArrayList<>());
     }
 
     while (rs.next()) {
       for (int j = 1; j <= rsmd.getColumnCount(); j++) {
-        valueList.get(rsmd.getColumnName(j)).add(rs.getObject(j));
+        valueList.get(j - 1).add(rs.getObject(j));
       }
     }
   }
 
   public Integer getValueListSize() {
     Integer size = null;
-    for (Entry<String, List<Object>> pair : valueList.entrySet()) {
-      size = pair.getValue().size();
+    for (List<Object> values : valueList) {
+      size = values.size();
       break;
     }
     return size;
   }
 
   public boolean containsEmptyResultColumnOnly() {
-    return valueList.keySet().size() == 1
-        && valueList.containsKey(RESULT)
-        && valueList.get(RESULT).isEmpty();
+    return columnNames.size() == 1
+        && columnNames.get(0).equals(RESULT)
+        && valueList.get(0).isEmpty();
   }
 
-  public Map<String, Object> getStringMappings(int listMin, int listMax) {
-    Map<String, Object> result = new HashMap<>();
-    for (String key : valueList.keySet()) {
+  public Pair<String, Object> getStringMappings(int listMin, int listMax) {
+    if (columnNames.size() == 1) {
       List<String> localList =
-          valueList.get(key).subList(listMin, listMax).stream()
+          valueList.get(0).subList(listMin, listMax).stream()
               .map(Object::toString)
+              .map(s -> wrapString(s, columnTypes.get(0)))
               .collect(Collectors.toUnmodifiableList());
-      switch (columnTypes.get(key)) {
-        case java.sql.Types.BIGINT:
-        case java.sql.Types.INTEGER:
-        case java.sql.Types.SMALLINT:
-        case java.sql.Types.TINYINT:
-          result.put(key, String.join(",", localList));
-          break;
-        default:
-          // Currently assumes String for all other types.
-          // TODO: Better handling and testing of data types across engines.
-          result.put(key, "'" + String.join("','", localList) + "'");
-      }
+      return Pair.of(columnNames.get(0), String.join(",", localList));
     }
-    return result;
+    StringBuilder multiValuesClause = new StringBuilder();
+    for (int i = listMin; i < listMax; i++) {
+      multiValuesClause.append("(");
+      for (int j = 0; j < valueList.size(); j++) {
+        multiValuesClause
+            .append(wrapString(valueList.get(j).get(i).toString(), columnTypes.get(j)))
+            .append(",");
+      }
+      // Remove trailing comma
+      multiValuesClause.setLength(multiValuesClause.length() - 1);
+      multiValuesClause.append("),");
+    }
+    // Remove trailing comma
+    multiValuesClause.setLength(multiValuesClause.length() - 1);
+    return Pair.of(MULTI_VALUES_KEY, multiValuesClause.toString());
+  }
+
+  private String wrapString(String value, int type) {
+    switch (type) {
+      case java.sql.Types.BIGINT:
+      case java.sql.Types.INTEGER:
+      case java.sql.Types.SMALLINT:
+      case java.sql.Types.TINYINT:
+        return value;
+      default:
+        // Currently assumes String for all other types.
+        // TODO: Better handling and testing of data types across engines.
+        return "'" + value + "'";
+    }
   }
 }
