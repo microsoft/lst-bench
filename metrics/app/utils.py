@@ -60,3 +60,21 @@ def performance_degradation(values: pd.DataFrame) -> float:
     # TODO: Handle multiple runs for more comprehensive analysis.
 
     return degradation_rate
+
+# -------- SQL GENERATION -------- #
+def generate_sql_in_with_null(lhs: str, values: list, NA_value = "N/A") -> str:
+    """
+    Generates a string of comma-separated values from a list
+    with None values converted to NULL.
+
+    Args:
+    - values (list): A list of values to be converted to a string.
+
+    Returns:
+    - str: A string of comma-separated values.
+    """
+
+    str_list = ', '.join(["'" + str(value) + "'" for value in values if value is not NA_value])
+    null_predicate = '' if NA_value in values else 'NOT'
+
+    return f"({lhs} IN ({str_list}) OR {lhs} IS {null_predicate} NULL)"
