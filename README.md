@@ -127,17 +127,21 @@ Alternatively, if the LST-Bench [Metrics Processor](metrics) is used, you can si
 The processor will then analyze and visualize the results, providing a streamlined solution for result analysis and visualization.
 
 ## Documentation
-For more details about LST-Bench, please refer to the accompanying [technical report](https://arxiv.org/pdf/2305.01120):
+For more details about LST-Bench, please refer to the accompanying [technical report](https://arxiv.org/pdf/2305.01120).
+
+If you are writing an academic paper, you can cite this work as:
 
 ```bibtex
-@article{2023lstbench,
-    title={LST-Bench: Benchmarking Log-Structured Tables in the Cloud},
-    author={Jesús Camacho-Rodríguez and Ashvin Agrawal and Anja Gruenheid and
+@article{2024lstbench,
+    author = {Jes\'{u}s Camacho-Rodr\'{\i}guez and Ashvin Agrawal and Anja Gruenheid and
             Ashit Gosalia and Cristian Petculescu and Josep Aguilar-Saborit and
             Avrilia Floratou and Carlo Curino and Raghu Ramakrishnan},
-    year={2023},
-    journal={arXiv preprint arXiv:2305.01120},
-    url={https://arxiv.org/abs/2305.01120},
+    title = {LST-Bench: Benchmarking Log-Structured Tables in the Cloud},
+    journal = {Proc. ACM Manag. Data},
+    volume = {2},
+    number = {1},
+    year = {2024},
+    url = {https://doi.org/10.1145/3639314}
 }
 ```
 
