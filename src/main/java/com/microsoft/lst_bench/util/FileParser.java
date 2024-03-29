@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -172,13 +171,29 @@ public class FileParser {
    */
   private static <T> T createObject(String filePath, Class<T> objectType, String schemaFilePath)
       throws IOException {
-    String resolvedYAMLContent = StringUtils.replaceEnvVars(new File(filePath));
+
+    // Verify that files exist
+    File file = new File(filePath);
+    File schemaFile = new File(schemaFilePath);
+    if (!file.exists()) {
+      throw new IllegalArgumentException("File does not exist: " + filePath);
+    }
+    if (!schemaFile.exists()) {
+      throw new IllegalArgumentException("Schema file does not exist: " + schemaFilePath);
+    }
+
+    String resolvedYAMLContent = StringUtils.replaceEnvVars(file);
+
+    if (resolvedYAMLContent == null) {
+      throw new IllegalArgumentException("Error resolving environment variables in YAML file");
+    }
+
     // Validate YAML file contents
     JsonSchemaFactory factory =
         JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
             .objectMapper(YAML_MAPPER)
             .build();
-    JsonSchema schema = factory.getSchema(Files.newInputStream(Paths.get(schemaFilePath)));
+    JsonSchema schema = factory.getSchema(Files.newInputStream(schemaFile.toPath()));
     JsonNode jsonNodeDirect = YAML_MAPPER.readTree(resolvedYAMLContent);
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     if (!errorsFromFile.isEmpty()) {
