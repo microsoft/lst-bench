@@ -36,6 +36,8 @@ To include data from a new system, duplicate one of the directories in the [run 
 For a deeper understanding of the directory structure, consult the [README file](/run/README.md). 
 The LST-Bench dashboard web app automatically retrieves results from the .duckdb files within those folders and displays them on the dashboard.
 
+Alternatively, you can provide your own paths to search for results via commandline arguments, see below.
+
 ## Dashboard Development
 To run the LST-Bench dashboard locally and test your changes, follow these steps:
 
@@ -67,6 +69,7 @@ With the dependencies installed, you can now start the Streamlit app by running 
 
 ```bash
 python -m streamlit run main.py
+python -m streamlit run main.py -- --result_dirs DIR1 DIR2 ...
 ```
 
 This command will launch the LST-Bench dashboard locally in your browser.
