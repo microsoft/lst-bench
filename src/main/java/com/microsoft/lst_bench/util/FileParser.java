@@ -30,6 +30,7 @@ import com.networknt.schema.ValidationMessage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -44,15 +45,7 @@ import java.util.StringTokenizer;
 public class FileParser {
 
   private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
-  private static final String SCHEMAS_PATH =
-      "src"
-          + File.separator
-          + "main"
-          + File.separator
-          + "resources"
-          + File.separator
-          + "schemas"
-          + File.separator;
+  private static final String SCHEMAS_PATH = "schemas" + File.separator;
 
   private FileParser() {
     // Defeat instantiation
@@ -126,8 +119,12 @@ public class FileParser {
   /**
    * Reads the YAML file and replaces all environment variables (if present). Validates the YAML
    * file according to the schema. Creates and returns a `TaskLibrary` object.
+   *
+   * <p>Exports LIB_PATH for the directory of the file, so that the file contents can reference it
+   * as ${LIB_PATH}.
    */
   public static Library loadLibrary(String filePath) throws IOException {
+    exportFilePath(filePath, "LIB_PATH");
     return createObject(filePath, Library.class, SCHEMAS_PATH + "library.json");
   }
 
@@ -136,6 +133,7 @@ public class FileParser {
    * file according to the schema. Creates and returns a `Workload` object.
    */
   public static Workload loadWorkload(String filePath) throws IOException {
+    exportFilePath(filePath, "WL_PATH");
     return createObject(filePath, Workload.class, SCHEMAS_PATH + "workload.json");
   }
 
@@ -144,6 +142,7 @@ public class FileParser {
    * file according to the schema. Creates and returns a `ConnectionsConfig` object.
    */
   public static ConnectionsConfig loadConnectionsConfig(String filePath) throws IOException {
+    exportFilePath(filePath, "CON_PATH");
     return createObject(
         filePath, ConnectionsConfig.class, SCHEMAS_PATH + "connections_config.json");
   }
@@ -153,6 +152,7 @@ public class FileParser {
    * file according to the schema. Creates and returns a `ExperimentConfig` object.
    */
   public static ExperimentConfig loadExperimentConfig(String filePath) throws IOException {
+    exportFilePath(filePath, "EXP_PATH");
     return createObject(filePath, ExperimentConfig.class, SCHEMAS_PATH + "experiment_config.json");
   }
 
@@ -161,6 +161,7 @@ public class FileParser {
    * file according to the schema. Creates and returns a `TelemetryConfig` object.
    */
   public static TelemetryConfig loadTelemetryConfig(String filePath) throws IOException {
+    exportFilePath(filePath, "TEL_PATH");
     return createObject(filePath, TelemetryConfig.class, SCHEMAS_PATH + "telemetry_config.json");
   }
 
@@ -174,11 +175,13 @@ public class FileParser {
 
     // Verify that files exist
     File file = new File(filePath);
-    File schemaFile = new File(schemaFilePath);
     if (!file.exists()) {
       throw new IllegalArgumentException("File does not exist: " + filePath);
     }
-    if (!schemaFile.exists()) {
+
+    InputStream schemaInputStream =
+        FileParser.class.getClassLoader().getResourceAsStream(schemaFilePath);
+    if (schemaInputStream == null) {
       throw new IllegalArgumentException("Schema file does not exist: " + schemaFilePath);
     }
 
@@ -193,7 +196,7 @@ public class FileParser {
         JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
             .objectMapper(YAML_MAPPER)
             .build();
-    JsonSchema schema = factory.getSchema(Files.newInputStream(schemaFile.toPath()));
+    JsonSchema schema = factory.getSchema(schemaInputStream);
     JsonNode jsonNodeDirect = YAML_MAPPER.readTree(resolvedYAMLContent);
     Set<ValidationMessage> errorsFromFile = schema.validate(jsonNodeDirect);
     if (!errorsFromFile.isEmpty()) {
@@ -201,5 +204,12 @@ public class FileParser {
     }
     // Create and return POJO
     return YAML_MAPPER.treeToValue(jsonNodeDirect, objectType);
+  }
+
+  /** Exports the directory of the file as an environment variable. */
+  private static void exportFilePath(String file, String variableName) {
+    File f = new File(file);
+    String directory = f.isDirectory() ? file : f.getParent();
+    System.setProperty(variableName, directory);
   }
 }

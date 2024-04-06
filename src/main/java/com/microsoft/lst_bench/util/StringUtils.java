@@ -22,6 +22,7 @@ import com.microsoft.lst_bench.exec.StatementExec;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -92,9 +93,10 @@ public class StringUtils {
   }
 
   /**
-   * Reads the contents of the `sourceFile` and replaces any environment variables if present. If
-   * the environment variable is not set, the default value is used if specified. All other
-   * parameters are ignored.
+   * Reads the contents of the `sourceFile` and replaces any environment variables and JVM
+   * properties if present. JVM properties take precedence over environment variables. If a
+   * environment variable is not set, the default value is used if specified. All other parameters
+   * are ignored.
    */
   public static String replaceEnvVars(File sourceFile) throws IOException {
     if (sourceFile == null || !sourceFile.isFile()) {
@@ -102,7 +104,9 @@ public class StringUtils {
       LOGGER.debug("replaceEnvVars received a null or missing file.");
       return null;
     }
-    StringSubstitutor envSub = new StringSubstitutor(System.getenv());
+    Map<String, String> env = new HashMap<>(System.getenv());
+    System.getProperties().forEach((k, v) -> env.put(k.toString(), v.toString()));
+    StringSubstitutor envSub = new StringSubstitutor(env);
     return envSub.replace(FileUtils.readFileToString(sourceFile, StandardCharsets.UTF_8));
   }
 }
