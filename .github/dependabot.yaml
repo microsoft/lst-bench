@@ -29,4 +29,4 @@ updates:
     groups:
       log4j:
         patterns:
-          - "log4j-*"
+          - "org.apache.logging.log4j*"
