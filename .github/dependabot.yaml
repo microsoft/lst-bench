@@ -26,3 +26,7 @@ updates:
       interval: "daily"
     assignees:
       - "jcamachor"
+    groups:
+      log4j:
+        patterns:
+          - "org.apache.logging.log4j*"

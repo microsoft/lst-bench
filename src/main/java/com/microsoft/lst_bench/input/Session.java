@@ -30,8 +30,31 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableSession.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface Session {
-  List<Task> getTasks();
+
+  @JsonProperty("template_id")
+  @Nullable String getTemplateId();
+
+  @Nullable List<Task> getTasks();
+
+  @JsonProperty("tasks_sequences")
+  @Nullable List<TasksSequence> getTasksSequences();
 
   @JsonProperty("target_endpoint")
   @Nullable Integer getTargetEndpoint();
+
+  /**
+   * Validates that a session has exactly one of template ID, list of tasks, or list of tasks
+   * sequences defined.
+   */
+  @Value.Check
+  default void check() {
+    boolean onlyOneTrue =
+        (getTemplateId() != null && getTasks() == null && getTasksSequences() == null)
+            || (getTemplateId() == null && getTasks() != null && getTasksSequences() == null)
+            || (getTemplateId() == null && getTasks() == null && getTasksSequences() != null);
+    if (!onlyOneTrue) {
+      throw new IllegalStateException(
+          "Must have exactly one of template id, list of tasks, or list of tasks sequences defined");
+    }
+  }
 }

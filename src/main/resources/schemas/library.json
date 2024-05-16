@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "Schema for library definition file",
+  "required": [ "version", "task_templates" ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "title": "File format version"
+    },
+    "task_templates": {
+      "type": "array",
+      "title": "List of task templates",
+      "items": {
+        "$ref": "#/$defs/id_task_template"
+      },
+      "additionalProperties": false
+    },
+    "session_templates": {
+      "type": "array",
+      "title": "List of session templates",
+      "items": {
+        "$ref": "#/$defs/id_session_template"
+      },
+      "additionalProperties": false
+    },
+    "phase_templates": {
+      "type": "array",
+      "title": "List of phase templates",
+      "items": {
+        "$ref": "#/$defs/id_phase_template"
+      },
+      "additionalProperties": false
+    },
+    "prepared_tasks": {
+      "type": "array",
+      "title": "List of prepared tasks",
+      "items": {
+        "$ref": "#/$defs/id_prepared_task"
+      },
+      "additionalProperties": false
+    },
+    "prepared_tasks_sequences": {
+      "type": "array",
+      "title": "List of sequences of prepared tasks",
+      "items": {
+        "$ref": "#/$defs/id_tasks_sequence"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs" : {
+    "id_task_template": {
+      "type": "object",
+      "title": "Task template with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the task template"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/template.json#/$defs/task_template"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "id_session_template": {
+      "type": "object",
+      "title": "Session template with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the session template"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/template.json#/$defs/session_template"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "id_phase_template": {
+      "type": "object",
+      "title": "Phase template with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the phase template"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/template.json#/$defs/phase_template"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "id_prepared_task": {
+      "type": "object",
+      "title": "Prepared task with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the task"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/instance.json#/$defs/task"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "id_tasks_sequence": {
+      "type": "object",
+      "title": "Tasks sequence with identifier",
+      "allOf": [
+        {
+          "type": "object",
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Identifier for the tasks sequence"
+            }
+          }
+        },
+        {
+          "$ref": "resource:/schemas/instance.json#/$defs/tasks_sequence"
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

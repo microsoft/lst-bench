@@ -30,8 +30,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -143,29 +145,29 @@ public class ValidationTest {
   @EnabledOnOs({OS.LINUX, OS.MAC})
   @ValueSource(
       strings = {
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
-        "src/main/resources/config/trino/tpcds/task_library.yaml",
-        "src/main/resources/config/spark/tpch/task_library.yaml"
+        "run/spark-3.3.1/config/tpcds/library.yaml",
+        "run/trino-420/config/tpcds/library.yaml",
+        "run/spark-3.3.1/config/tpch/library.yaml"
       })
-  public void testValidationTaskLibraryUnix(String taskLibraryPath) throws IOException {
-    testValidationTaskLibrary(taskLibraryPath);
+  public void testValidationLibraryUnix(String libraryPath) throws IOException {
+    testValidationLibrary(libraryPath);
   }
 
   @ParameterizedTest
   @EnabledOnOs({OS.WINDOWS})
   @ValueSource(
       strings = {
-        "src\\main\\resources\\config\\spark\\tpcds\\task_library.yaml",
-        "src\\main\\resources\\config\\trino\\tpcds\\task_library.yaml",
-        "src\\main\\resources\\config\\spark\\tpch\\task_library.yaml"
+        "run\\spark-3.3.1\\config\\tpcds\\library.yaml",
+        "run\\trino-420\\config\\tpcds\\library.yaml",
+        "run\\spark-3.3.1\\config\\tpch\\library.yaml"
       })
-  public void testValidationTaskLibraryWin(String taskLibraryPath) throws IOException {
-    testValidationTaskLibrary(taskLibraryPath);
+  public void testValidationLibraryWin(String libraryPath) throws IOException {
+    testValidationLibrary(libraryPath);
   }
 
-  private void testValidationTaskLibrary(String taskLibraryPath) throws IOException {
+  private void testValidationLibrary(String libraryPath) throws IOException {
     // Validate YAML file contents and create POJO object
-    TaskLibrary taskLibrary = FileParser.loadTaskLibrary(taskLibraryPath);
+    Library taskLibrary = FileParser.loadLibrary(libraryPath);
     // Validate YAML generated from POJO object
     ObjectMapper mapper = new YAMLMapper();
     JsonSchemaFactory factory =
@@ -173,7 +175,7 @@ public class ValidationTest {
             .objectMapper(mapper)
             .build();
     JsonSchema schema =
-        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "task_library.json")));
+        factory.getSchema(Files.newInputStream(Paths.get(SCHEMAS_PATH + "library.json")));
     JsonNode jsonNodeObject = mapper.convertValue(taskLibrary, JsonNode.class);
     Set<ValidationMessage> errorsFromPOJO = schema.validate(jsonNodeObject);
     Assertions.assertEquals(
@@ -184,21 +186,21 @@ public class ValidationTest {
   @EnabledOnOs({OS.LINUX, OS.MAC})
   @ValueSource(
       strings = {
-        "src/main/resources/config/spark/tpcds/w0_tpcds-delta.yaml",
-        "src/main/resources/config/spark/tpcds/w0_tpcds-hudi.yaml",
-        "src/main/resources/config/spark/tpcds/w0_tpcds-iceberg.yaml",
-        "src/main/resources/config/spark/tpcds/wp1_longevity.yaml",
-        "src/main/resources/config/spark/tpcds/wp2_resilience.yaml",
-        "src/main/resources/config/spark/tpcds/wp3_rw_concurrency.yaml",
-        "src/main/resources/config/spark/tpcds/wp3_rw_concurrency_multi.yaml",
-        "src/main/resources/config/spark/tpcds/wp4_time_travel.yaml",
-        "src/main/resources/config/trino/tpcds/w0_tpcds.yaml",
-        "src/main/resources/config/trino/tpcds/wp1_longevity.yaml",
-        "src/main/resources/config/trino/tpcds/wp2_resilience.yaml",
-        "src/main/resources/config/trino/tpcds/wp3_rw_concurrency.yaml",
-        "src/main/resources/config/spark/tpch/w0_tpch-delta.yaml",
-        "src/main/resources/config/spark/tpch/w0_tpch-hudi.yaml",
-        "src/main/resources/config/spark/tpch/w0_tpch-iceberg.yaml"
+        "run/spark-3.3.1/config/tpcds/w0_tpcds-delta-2.2.0.yaml",
+        "run/spark-3.3.1/config/tpcds/w0_tpcds-hudi-0.12.2.yaml",
+        "run/spark-3.3.1/config/tpcds/w0_tpcds-iceberg-1.1.0.yaml",
+        "run/spark-3.3.1/config/tpcds/wp1_longevity-delta-2.2.0.yaml",
+        "run/spark-3.3.1/config/tpcds/wp2_resilience-delta-2.2.0.yaml",
+        "run/spark-3.3.1/config/tpcds/wp3_rw_concurrency-delta-2.2.0.yaml",
+        "run/spark-3.3.1/config/tpcds/wp3_rw_concurrency_multi-delta-2.2.0.yaml",
+        "run/spark-3.3.1/config/tpcds/wp4_time_travel-delta-2.2.0.yaml",
+        "run/trino-420/config/tpcds/w0_tpcds.yaml",
+        "run/trino-420/config/tpcds/wp1_longevity.yaml",
+        "run/trino-420/config/tpcds/wp2_resilience.yaml",
+        "run/trino-420/config/tpcds/wp3_rw_concurrency.yaml",
+        "run/spark-3.3.1/config/tpch/w0_tpch-delta.yaml",
+        "run/spark-3.3.1/config/tpch/w0_tpch-hudi.yaml",
+        "run/spark-3.3.1/config/tpch/w0_tpch-iceberg.yaml"
       })
   public void testValidationWorkloadUnix(String workloadFilePath) throws IOException {
     testValidationWorkload(workloadFilePath);
@@ -208,21 +210,21 @@ public class ValidationTest {
   @EnabledOnOs({OS.WINDOWS})
   @ValueSource(
       strings = {
-        "src\\main\\resources\\config\\spark\\tpcds\\w0_tpcds-delta.yaml",
-        "src\\main\\resources\\config\\spark\\tpcds\\w0_tpcds-hudi.yaml",
-        "src\\main\\resources\\config\\spark\\tpcds\\w0_tpcds-iceberg.yaml",
-        "src\\main\\resources\\config\\spark\\tpcds\\wp1_longevity.yaml",
-        "src\\main\\resources\\config\\spark\\tpcds\\wp2_resilience.yaml",
-        "src\\main\\resources\\config\\spark\\tpcds\\wp3_rw_concurrency.yaml",
-        "src\\main\\resources\\config\\spark\\tpcds\\wp3_rw_concurrency_multi.yaml",
-        "src\\main\\resources\\config\\spark\\tpcds\\wp4_time_travel.yaml",
-        "src\\main\\resources\\config\\trino\\tpcds\\w0_tpcds.yaml",
-        "src\\main\\resources\\config\\trino\\tpcds\\wp1_longevity.yaml",
-        "src\\main\\resources\\config\\trino\\tpcds\\wp2_resilience.yaml",
-        "src\\main\\resources\\config\\trino\\tpcds\\wp3_rw_concurrency.yaml",
-        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch-delta.yaml",
-        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch-hudi.yaml",
-        "src\\main\\resources\\config\\spark\\tpch\\w0_tpch-iceberg.yaml"
+        "run\\spark-3.3.1\\config\\tpcds\\w0_tpcds-delta-2.2.0.yaml",
+        "run\\spark-3.3.1\\config\\tpcds\\w0_tpcds-hudi-0.12.2.yaml",
+        "run\\spark-3.3.1\\config\\tpcds\\w0_tpcds-iceberg-1.1.0.yaml",
+        "run\\spark-3.3.1\\config\\tpcds\\wp1_longevity-delta-2.2.0.yaml",
+        "run\\spark-3.3.1\\config\\tpcds\\wp2_resilience-delta-2.2.0.yaml",
+        "run\\spark-3.3.1\\config\\tpcds\\wp3_rw_concurrency-delta-2.2.0.yaml",
+        "run\\spark-3.3.1\\config\\tpcds\\wp3_rw_concurrency_multi-delta-2.2.0.yaml",
+        "run\\spark-3.3.1\\config\\tpcds\\wp4_time_travel-delta-2.2.0.yaml",
+        "run\\trino-420\\config\\tpcds\\w0_tpcds.yaml",
+        "run\\trino-420\\config\\tpcds\\wp1_longevity.yaml",
+        "run\\trino-420\\config\\tpcds\\wp2_resilience.yaml",
+        "run\\trino-420\\config\\tpcds\\wp3_rw_concurrency.yaml",
+        "run\\spark-3.3.1\\config\\tpch\\w0_tpch-delta.yaml",
+        "run\\spark-3.3.1\\config\\tpch\\w0_tpch-hudi.yaml",
+        "run\\spark-3.3.1\\config\\tpch\\w0_tpch-iceberg.yaml"
       })
   public void testValidationWorkloadWin(String workloadFilePath) throws IOException {
     testValidationWorkload(workloadFilePath);
@@ -304,5 +306,46 @@ public class ValidationTest {
     // Try to create POJO object, which should fail at validation time
     Assertions.assertThrows(
         IllegalArgumentException.class, () -> FileParser.loadTelemetryConfig(configFilePath));
+  }
+
+  @Test
+  public void testIncorrectTaskCreation() {
+    ImmutableTask.Builder builder =
+        ImmutableTask.builder().preparedTaskId("pt_id").templateId("t_id");
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableTask.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+  }
+
+  @Test
+  public void testIncorrectTasksSequenceCreation() {
+    ImmutableTasksSequence.Builder builder =
+        ImmutableTasksSequence.builder().preparedTasksSequenceId("pts_id").tasks(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableTasksSequence.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+  }
+
+  @Test
+  public void testIncorrectSessionCreation() {
+    ImmutableSession.Builder builder =
+        ImmutableSession.builder()
+            .templateId("t_id")
+            .tasksSequences(new ArrayList<>())
+            .tasks(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableSession.builder().templateId("t_id").tasks(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutableSession.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+  }
+
+  @Test
+  public void testIncorrectPhaseCreation() {
+    ImmutablePhase.Builder builder =
+        ImmutablePhase.builder().templateId("t_id").sessions(new ArrayList<>());
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
+    builder = ImmutablePhase.builder();
+    Assertions.assertThrows(IllegalStateException.class, builder::build);
   }
 }

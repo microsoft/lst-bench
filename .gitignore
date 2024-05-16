@@ -57,6 +57,9 @@ bin/
 # Local configuration file (sdk path, etc)
 local.properties
 
+# Python
+*.pyc
+
 # Others
 *~
 .DS_Store

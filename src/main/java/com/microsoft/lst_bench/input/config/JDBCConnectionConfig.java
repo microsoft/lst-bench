@@ -37,6 +37,12 @@ public interface JDBCConnectionConfig extends ConnectionConfig {
     return 0;
   }
 
+  @JsonProperty("show_warnings")
+  @Value.Default
+  default boolean showWarnings() {
+    return false;
+  }
+
   @Nullable String getUsername();
 
   @Nullable String getPassword();

@@ -1,0 +1,58 @@
+# Description: WP3: R/W concurrency
+---
+version: 1
+id: wp3_rw_concurrency
+phases:
+- id: init
+  sessions:
+  - tasks:
+    - template_id: init
+- id: build
+  sessions:
+  - tasks:
+    - template_id: build
+- id: single_user_1_data_maintenance_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+- id: single_user_2_optimize_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: optimize_delta
+- id: single_user_2o_data_maintenance_2
+  sessions:
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+- id: single_user_3_optimize_2
+  sessions:
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: optimize_delta
+- id: single_user_3o_data_maintenance_3
+  sessions:
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+- id: single_user_4_optimize_3
+  sessions:
+  - tasks:
+    - template_id: single_user
+  - tasks:
+    - template_id: optimize_delta

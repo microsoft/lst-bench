@@ -15,13 +15,15 @@
  */
 package com.microsoft.lst_bench.common;
 
+import static org.mockito.Mockito.doThrow;
+
 import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.input.BenchmarkObjectFactory;
-import com.microsoft.lst_bench.input.ImmutableTaskLibrary;
+import com.microsoft.lst_bench.input.ImmutableLibrary;
 import com.microsoft.lst_bench.input.ImmutableWorkload;
-import com.microsoft.lst_bench.input.TaskLibrary;
+import com.microsoft.lst_bench.input.Library;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
 import com.microsoft.lst_bench.input.config.ImmutableExperimentConfig;
@@ -76,10 +78,10 @@ class LSTBenchmarkExecutorTest {
     var idToConnectionManager = new ArrayList<ConnectionManager>();
     ExperimentConfig experimentConfig =
         ImmutableExperimentConfig.builder().id("nooptest").version(1).repetitions(1).build();
-    TaskLibrary taskLibrary = ImmutableTaskLibrary.builder().version(1).build();
+    Library library = ImmutableLibrary.builder().version(1).build();
     Workload workload = ImmutableWorkload.builder().id("nooptest").version(1).build();
 
-    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
+    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, library, workload);
 
     SQLTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
 
@@ -108,17 +110,16 @@ class LSTBenchmarkExecutorTest {
     ExperimentConfig experimentConfig =
         ImmutableExperimentConfig.builder().id("telemetryTest").version(1).repetitions(1).build();
 
-    URL taskLibFile =
-        getClass().getClassLoader().getResource("./config/samples/task_library_0.yaml");
-    Assertions.assertNotNull(taskLibFile);
-    TaskLibrary taskLibrary = FileParser.loadTaskLibrary(taskLibFile.getFile());
+    URL libFile = getClass().getClassLoader().getResource("./config/samples/library_0.yaml");
+    Assertions.assertNotNull(libFile);
+    Library library = FileParser.loadLibrary(libFile.getFile());
 
     URL workloadFile =
         getClass().getClassLoader().getResource("./config/spark/w_all_tpcds-delta.yaml");
     Assertions.assertNotNull(workloadFile);
     Workload workload = FileParser.loadWorkload(workloadFile.getFile());
 
-    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, taskLibrary, workload);
+    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, library, workload);
 
     SQLTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
 
@@ -138,6 +139,44 @@ class LSTBenchmarkExecutorTest {
 
       // TODO improve event validation
     }
+  }
+
+  /**
+   * This test checks whether erroneous execution of a query will lead to a (successful) retry if
+   * the workload specifies that a specific error is permitted.
+   */
+  @Test
+  void testExperimentRetry() throws Exception {
+    final String queryString = "SELECT * FROM test;";
+    final String errorString = "testError";
+
+    Connection mockConnection = Mockito.mock(Connection.class);
+    ConnectionManager mockConnectionManager = Mockito.mock(ConnectionManager.class);
+    Mockito.when(mockConnectionManager.createConnection()).thenReturn(mockConnection);
+    doThrow(new ClientException(errorString)).doNothing().when(mockConnection).execute(queryString);
+
+    var connectionManagers = new ArrayList<ConnectionManager>();
+    connectionManagers.add(mockConnectionManager);
+
+    ExperimentConfig experimentConfig =
+        ImmutableExperimentConfig.builder().id("retryTest").version(1).repetitions(1).build();
+
+    URL libFile = getClass().getClassLoader().getResource("./config/samples/library_retry.yaml");
+    Assertions.assertNotNull(libFile);
+    Library library = FileParser.loadLibrary(libFile.getFile());
+
+    URL workloadFile =
+        getClass().getClassLoader().getResource("./config/spark/w_retry_query_test.yaml");
+    Assertions.assertNotNull(workloadFile);
+    Workload workload = FileParser.loadWorkload(workloadFile.getFile());
+
+    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, library, workload);
+
+    SQLTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
+
+    LSTBenchmarkExecutor benchmark =
+        new LSTBenchmarkExecutor(connectionManagers, config, telemetryRegistry);
+    benchmark.run();
   }
 
   private SQLTelemetryRegistry getTelemetryRegistry() throws ClientException, IOException {

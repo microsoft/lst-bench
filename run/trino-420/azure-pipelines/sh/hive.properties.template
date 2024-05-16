@@ -1,0 +1,5 @@
+connector.name=hive
+hive.metastore.uri=thrift://${TRINO_MASTER_HOST}:9083
+hive.allow-drop-table=true
+hive.azure.abfs-storage-account=${DATA_STORAGE_ACCOUNT}
+hive.azure.abfs-access-key=${DATA_STORAGE_ACCOUNT_SHARED_KEY}

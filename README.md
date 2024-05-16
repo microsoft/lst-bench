@@ -69,8 +69,8 @@ usage: ./launcher.sh -c <arg> -e <arg> -l <arg> -t <arg> -w <arg>
                                  connections config details
  -e,--experiment-config <arg>    [required] Path to input file containing
                                  the experiment config details
- -l,--task-library <arg>         [required] Path to input file containing
-                                 the library with task templates
+ -l,--library <arg>              [required] Path to input file containing
+                                 the library with templates
  -t,--input-log-config <arg>     [required] Path to input file containing
                                  the telemetry gathering config details
  -w,--workload <arg>             [required] Path to input file containing
@@ -111,22 +111,7 @@ The LST-Bench code is organized into two modules:
    The Python module performs data processing, analysis, and visualization to facilitate a deeper understanding of the experimental results.
 
 ### LST-Bench Concepts
-In LST-Bench, the following concepts are used to define and organize SQL workloads:
-
-- **Task**: A task is a collection of SQL statements grouped together in a sequence of files. Each file represents a step or subtask within the overall task.
-
-- **Session**: A session refers to a sequence of tasks. It represents a logical unit of work or a user session.
-
-- **Phase**: A phase consists of multiple concurrent sessions that need to be completed before proceeding to the next phase. Phases help simulate concurrent workload scenarios.
-
-- **Workload**: A workload is a sequence of phases, defining the complete set of tasks, sessions, and phases to be executed during the evaluation.
-
-In LST-Bench, tasks are generated using task templates predefined in the task library.
-LST-Bench includes a default task library that encompasses tasks derived from the TPC-DS benchmark, along with workload definitions representing the original TPC-DS and multiple workload patterns. These resources can be located [here](src/main/resources/config/tpcds).
-
-Although LST-Bench provides this set of tasks and workload patterns,
-users have the flexibility to incorporate additional task templates or even create a completely new task library to model specific scenarios.
-This flexible model allows for the easy creation of diverse SQL workloads for evaluation purposes without the need to modify the application itself.
+In LST-Bench, we utilize specific concepts to define and organize SQL workloads, with a focus on maximizing flexibility and facilitating reusability across various workloads. For detailed information, refer to our [documentation](docs/workloads.md).
 
 ### Telemetry and Metrics Processor
 LST-Bench captures execution telemetry during workload execution at multiple levels, including per experiment, phase, session, task, file, and statement.
@@ -142,17 +127,21 @@ Alternatively, if the LST-Bench [Metrics Processor](metrics) is used, you can si
 The processor will then analyze and visualize the results, providing a streamlined solution for result analysis and visualization.
 
 ## Documentation
-For more details about LST-Bench, please refer to the accompanying [technical report](https://arxiv.org/pdf/2305.01120):
+For more details about LST-Bench, please refer to the accompanying [technical report](https://arxiv.org/pdf/2305.01120).
+
+If you are writing an academic paper, you can cite this work as:
 
 ```bibtex
-@article{2023lstbench,
-    title={LST-Bench: Benchmarking Log-Structured Tables in the Cloud},
-    author={Jesús Camacho-Rodríguez and Ashvin Agrawal and Anja Gruenheid and
+@article{2024lstbench,
+    author = {Jes\'{u}s Camacho-Rodr\'{\i}guez and Ashvin Agrawal and Anja Gruenheid and
             Ashit Gosalia and Cristian Petculescu and Josep Aguilar-Saborit and
             Avrilia Floratou and Carlo Curino and Raghu Ramakrishnan},
-    year={2023},
-    journal={arXiv preprint arXiv:2305.01120},
-    url={https://arxiv.org/abs/2305.01120},
+    title = {LST-Bench: Benchmarking Log-Structured Tables in the Cloud},
+    journal = {Proc. ACM Manag. Data},
+    volume = {2},
+    number = {1},
+    year = {2024},
+    url = {https://doi.org/10.1145/3639314}
 }
 ```
 

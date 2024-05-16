@@ -1,0 +1,36 @@
+<configuration>
+  <property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>${HMS_JDBC_URL}</value>
+  </property>
+
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>${HMS_JDBC_DRIVER}</value>
+  </property>
+
+  <property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>${HMS_JDBC_USER}</value>
+  </property>
+
+  <property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>${HMS_JDBC_PASSWORD}</value>
+  </property>
+
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>abfss://${HMS_STORAGE_ACCOUNT_CONTAINER}@${HMS_STORAGE_ACCOUNT}.dfs.core.windows.net/hive/warehouse</value>
+  </property>
+
+  <property>
+    <name>fs.azure.account.auth.type.${HMS_STORAGE_ACCOUNT}.dfs.core.windows.net</name>
+    <value>SharedKey</value>
+  </property>
+
+  <property>
+    <name>fs.azure.account.key.${HMS_STORAGE_ACCOUNT}.dfs.core.windows.net</name>
+    <value>${HMS_STORAGE_ACCOUNT_SHARED_KEY}</value>
+  </property>
+</configuration>

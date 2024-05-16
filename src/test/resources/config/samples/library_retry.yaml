@@ -1,0 +1,7 @@
+# Description: Tasks Library
+---
+version: 1
+task_templates:
+- id: retry_query
+  files:
+  - src/test/resources/scripts/retry_test_query.sql

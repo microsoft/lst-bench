@@ -1,0 +1,73 @@
+# Description: Tasks Library
+---
+version: 1
+task_templates:
+# Create external tables needed for benchmark
+- id: setup
+  files:
+  - run/spark-3.3.1/scripts/tpcds/setup/ddl-external-tables.sql
+# Create data maintenance external tables needed for benchmark
+- id: setup_data_maintenance
+  files:
+  - run/spark-3.3.1/scripts/tpcds/setup_data_maintenance/ddl-external-tables-refresh.sql
+  parameter_values_file: run/auxiliary/tpcds/setup_data_maintenance/parameter_values.dat
+# Create schema and drop existing tables
+- id: init
+  files:
+  - run/spark-3.3.1/scripts/tpcds/init/init.sql
+# Create benchmark tables and load data into them
+- id: build
+  files:
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_call_center.sql
+  - run/spark-3.3.1/scripts/tpcds/build/1_create_catalog_page.sql
+  - run/spark-3.3.1/scripts/tpcds/build/2_load_customer.sql
+# Execution of TPC-DS queries (possibly in a previous point-in-time)
+- id: single_user
+  files:
+  - run/spark-3.3.1/scripts/tpcds/single_user/query7.sql
+  - run/spark-3.3.1/scripts/tpcds/single_user/query15.sql
+  supports_time_travel: true
+# Execution of TPC-DS data maintenance queries (Delta)
+- id: data_maintenance_delta
+  files:
+  - run/spark-3.3.1/scripts/tpcds/data_maintenance/LF_CS.sql
+- id: data_maintenance_dependent
+  files:
+  - run/spark-3.3.1/scripts/tpcds/data_maintenance_dependent/DF_CR_1.sql
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
+- id: optimize_delta
+  files:
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_ship_mode-delta.sql
+- id: optimize_split_delta
+  files:
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_returns_SELECT.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_returns_IN-delta.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_returns_NULL-delta.sql
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
+prepared_tasks:
+# Optimize split instance of task
+- id: optimize_split_delta
+  template_id: optimize_split_delta
+  task_executor_arguments:
+    dependent_task_batch_size: 100
+    # TODO: Remove this once #182 is fixed
+    skip_erroneous_query_strings: "[DELTA_FAILED_RECOGNIZE_PREDICATE]"
+prepared_tasks_sequences:
+# Data maintenance session
+- id: seq_data_maintenance_delta
+  tasks:
+  - template_id: data_maintenance_delta
+  - template_id: data_maintenance_delta
+session_templates:
+# Data maintenance session (combines prepared task sequence with inlined sequence of tasks)
+- id: session_data_maintenance_delta
+  tasks_sequences:
+  - prepared_tasks_sequence_id: seq_data_maintenance_delta
+  - tasks:
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_delta
+phase_templates:
+# Data maintenance phase
+- id: phase_data_maintenance_delta
+  sessions:
+  - template_id: session_data_maintenance_delta

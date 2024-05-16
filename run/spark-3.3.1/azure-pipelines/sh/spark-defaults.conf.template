@@ -1,0 +1,16 @@
+spark.master                                                                  spark://${SPARK_MASTER_HOST}:7077
+spark.driver.cores                                                            4
+spark.driver.memory                                                           45992m
+spark.executor.cores                                                          7
+spark.executor.memory                                                         11754m
+spark.memory.offHeap.enabled                                                  true
+spark.memory.offHeap.size                                                     36974886912
+spark.eventLog.enabled                                                        true
+spark.eventLog.dir                                                            file:/opt/spark-events
+spark.history.fs.logDirectory                                                 file:/opt/spark-events
+spark.serializer                                                              org.apache.spark.serializer.KryoSerializer
+spark.kryoserializer.buffer                                                   1024k
+spark.kryoserializer.buffer.max                                               1024m
+spark.sql.parquet.compression.codec                                           gzip
+spark.hadoop.fs.azure.account.auth.type.${DATA_STORAGE_ACCOUNT}.dfs.core.windows.net SharedKey
+spark.hadoop.fs.azure.account.key.${DATA_STORAGE_ACCOUNT}.dfs.core.windows.net       ${DATA_STORAGE_ACCOUNT_SHARED_KEY}

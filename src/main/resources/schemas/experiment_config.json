@@ -25,6 +25,11 @@
       "type": "object",
       "title": "Experiment parameter values",
       "description": "Map of parameter name-value pairs. When a parameter name is referenced in a SQL script used in the experiment, it will be replaced by its corresponding value"
+    },
+    "task_executor_arguments": {
+      "type": "object",
+      "title": "Task executor arguments",
+      "description": "Any arguments passed to a (custom) task executor can be defined here. Arguments set here are defined globally for all tasks."
     }
   },
   "additionalProperties": false

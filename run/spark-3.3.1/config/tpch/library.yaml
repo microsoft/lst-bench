@@ -1,0 +1,87 @@
+# Description: Tasks Library
+---
+version: 1
+task_templates:
+# Create external tables needed for benchmark
+- id: setup
+  files:
+  - run/spark-3.3.1/scripts/tpch/setup/ddl-external-tables.sql
+# Create data maintenance external tables needed for benchmark
+- id: setup_data_maintenance
+  files:
+  - run/spark-3.3.1/scripts/tpch/setup_data_maintenance/ddl-external-tables-refresh.sql
+  parameter_values_file: run/auxiliary/tpch/setup_data_maintenance/parameter_values.dat
+# Create schema and drop existing tables
+- id: init
+  files:
+  - run/spark-3.3.1/scripts/tpch/init/init.sql
+# Create benchmark tables and load data into them
+- id: build
+  files:
+  - run/spark-3.3.1/scripts/tpch/build/1_create_customer.sql
+  - run/spark-3.3.1/scripts/tpch/build/1_create_lineitem.sql
+  - run/spark-3.3.1/scripts/tpch/build/1_create_nation.sql
+  - run/spark-3.3.1/scripts/tpch/build/1_create_orders.sql
+  - run/spark-3.3.1/scripts/tpch/build/1_create_part.sql
+  - run/spark-3.3.1/scripts/tpch/build/1_create_partsupp.sql
+  - run/spark-3.3.1/scripts/tpch/build/1_create_region.sql
+  - run/spark-3.3.1/scripts/tpch/build/1_create_supplier.sql
+  - run/spark-3.3.1/scripts/tpch/build/2_load_customer.sql
+  - run/spark-3.3.1/scripts/tpch/build/2_load_lineitem.sql
+  - run/spark-3.3.1/scripts/tpch/build/2_load_nation.sql
+  - run/spark-3.3.1/scripts/tpch/build/2_load_orders.sql
+  - run/spark-3.3.1/scripts/tpch/build/2_load_part.sql
+  - run/spark-3.3.1/scripts/tpch/build/2_load_partsupp.sql
+  - run/spark-3.3.1/scripts/tpch/build/2_load_region.sql
+  - run/spark-3.3.1/scripts/tpch/build/2_load_supplier.sql
+# Compute statistics for tables
+- id: analyze
+  files:
+  - run/spark-3.3.1/scripts/tpch/build/3_analyze_customer.sql
+  - run/spark-3.3.1/scripts/tpch/build/3_analyze_lineitem.sql
+  - run/spark-3.3.1/scripts/tpch/build/3_analyze_nation.sql
+  - run/spark-3.3.1/scripts/tpch/build/3_analyze_orders.sql
+  - run/spark-3.3.1/scripts/tpch/build/3_analyze_part.sql
+  - run/spark-3.3.1/scripts/tpch/build/3_analyze_partsupp.sql
+  - run/spark-3.3.1/scripts/tpch/build/3_analyze_region.sql
+  - run/spark-3.3.1/scripts/tpch/build/3_analyze_supplier.sql
+# Execution of TPC-H queries
+- id: single_user
+  files:
+  - run/spark-3.3.1/scripts/tpch/single_user/query1.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query2.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query3.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query4.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query5.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query6.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query7.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query8.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query9.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query10.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query11.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query12.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query13.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query14.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query15.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query16.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query17.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query18.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query19.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query20.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query21.sql
+  - run/spark-3.3.1/scripts/tpch/single_user/query22.sql
+# Execution of RF1 TPC-H data maintenance queries
+- id: data_maintenance_1
+  files:
+  - run/spark-3.3.1/scripts/tpch/data_maintenance/RF1.sql
+  parameter_values_file: run/auxiliary/tpch/data_maintenance/parameter_values.dat
+# Execution of RF2 TPC-H data maintenance queries (using MERGE)
+- id: data_maintenance_2_merge
+  files:
+  - run/spark-3.3.1/scripts/tpch/data_maintenance/RF2-merge.sql
+  parameter_values_file: run/auxiliary/tpch/data_maintenance/parameter_values.dat
+# Execution of RF2 TPC-H data maintenance queries (using DELETE)
+- id: data_maintenance_2_delete
+  files:
+  - run/spark-3.3.1/scripts/tpch/data_maintenance/RF2.sql
+  parameter_values_file: run/auxiliary/tpch/data_maintenance/parameter_values.dat

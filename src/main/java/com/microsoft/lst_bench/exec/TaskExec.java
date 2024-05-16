@@ -15,8 +15,8 @@
  */
 package com.microsoft.lst_bench.exec;
 
+import com.microsoft.lst_bench.task.util.TaskExecutorArguments;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
@@ -33,7 +33,7 @@ public interface TaskExec {
   @Nullable String getTimeTravelPhaseId();
 
   @Value.Parameter(false)
-  @Nullable Map<String, String> getTaskExecutorArguments();
+  @Nullable TaskExecutorArguments getTaskExecutorArguments();
 
   @Value.Parameter(false)
   @Nullable String getCustomTaskExecutor();

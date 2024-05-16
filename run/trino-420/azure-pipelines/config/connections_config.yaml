@@ -1,0 +1,9 @@
+# Description: Connections Configuration
+---
+version: 1
+connections:
+- id: trino_0
+  driver: io.trino.jdbc.TrinoDriver
+  url: jdbc:trino://${TRINO_MASTER_HOST}:8080
+  username: admin
+  password: ''

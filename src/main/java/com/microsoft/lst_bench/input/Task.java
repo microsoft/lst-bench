@@ -31,8 +31,15 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableTask.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface Task {
+
+  @JsonProperty("id")
+  @Nullable String getId();
+
+  @JsonProperty("prepared_task_id")
+  @Nullable String getPreparedTaskId();
+
   @JsonProperty("template_id")
-  String getTemplateId();
+  @Nullable String getTemplateId();
 
   @JsonProperty("permute_order")
   @Nullable Boolean isPermuteOrder();
@@ -41,7 +48,7 @@ public interface Task {
   @Nullable String getTimeTravelPhaseId();
 
   @JsonProperty("task_executor_arguments")
-  @Nullable Map<String, String> getTaskExecutorArguments();
+  @Nullable Map<String, Object> getTaskExecutorArguments();
 
   @JsonProperty("replace_regex")
   @Nullable List<ReplaceRegex> getReplaceRegex();
@@ -53,5 +60,15 @@ public interface Task {
     String getPattern();
 
     String getReplacement();
+  }
+
+  /** Validates that a task has exactly one of template ID or prepared task ID defined. */
+  @Value.Check
+  default void check() {
+    boolean onlyOneTrue = getTemplateId() != null ^ getPreparedTaskId() != null;
+    if (!onlyOneTrue) {
+      throw new IllegalStateException(
+          "Must have exactly one of template id or prepared task id defined");
+    }
   }
 }

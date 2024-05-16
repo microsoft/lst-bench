@@ -6,6 +6,7 @@ connections:
   driver: org.apache.hive.jdbc.HiveDriver
   url: jdbc:hive2://127.0.0.1:10000
   max_num_retries: 3
+  show_warnings: true
   username: ${DATABASE_USER:-spark_admin}
   password: ${DATABASE_PASSWORD}
 - id: spark_1

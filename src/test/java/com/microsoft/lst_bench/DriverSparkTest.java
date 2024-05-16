@@ -15,7 +15,7 @@
  */
 package com.microsoft.lst_bench;
 
-import com.microsoft.lst_bench.input.TaskLibrary;
+import com.microsoft.lst_bench.input.Library;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.input.config.ConnectionsConfig;
 import com.microsoft.lst_bench.input.config.ExperimentConfig;
@@ -45,7 +45,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-delta.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
         "src/test/resources/config/spark/w_all_tpcds-delta.yaml");
   }
 
@@ -57,7 +57,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-hudi.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
         "src/test/resources/config/spark/w_all_tpcds-hudi.yaml");
   }
 
@@ -69,7 +69,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-iceberg.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
         "src/test/resources/config/spark/w_all_tpcds-iceberg.yaml");
   }
 
@@ -81,7 +81,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-delta.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/spark/tpch/task_library.yaml",
+        "run/spark-3.3.1/config/tpch/library.yaml",
         "src/test/resources/config/spark/w_all_tpch-delta.yaml");
   }
 
@@ -93,7 +93,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-hudi.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/spark/tpch/task_library.yaml",
+        "run/spark-3.3.1/config/tpch/library.yaml",
         "src/test/resources/config/spark/w_all_tpch-hudi.yaml");
   }
 
@@ -105,7 +105,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-iceberg.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/spark/tpch/task_library.yaml",
+        "run/spark-3.3.1/config/tpch/library.yaml",
         "src/test/resources/config/spark/w_all_tpch-iceberg.yaml");
   }
 
@@ -117,7 +117,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-delta.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/test/resources/config/spark/simplified_task_library.yaml",
+        "src/test/resources/config/spark/simplified_library.yaml",
         "src/test/resources/config/spark/w_multi_connection-delta.yaml");
   }
 
@@ -129,7 +129,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-hudi.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/test/resources/config/spark/simplified_task_library.yaml",
+        "src/test/resources/config/spark/simplified_library.yaml",
         "src/test/resources/config/spark/w_multi_connection-hudi.yaml");
   }
 
@@ -141,7 +141,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-iceberg.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/test/resources/config/spark/simplified_task_library.yaml",
+        "src/test/resources/config/spark/simplified_library.yaml",
         "src/test/resources/config/spark/w_multi_connection-iceberg.yaml");
   }
 
@@ -153,7 +153,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-delta.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
         "src/test/resources/config/spark/w_all_tpcds_single_session_jdbc-delta.yaml");
   }
 
@@ -165,7 +165,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-hudi.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
         "src/test/resources/config/spark/w_all_tpcds_single_session_jdbc-hudi.yaml");
   }
 
@@ -177,7 +177,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-iceberg.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
         "src/test/resources/config/spark/w_all_tpcds_single_session_jdbc-iceberg.yaml");
   }
 
@@ -189,7 +189,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-delta.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/test/resources/config/spark/simplified_task_library.yaml",
+        "src/test/resources/config/spark/simplified_library.yaml",
         "src/test/resources/config/spark/w_faulty_query_test.yaml");
   }
 
@@ -201,7 +201,7 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-hudi.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/test/resources/config/spark/simplified_task_library.yaml",
+        "src/test/resources/config/spark/simplified_library.yaml",
         "src/test/resources/config/spark/w_faulty_query_test.yaml");
   }
 
@@ -213,8 +213,20 @@ public class DriverSparkTest {
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
         "src/test/resources/config/spark/experiment_config-iceberg.yaml",
         "src/test/resources/config/spark/telemetry_config.yaml",
-        "src/test/resources/config/spark/simplified_task_library.yaml",
+        "src/test/resources/config/spark/simplified_library.yaml",
         "src/test/resources/config/spark/w_faulty_query_test.yaml");
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "delta")
+  @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
+  public void testJDBCSkipFailedQueriesGlobalDelta() throws Exception {
+    runDriver(
+        "src/test/resources/config/spark/jdbc_connection_config.yaml",
+        "src/test/resources/config/spark/experiment_config-delta-skip-faulty.yaml",
+        "src/test/resources/config/spark/telemetry_config.yaml",
+        "src/test/resources/config/spark/simplified_library.yaml",
+        "src/test/resources/config/spark/w_faulty_query_test2.yaml");
   }
 
   private void runDriver(String arg0, String arg1, String arg2, String arg3, String arg4)
@@ -227,7 +239,7 @@ public class DriverSparkTest {
   @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "spark")
   public void testSparkSessionDelta(@TempDir Path tempDir) throws Exception {
     testSparkSession(
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
         "src/test/resources/config/spark/w_all_tpcds_single_session-delta.yaml",
         "src/test/resources/config/spark/spark_connection_config-delta.yaml",
         "src/test/resources/config/spark/experiment_config-delta.yaml",
@@ -240,7 +252,7 @@ public class DriverSparkTest {
   @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "spark")
   public void testSparkSessionHudi(@TempDir Path tempDir) throws Exception {
     testSparkSession(
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
         "src/test/resources/config/spark/w_all_tpcds_single_session-hudi.yaml",
         "src/test/resources/config/spark/spark_connection_config-hudi.yaml",
         "src/test/resources/config/spark/experiment_config-hudi.yaml",
@@ -253,7 +265,7 @@ public class DriverSparkTest {
   @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "spark")
   public void testSparkSessionIceberg(@TempDir Path tempDir) throws Exception {
     testSparkSession(
-        "src/main/resources/config/spark/tpcds/task_library.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
         "src/test/resources/config/spark/w_all_tpcds_single_session-iceberg.yaml",
         "src/test/resources/config/spark/spark_connection_config-iceberg.yaml",
         "src/test/resources/config/spark/experiment_config-iceberg.yaml",
@@ -265,7 +277,7 @@ public class DriverSparkTest {
       String arg0, String arg1, String arg2, String arg3, String arg4, Path tempDir)
       throws Exception {
     // Create Java objects from input files
-    TaskLibrary taskLibrary = FileParser.loadTaskLibrary(arg0);
+    Library taskLibrary = FileParser.loadLibrary(arg0);
     Workload workload = FileParser.loadWorkload(arg1);
     ConnectionsConfig connectionsConfig = FileParser.loadConnectionsConfig(arg2);
     ExperimentConfig experimentConfig = FileParser.loadExperimentConfig(arg3);

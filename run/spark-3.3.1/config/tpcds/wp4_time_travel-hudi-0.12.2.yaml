@@ -1,0 +1,86 @@
+# Description: WP4: Time travel
+---
+version: 1
+id: wp4_time_travel
+phases:
+- id: init
+  sessions:
+  - tasks:
+    - template_id: init
+- id: build
+  sessions:
+  - tasks:
+    - template_id: build
+      replace_regex:
+      - pattern: '(?i)varchar\(.*\)|char\(.*\)'
+        replacement: 'string'
+- id: data_maintenance_1
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_hudi
+    - template_id: data_maintenance_hudi
+- id: single_user_2_0
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: build
+- id: data_maintenance_2
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_hudi
+    - template_id: data_maintenance_hudi
+- id: single_user_3_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: data_maintenance_1
+- id: single_user_3_0
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: build
+- id: data_maintenance_3
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_hudi
+    - template_id: data_maintenance_hudi
+- id: single_user_4_2
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: data_maintenance_2
+- id: single_user_4_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: data_maintenance_1
+- id: single_user_4_0
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: build
+- id: data_maintenance_4
+  sessions:
+  - tasks:
+    - template_id: data_maintenance_hudi
+    - template_id: data_maintenance_hudi
+- id: single_user_5_3
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: data_maintenance_3
+- id: single_user_5_2
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: data_maintenance_2
+- id: single_user_5_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: data_maintenance_1
+- id: single_user_5_0
+  sessions:
+  - tasks:
+    - template_id: single_user
+      time_travel_phase_id: build
