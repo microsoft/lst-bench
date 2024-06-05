@@ -79,7 +79,7 @@ An example is shown here, based on the implementation of the custom [DependentTa
 ```
 
 The task executor arguments are passed as a <String, Object> map, new parameters should be registered via the [TaskExecutorArgumentsParser](/src/main/java/com/microsoft/lst_bench/util/TaskExecutorArgumentsParser.java) to ensure that only valid parameters are passed into the execution.
-An example for how task-specific arguments can be incorporated into the execution class, refer to the example of the [DependentTaskExecutorArguments](/src/main/java/com/microsoft/lst_bench/task/custom/DependentTaskExecutor.java).
+An example for how task-specific arguments can be incorporated into the execution class, refer to the [DependentTaskExecutorArguments](/src/main/java/com/microsoft/lst_bench/task/custom/DependentTaskExecutor.java).
 
 ### Prepared Tasks
 
