@@ -66,7 +66,20 @@ These optional task parameters as well as an explanation about them can be found
 
 ### Custom Tasks
 
-<!--- TODO: Update this section --->
+Custom tasks allow users to specify their own task execution classes to change execution order, add dependencies between tasks, or pass custom parameters that influence task execution dynamically, amongst others.
+The exact implementation is left to the user, however, they need to inherit from and abide to the API's of the `TaskExecutor` class that can be found [here](/src/main/java/com/microsoft/lst_bench/task/TaskExecutor.java). 
+The execution class as well as the task's arguments are defined in the workload configuration via the `custom_task_executor` and `task_executor_arguments` keywords respectively.
+An example is shown here, based on the implementation of the custom [DependentTaskExecutor](/src/main/java/com/microsoft/lst_bench/task/custom/DependentTaskExecutor.java) class:
+
+```yaml
+- template_id: data_maintenance_dependent
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
+  task_executor_arguments:
+    dependent_task_batch_size: 100
+```
+
+The task executor arguments are passed as a <String, Object> map, new parameters should be registered via the [TaskExecutorArgumentsParser](/src/main/java/com/microsoft/lst_bench/util/TaskExecutorArgumentsParser.java) to ensure that only valid parameters are passed into the execution.
+An example for how task-specific arguments can be incorporated into the execution class, refer to the [DependentTaskExecutorArguments](/src/main/java/com/microsoft/lst_bench/task/custom/DependentTaskExecutor.java).
 
 ### Prepared Tasks
 
