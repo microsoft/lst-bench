@@ -127,7 +127,10 @@ Alternatively, if the LST-Bench [Metrics Processor](metrics) is used, you can si
 The processor will then analyze and visualize the results, providing a streamlined solution for result analysis and visualization.
 
 ## Documentation
-For more details about LST-Bench, please refer to the accompanying [technical report](https://arxiv.org/pdf/2305.01120).
+Interested in learning more about LST-Bench? Explore the following resources:
+
+* **From Paper to Practice: Leveraging LST-Bench to Evaluate Lake-Centric Data Platforms** - Presented at the DBTest'24 Workshop, June 2024. [Slides available here](docs/20240609-LSTBench-DBTest24.pdf).
+* **LST-Bench: Benchmarking Log-Structured Tables in the Cloud** - In SIGMOD 2024. [Read the technical report here](https://arxiv.org/pdf/2305.01120).
 
 If you are writing an academic paper, you can cite this work as:
 
