@@ -136,7 +136,7 @@ If you are writing an academic paper, you can cite this work as:
 
 ```bibtex
 @article{2024lstbench,
-    author = {Jes\'{u}s Camacho-Rodr\'{\i}guez and Ashvin Agrawal and Anja Gruenheid and
+    author = {Jes{\'u}s Camacho-Rodr{\'i}guez and Ashvin Agrawal and Anja Gruenheid and
             Ashit Gosalia and Cristian Petculescu and Josep Aguilar-Saborit and
             Avrilia Floratou and Carlo Curino and Raghu Ramakrishnan},
     title = {LST-Bench: Benchmarking Log-Structured Tables in the Cloud},
