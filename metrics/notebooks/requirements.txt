@@ -8,4 +8,4 @@ azure-core==1.27.0
 azure-cli-core==2.49.0
 azure-mgmt-compute==30.0.0
 azure-monitor-query==1.2.0
-azure-identity==1.13.0
+azure-identity==1.16.1
