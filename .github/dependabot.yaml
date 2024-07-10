@@ -20,6 +20,9 @@ updates:
       interval: "daily"
     assignees:
       - "jcamachor"
+    ignore:
+      - dependency-name: "com.microsoft.sqlserver:mssql-jdbc"
+        versions: ["<12.7.0"]
   - package-ecosystem: "github-actions"
     directory: "/.github/workflows"
     schedule:
