@@ -1,0 +1,9 @@
+# Description: Library.
+---
+version: 1
+task_templates:
+# Create external tables needed for benchmark
+- id: setup
+  files:
+  - run/snowflake-8.13.1/scripts/tpcds/setup/ddl-external-tables.sql
+  - run/snowflake-8.13.1/scripts/tpcds/setup/populate-external-tables.sql

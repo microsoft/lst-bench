@@ -1,0 +1,9 @@
+# Description: Setup experiment
+---
+version: 1
+id: setup_experiment
+phases:
+- id: setup
+  sessions:
+  - tasks:
+    - template_id: setup
