@@ -1,0 +1,26 @@
+# Description: Experiment Configuration
+---
+version: 1
+id: exp_name
+repetitions: 1
+# Metadata accepts any key-value that we want to register together with the experiment run.
+metadata:
+  system: snowflake
+  system_version: 8.7.1 # SELECT CURRENT_VERSION();
+  table_format: snowflake
+  scale_factor: 1
+  wh_size: wh_small
+# The following parameter values will be used to replace the variables in the workload statements.
+parameter_values:
+  external_catalog: lst_bench # Snowflake Database
+  external_database: external_tpcds_sf_1 # Snowflake Schema
+  external_table_format: csv
+  external_data_path: 'wasbs://blobl@name.blob.core.windows.net/tpc-ds/'
+  external_options_suffix: ',header="false", delimiter="|"'
+  external_tblproperties_suffix: ''
+  catalog: lst_bench # Snowflake Database
+  database: exp_name # Snowflake Schema
+  table_format: snowflake
+  scale_factor: 1
+  # Snowflake specific parameters
+  snowflake_stage: 'tpcds_stage'
