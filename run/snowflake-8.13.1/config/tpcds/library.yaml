@@ -13,3 +13,7 @@ task_templates:
   - run/snowflake-8.13.1/scripts/tpcds/setup_data_maintenance/ddl-external-tables-refresh.sql
   - run/snowflake-8.13.1/scripts/tpcds/setup_data_maintenance/populate-external-tables-refresh.sql
   parameter_values_file: run/auxiliary/tpcds/setup_data_maintenance/parameter_values.dat
+# Create schema and drop existing tables
+- id: init
+  files:
+  - run/snowflake-8.13.1/scripts/tpcds/init/init.sql
