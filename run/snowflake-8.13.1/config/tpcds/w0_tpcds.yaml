@@ -22,3 +22,7 @@ phases:
   sessions:
   - tasks:
     - template_id: build
+- id: single_user_1
+  sessions:
+  - tasks:
+    - template_id: single_user
