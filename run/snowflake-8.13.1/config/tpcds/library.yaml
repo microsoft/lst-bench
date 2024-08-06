@@ -172,3 +172,18 @@ task_templates:
   - run/snowflake-8.13.1/scripts/tpcds/single_user/query99.sql
   permutation_orders_path: run/auxiliary/tpcds/single_user/permutation_orders/
   supports_time_travel: true
+# Execution of TPC-DS data maintenance queries (Hudi)
+- id: data_maintenance
+  files:
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/DF_CS.sql
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/DF_I.sql
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/DF_SS.sql
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/DF_WS.sql
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/LF_CR.sql
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/LF_CS.sql
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/LF_I.sql
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/LF_SR.sql
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/LF_SS.sql
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/LF_WR.sql
+  - run/snowflake-8.13.1/scripts/tpcds/data_maintenance/LF_WS.sql
+  parameter_values_file: run/auxiliary/tpcds/data_maintenance/parameter_values.dat

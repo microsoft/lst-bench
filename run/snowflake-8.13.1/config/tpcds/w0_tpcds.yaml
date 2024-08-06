@@ -3,17 +3,6 @@
 version: 1
 id: w0_tpcds
 phases:
-- id: setup
-  sessions:
-  - tasks:
-    - template_id: setup
-- id: setup_data_maintenance
-  sessions:
-  - tasks:
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
-    - template_id: setup_data_maintenance
 - id: init
   sessions:
   - tasks:
@@ -26,3 +15,25 @@ phases:
   sessions:
   - tasks:
     - template_id: single_user
+- id: throughput_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+    - template_id: single_user
+    - template_id: single_user
+    - template_id: single_user
+- id: data_maintenance_1
+  sessions:
+  - tasks:
+    - template_id: data_maintenance
+- id: throughput_2
+  sessions:
+  - tasks:
+    - template_id: single_user
+    - template_id: single_user
+    - template_id: single_user
+    - template_id: single_user
+- id: data_maintenance_2
+  sessions:
+  - tasks:
+    - template_id: data_maintenance
