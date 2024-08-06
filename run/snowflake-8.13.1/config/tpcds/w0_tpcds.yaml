@@ -18,3 +18,7 @@ phases:
   sessions:
   - tasks:
     - template_id: init
+- id: build
+  sessions:
+  - tasks:
+    - template_id: build
