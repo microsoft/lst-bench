@@ -15,9 +15,8 @@ parameter_values:
   external_catalog: lst_bench # Snowflake Database
   external_database: external_tpcds_sf_1 # Snowflake Schema
   external_table_format: csv
+  field_delimiter: '"|"'
   external_data_path: 'wasbs://blobl@name.blob.core.windows.net/tpc-ds/'
-  external_options_suffix: ',header="false", delimiter="|"'
-  external_tblproperties_suffix: ''
   catalog: lst_bench # Snowflake Database
   database: exp_name # Snowflake Schema
   table_format: snowflake

@@ -3,8 +3,8 @@ drop stage if exists ${external_catalog}.${external_database}.${snowflake_stage}
 create stage ${external_catalog}.${external_database}.${snowflake_stage}
                 url="${external_data_path}"
                 file_format = (
-                    TYPE = CSV
-                    FIELD_DELIMITER = "|"
+                    TYPE = ${external_table_format}
+                    FIELD_DELIMITER = ${field_delimiter}
                     ERROR_ON_COLUMN_COUNT_MISMATCH = FALSE
                     ENCODING = "iso-8859-1"
                 );
