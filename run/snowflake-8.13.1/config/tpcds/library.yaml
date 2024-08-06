@@ -7,3 +7,9 @@ task_templates:
   files:
   - run/snowflake-8.13.1/scripts/tpcds/setup/ddl-external-tables.sql
   - run/snowflake-8.13.1/scripts/tpcds/setup/populate-external-tables.sql
+# Create data maintenance external tables needed for benchmark
+- id: setup_data_maintenance
+  files:
+  - run/snowflake-8.13.1/scripts/tpcds/setup_data_maintenance/ddl-external-tables-refresh.sql
+  - run/snowflake-8.13.1/scripts/tpcds/setup_data_maintenance/populate-external-tables-refresh.sql
+  parameter_values_file: run/auxiliary/tpcds/setup_data_maintenance/parameter_values.dat
