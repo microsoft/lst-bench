@@ -108,8 +108,12 @@ public class SessionExecutor implements Callable<Boolean> {
           DateTimeFormatter.AS_OF_FORMATTER.format(
               ttPhaseEndTime.truncatedTo(ChronoUnit.SECONDS).plusSeconds(1));
       values.put("asof", "TIMESTAMP AS OF " + StringUtils.quote(timeTravelValue));
+      // Snowflake requires a different syntax for the asof clause
+      values.put(
+          "asof_sf", "AT(TIMESTAMP => " + StringUtils.quote(timeTravelValue) + "::TIMESTAMP_LTZ)");
     } else {
       values.put("asof", "");
+      values.put("asof_sf", "");
     }
     return values;
   }
