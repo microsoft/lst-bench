@@ -25,3 +25,6 @@ parameter_values:
   # Snowflake specific parameters
   snowflake_stage: 'tpcds_stage'
   snowflake_dm_stage: 'tpcds_dm_stage'
+  # Iceberg table parameters
+  exvol: 'external_volume'
+  base_location: 'base_location/'
