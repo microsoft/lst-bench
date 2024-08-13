@@ -75,6 +75,6 @@ def generate_sql_in_with_null(lhs: str, values: list, NA_value = "N/A") -> str:
     """
 
     str_list = ', '.join(["'" + str(value) + "'" for value in values if value is not NA_value])
-    null_predicate = '' if NA_value in values else 'NOT'
+    null_predicate = f'OR {lhs} IS NULL' if NA_value in values else ''
 
-    return f"({lhs} IN ({str_list}) OR {lhs} IS {null_predicate} NULL)"
+    return f"({lhs} IN ({str_list}) {null_predicate})"
