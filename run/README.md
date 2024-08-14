@@ -27,6 +27,9 @@ This folder contains configurations for running LST-Bench on various systems as 
 - [x] Trino 420
   - [x] Delta Lake
   - [x] Apache Iceberg
+- [x] Snowflake 8.13.1
+  - [x] Native tables
+  - [x] Apache Iceberg   
 
 ## Folder Structure
 While the folder for each engine may have a slightly different structure, they generally contain the following:
