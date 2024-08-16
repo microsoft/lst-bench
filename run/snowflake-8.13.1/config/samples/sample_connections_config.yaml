@@ -1,0 +1,7 @@
+# Description: Connections Configuration
+---
+version: 1
+connections:
+- id: snow_wh_small
+  driver: net.snowflake.client.jdbc.SnowflakeDriver
+  url: jdbc:snowflake://account-locator.snowflakecomputing.com/?user=user&password=password&warehouse=wh_small

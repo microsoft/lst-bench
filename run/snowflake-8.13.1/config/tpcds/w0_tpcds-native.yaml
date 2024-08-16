@@ -1,0 +1,39 @@
+# Description: W0: Original TPC-DS sequence
+---
+version: 1
+id: w0_tpcds
+phases:
+- id: init
+  sessions:
+  - tasks:
+    - template_id: init
+- id: build
+  sessions:
+  - tasks:
+    - template_id: build
+- id: single_user_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+- id: throughput_1
+  sessions:
+  - tasks:
+    - template_id: single_user
+    - template_id: single_user
+    - template_id: single_user
+    - template_id: single_user
+- id: data_maintenance_1
+  sessions:
+  - tasks:
+    - template_id: data_maintenance
+- id: throughput_2
+  sessions:
+  - tasks:
+    - template_id: single_user
+    - template_id: single_user
+    - template_id: single_user
+    - template_id: single_user
+- id: data_maintenance_2
+  sessions:
+  - tasks:
+    - template_id: data_maintenance

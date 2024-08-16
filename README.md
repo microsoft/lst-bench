@@ -46,7 +46,7 @@ mvnw.cmd package
 
 To build LST-Bench for a specific database, you can use the profile name (`-P`) option. 
 This will include the corresponding JDBC driver in the `./target` directory. 
-Currently, the following profiles are supported: `databricks-jdbc`, `spark-jdbc`, `spark-client`, `trino-jdbc` and `microsoft-fabric-jdbc`.
+Currently, the following profiles are supported: `databricks-jdbc`, `snowflake-jdbc`, `spark-jdbc`, `spark-client`, `trino-jdbc` and `microsoft-fabric-jdbc`.
 For example, to build LST-Bench for open-source Spark with JDBC drivers in Linux/macOS, you can run the following command:
 
 ```bash
