@@ -1,0 +1,3 @@
+[submodule "adapters/cab-converter/cab"]
+	path = adapters/cab-converter/cab
+	url = https://github.com/alexandervanrenen/cab

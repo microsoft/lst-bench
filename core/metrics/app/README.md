@@ -29,11 +29,11 @@ The results displayed in the dashboard are specific to the versions and configur
 Their performance is subject to change and improvement through further tuning and future developments.
 Thus, the primary aim of sharing them is not to assert that one LST or engine is superior (in terms of speed, cost, etc.) to another. 
 Instead, it is to showcase LST-Bench's capability in quantifying significant trade-offs across various combinations of engines and LSTs. 
-Further details about the runs and setups are available [here](/run).
+Further details about the runs and setups are available [here](/core/run).
 
 ## Adding a New Result
-To include data from a new system, duplicate one of the directories in the [run folder](/run) and modify the necessary files within. 
-For a deeper understanding of the directory structure, consult the [README file](/run/README.md). 
+To include data from a new system, duplicate one of the directories in the [run folder](/core/run) and modify the necessary files within. 
+For a deeper understanding of the directory structure, consult the [README file](/core/run/README.md). 
 The LST-Bench dashboard web app automatically retrieves results from the .duckdb files within those folders and displays them on the dashboard.
 
 Alternatively, you can provide your own paths to search for results via commandline arguments, see below.
@@ -58,7 +58,7 @@ source venv/bin/activate
 ```
 
 ### 3. Install Dependencies
-Install the the necessary packages specified in the requirements.txt using pip:
+Install the necessary packages specified in the requirements.txt using pip:
 
 ```bash
 pip install -r requirements.txt

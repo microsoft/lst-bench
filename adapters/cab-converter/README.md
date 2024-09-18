@@ -1,0 +1,51 @@
+<!--
+{% comment %}
+Copyright (c) Microsoft Corporation.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+{% endcomment %}
+-->
+
+# Cloud Analytics Benchmark (CAB) to LST-Bench Converter
+
+This module converts output files from the Cloud Analytics Benchmark (CAB) to the format accepted by the LST-Bench framework. 
+The CAB repository is included as a Git submodule, and you can build it separately using the instructions provided in its own `README` file.
+
+## Setup Instructions
+
+### 1. Clone the LST-Bench Project with Submodules
+To get the `cab-converter` project, you need to clone the main LST-Bench repository and ensure the CAB submodule is initialized.
+
+Run the following command to clone the repository with all submodules:
+
+```bash
+git clone --recurse-submodules https://github.com/microsoft/lst-bench.git
+```
+
+If you've already cloned the repository without the submodules, you can initialize them manually by running:
+
+```bash
+cd adapters/cab-converter
+git submodule update --init --recursive
+```
+
+This will pull in the CAB repository under the `cab` directory.
+
+### 2. Build the CAB Project
+The CAB project is a separate C++ application with its own build process. For platform-specific build instructions (Linux, macOS, Windows), refer to the CAB `README` located in the `cab` submodule.
+
+### 3. Using the CAB to LST-Bench Converter
+Once CAB is built and its output files are generated, you can run the `cab-converter` to transform those files into the format required by LST-Bench.
+
+#### Running the Converter
+_TODO: Add more details here._
