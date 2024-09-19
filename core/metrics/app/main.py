@@ -278,8 +278,8 @@ def run(*, result_dirs: List[str] = None):
     st.title('LST-Bench - Dashboard')
     st.write("[Project Page](https://github.com/microsoft/lst-bench/) | "
             "[Technical Report](https://arxiv.org/abs/2305.01120) | "
-            "[Evaluation](https://github.com/microsoft/lst-bench/tree/main/metrics/app#evaluation) | "
-            "[Adding a New Result](https://github.com/microsoft/lst-bench/tree/main/metrics/app#adding-a-new-result)")
+            "[Evaluation](https://github.com/microsoft/lst-bench/tree/main/core/metrics/app#evaluation) | "
+            "[Adding a New Result](https://github.com/microsoft/lst-bench/tree/main/core/metrics/app#adding-a-new-result)")
 
     workloads = get_workloads(result_dirs=result_dirs)
     workload_selected = st.sidebar.selectbox('Workload', workloads, index=0)
