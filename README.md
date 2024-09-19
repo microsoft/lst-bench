@@ -80,7 +80,7 @@ usage: ./launcher.sh -c <arg> -e <arg> -l <arg> -t <arg> -w <arg>
 ## Configuration Files
 The configuration files used in LST-Bench are YAML files. 
 
-You can find their schema, which describes the expected structure and properties, [here](src/main/resources/schemas).
+You can find their schema, which describes the expected structure and properties, [here](core/src/main/resources/schemas).
 
 NOTE: The spark schemas are configured for Spark 3.3 or earlier. In case you plan to use Spark 3.4, the setup and setup_data_maintenance tasks need to be
 modified to handle [SPARK-44025](https://issues.apache.org/jira/browse/SPARK-44025). Columns in CSV tables need to defined as `STRING` instead of `VARCHAR` or `CHAR`.
@@ -91,7 +91,7 @@ Append the following regex replacement to the setup and setup_data_maintenance p
         replacement: 'string'
 ```
 
-Additionally, you can find sample configurations that can serve as guidelines for creating your configurations [here](src/main/resources/config).
+Additionally, you can find sample configurations that can serve as guidelines for creating your configurations [here](core/src/main/resources/config).
 The YAML file can also contain references to environment variable along with default values. The parser will handle the same appropriately. 
 Example:
 ```bash
@@ -100,15 +100,18 @@ Example:
 
 ## Architecture
 
-The LST-Bench code is organized into two modules:
+The core of LST-Bench is organized into two modules:
 
 1. **Java Application.** This module is written entirely in Java and is responsible for executing SQL workloads against a system under test using JDBC.
    It reads input configuration files to determine the tasks, sessions, and phases to be executed.
    The Java application handles the execution of SQL statements and manages the interaction with the system under test.
 
-2. **Python Processing Module.** The processing module is written in Python and serves as the post-execution analysis component.
+2. **Python Metrics Module.** The metrics module is written in Python and serves as the post-execution analysis component.
    It consolidates experimental results obtained from the Java application and computes metrics to provide insights into LSTs and cloud data warehouses.
    The Python module performs data processing, analysis, and visualization to facilitate a deeper understanding of the experimental results.
+
+Additionally, the **Adapters** module is designed to handle integration with external tools and systems by converting outputs from third-party benchmarks into formats compatible with LST-Bench.
+One example of this is the **CAB to LST-Bench converter**, which transforms results from the Cloud Analytics Benchmark (CAB) into a format that can be used by LST-Bench for further analysis.
 
 ### LST-Bench Concepts
 In LST-Bench, we utilize specific concepts to define and organize SQL workloads, with a focus on maximizing flexibility and facilitating reusability across various workloads. For detailed information, refer to our [documentation](docs/workloads.md).
@@ -123,7 +126,7 @@ The telemetry registry in LST-Bench is configurable, providing flexibility for d
 By default, LST-Bench includes an implementation for a JDBC-based registry and supports writing telemetry to DuckDB or Spark.
 LST-Bench writes these telemetry events into a table within the specified systems, enabling any application to consume and gain insights from the results.
 
-Alternatively, if the LST-Bench [Metrics Processor](metrics) is used, you can simply point it to the same database.
+Alternatively, if the LST-Bench [Metrics Processor](core/metrics) is used, you can simply point it to the same database.
 The processor will then analyze and visualize the results, providing a streamlined solution for result analysis and visualization.
 
 ## Documentation

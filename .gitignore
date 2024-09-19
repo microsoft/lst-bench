@@ -65,9 +65,6 @@ local.properties
 .DS_Store
 /target
 /*/target
-/example/*/target
-/build
-/*/build
-/example/*/build
+/adapters/*/target
 /buildSrc/build
 /buildSrc/subprojects/*/build

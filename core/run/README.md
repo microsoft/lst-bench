@@ -17,7 +17,7 @@ limitations under the License.
 -->
 
 # LST-Bench: Configurations and Results
-This folder contains configurations for running LST-Bench on various systems as depicted in the [LST-Bench dashboard](/metrics/app), along with details about the setups used to generate those results.
+This folder contains configurations for running LST-Bench on various systems as depicted in the [LST-Bench dashboard](/core/metrics/app), along with details about the setups used to generate those results.
 
 ## Systems Included
 - [x] Apache Spark 3.3.1
@@ -40,10 +40,10 @@ While the folder for each engine may have a slightly different structure, they g
 - `config/`: 
   This directory houses LST-Bench configuration files required to execute the workload. 
   It includes LST-Bench phase/session/task libraries that reference the aforementioned SQL scripts.
-- Additional infrastructure and configuration automation folders, e.g., `azure-pipelines/`: 
+- _(Optional)_ Additional infrastructure and configuration automation folders, e.g., `azure-pipelines/`: 
   These folders contain scripts or files facilitating automation for running the benchmark on a specific infrastructure/engine.
   For instance, Azure Pipelines scripts to deploy an engine with different LSTs and executing LST-Bench. 
   Generally, these folders should include an additional README.md file offering further details.
-- `results/`: 
+- _(Optional)_ `results/`: 
   This folder stores the results of the LST-Bench runs as captured by LST-Bench telemetry using DuckDB.
-  These results are processed and visualized in the [LST-Bench dashboard](/metrics/app).
+  These results are processed and visualized in the [LST-Bench dashboard](/core/metrics/app).

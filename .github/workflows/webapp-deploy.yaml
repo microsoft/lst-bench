@@ -21,8 +21,8 @@ name: Build and deploy Web App - lst-bench
 on:
   push:
     paths:
-      - metrics/**
-      - run/**
+      - core/metrics/**
+      - core/run/**
     branches:
       - main
   workflow_dispatch:
@@ -32,7 +32,7 @@ permissions:
 
 env:
   AZURE_WEBAPP_NAME: lst-bench
-  WORKING_DIRECTORY: './metrics/app'
+  WORKING_DIRECTORY: './core/metrics/app'
   STARTUP_COMMAND: 'python -m streamlit run main.py --server.port 8000 --server.address 0.0.0.0 --client.toolbarMode minimal'
 
 jobs:
@@ -61,7 +61,7 @@ jobs:
 
       - name: 'Copy .duckdb files from ./run/'
         run: |
-          find ./run -type f -name "*.duckdb" -exec cp {} ${{ env.WORKING_DIRECTORY }} \;
+          find ./core/run -type f -name "*.duckdb" -exec cp {} ${{ env.WORKING_DIRECTORY }} \;
 
       - name: Zip artifact for deployment
         working-directory: ${{ env.WORKING_DIRECTORY }}
