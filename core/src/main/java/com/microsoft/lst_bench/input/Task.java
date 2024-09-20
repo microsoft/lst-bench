@@ -53,6 +53,9 @@ public interface Task {
   @JsonProperty("replace_regex")
   @Nullable List<ReplaceRegex> getReplaceRegex();
 
+  @JsonProperty("start")
+  @Nullable Long getStart();
+
   @Value.Immutable
   @JsonSerialize(as = ImmutableReplaceRegex.class)
   @JsonDeserialize(as = ImmutableReplaceRegex.class)

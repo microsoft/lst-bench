@@ -22,7 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 
+@DisabledIfSystemProperty(named = "lst-bench.test.db", matches = ".*")
 public class QueryResultTest {
 
   @Test

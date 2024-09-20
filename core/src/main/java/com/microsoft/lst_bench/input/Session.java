@@ -42,6 +42,9 @@ public interface Session {
   @JsonProperty("target_endpoint")
   @Nullable Integer getTargetEndpoint();
 
+  @JsonProperty("max_concurrency")
+  @Nullable Integer getMaxConcurrency();
+
   /**
    * Validates that a session has exactly one of template ID, list of tasks, or list of tasks
    * sequences defined.

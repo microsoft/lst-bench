@@ -15,7 +15,6 @@
  */
 package com.microsoft.lst_bench.common;
 
-import com.microsoft.lst_bench.client.ClientException;
 import com.microsoft.lst_bench.client.Connection;
 import com.microsoft.lst_bench.client.ConnectionManager;
 import com.microsoft.lst_bench.exec.SessionExec;
@@ -32,16 +31,22 @@ import com.microsoft.lst_bench.util.StringUtils;
 import java.lang.reflect.Constructor;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Default executor for sessions. Iterates over all tasks contained in the session and executes them
- * sequentially.
- */
+/** Default executor for sessions. */
 public class SessionExecutor implements Callable<Boolean> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SessionExecutor.class);
@@ -51,7 +56,7 @@ public class SessionExecutor implements Callable<Boolean> {
   private final SessionExec session;
   private final Map<String, Object> runtimeParameterValues;
   private final Map<String, Instant> phaseIdToEndTime;
-  private String experimentStartTime;
+  private final String experimentStartTime;
 
   public SessionExecutor(
       ConnectionManager connectionManager,
@@ -69,29 +74,70 @@ public class SessionExecutor implements Callable<Boolean> {
   }
 
   @Override
-  public Boolean call() throws ClientException {
+  public Boolean call() throws Exception {
     Instant sessionStartTime = Instant.now();
+
     try (Connection connection = connectionManager.createConnection()) {
-      for (TaskExec task : session.getTasks()) {
-        Map<String, Object> values = updateRuntimeParameterValues(task);
-        TaskExecutor taskExecutor = getTaskExecutor(task);
-        Instant taskStartTime = Instant.now();
-        try {
-          taskExecutor.executeTask(connection, task, values);
-        } catch (Exception e) {
-          LOGGER.error("Exception executing task: " + task.getId());
-          writeTaskEvent(taskStartTime, task.getId(), Status.FAILURE);
-          throw e;
-        }
-        writeTaskEvent(taskStartTime, task.getId(), Status.SUCCESS);
-      }
+      handleTasksExecution(connection, session.getMaxConcurrency());
     } catch (Exception e) {
-      LOGGER.error("Exception executing session: " + session.getId());
+      LOGGER.error("Exception executing session: {}", session.getId());
       writeSessionEvent(sessionStartTime, session.getId(), Status.FAILURE);
       throw e;
     }
     writeSessionEvent(sessionStartTime, session.getId(), Status.SUCCESS);
     return true;
+  }
+
+  private void handleTasksExecution(Connection connection, int maxConcurrentTasks)
+      throws Exception {
+    // Create a thread pool to manage concurrent execution.
+    // By default, the limit of concurrent tasks executed in LST-Bench was set to 1 and all tasks
+    // are executed sequentially.
+    // However, with introduction of start time for tasks, now it is possible to have multiple tasks
+    // running concurrently, and we limit the number of concurrent tasks to maxConcurrentTasks.
+    // If the number of tasks is greater than maxConcurrentTasks, we will execute maxConcurrentTasks
+    // tasks concurrently and wait for any of them to finish before starting the next task. If two
+    // tasks have the same start time, they are guaranteed to be executed in the same order as they
+    // are defined in the session specification.
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(maxConcurrentTasks);
+
+    // Store Futures to track task execution and check for exceptions later
+    List<Future<Boolean>> results = new ArrayList<>();
+    try {
+      for (TaskExec task : session.getTasks()) {
+        Future<Boolean> result =
+            executor.schedule(
+                () -> {
+                  Map<String, Object> values = updateRuntimeParameterValues(task);
+                  TaskExecutor taskExecutor = getTaskExecutor(task);
+                  Instant taskStartTime = Instant.now();
+                  try {
+                    taskExecutor.executeTask(connection, task, values);
+                  } catch (Exception e) {
+                    LOGGER.error("Exception executing task: {}", task.getId());
+                    writeTaskEvent(taskStartTime, task.getId(), Status.FAILURE);
+                    throw e;
+                  }
+                  writeTaskEvent(taskStartTime, task.getId(), Status.SUCCESS);
+                  return true;
+                },
+                ObjectUtils.<Long>defaultIfNull(task.getStart(), 0L),
+                TimeUnit.MILLISECONDS);
+        results.add(result);
+      }
+
+      // Check for exceptions in any of the submitted tasks
+      for (Future<Boolean> result : results) {
+        try {
+          Validate.isTrue(result.get());
+        } catch (InterruptedException | ExecutionException e) {
+          throw new RuntimeException("Task did not finish correctly", e);
+        }
+      }
+    } finally {
+      executor.shutdown();
+      Validate.isTrue(executor.awaitTermination(1, TimeUnit.MINUTES));
+    }
   }
 
   private Map<String, Object> updateRuntimeParameterValues(TaskExec task) {

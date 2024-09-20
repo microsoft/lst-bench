@@ -28,14 +28,18 @@ phases:
   sessions:
   - tasks:
     - template_id: single_user
+      start: 1000
     target_endpoint: 0
+    max_concurrency: 1
   - template_id: session_data_maintenance
     target_endpoint: 1
 - id: multi_mixed_2
   sessions:
   - tasks:
     - template_id: single_user
+      start: 1000
     target_endpoint: 0
+    max_concurrency: 1
   - tasks:
     - template_id: optimize_iceberg
     target_endpoint: 1
