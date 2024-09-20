@@ -75,6 +75,12 @@
                     },
                     "additionalProperties": false
                   }
+                },
+                "start": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "title": "Start time of the task",
+                  "description": "Time when the task should start relative to beginning of the session (in milliseconds). If not specified, a task starts immediately after the end of the previous task"
                 }
               }
             }
@@ -146,6 +152,12 @@
               "type": "integer",
               "title": "Target endpoint index (default: 0)",
               "description": "The positional index (starting from 0) of the connection manager within the connections configuration file"
+            },
+            "max_concurrency": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Maximum number of concurrent tasks (default: 1)",
+              "description": "Indicates the maximum number of tasks that can be executed concurrently during this session"
             }
           }
         }

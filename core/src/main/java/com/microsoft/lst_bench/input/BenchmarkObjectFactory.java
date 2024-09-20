@@ -195,7 +195,10 @@ public class BenchmarkObjectFactory {
       taskExecList.add(taskExec);
     }
     return ImmutableSessionExec.of(
-        sessionId, taskExecList, ObjectUtils.defaultIfNull(session.getTargetEndpoint(), 0));
+        sessionId,
+        taskExecList,
+        ObjectUtils.defaultIfNull(session.getTargetEndpoint(), 0),
+        ObjectUtils.defaultIfNull(session.getMaxConcurrency(), 1));
   }
 
   private static List<Task> getTasksFromSession(Session session, InternalLibrary internalLibrary) {

@@ -1,13 +1,13 @@
 # Definition of Workloads in LST-Bench
 
 In LST-Bench, workloads are defined using a YAML configuration file. 
-The schema for this configuration file can be accessed [here](/src/main/resources/schemas/workload.json). 
-To facilitate the reusability of various workload components, LST-Bench enables the definition of a [library](/src/main/resources/schemas/library.json). 
+The schema for this configuration file can be accessed [here](/core/src/main/resources/schemas/workload.json). 
+To facilitate the reusability of various workload components, LST-Bench enables the definition of a [library](/core/src/main/resources/schemas/library.json). 
 This library should be supplied during benchmark execution, allowing workloads to reference entities predefined within it.
 
 LST-Bench already includes libraries encompassing tasks derived from the TPC-DS and TPC-H benchmarks, along with workload definitions that represent the original workloads specified by these standards. 
 Additionally, multiple other workload patterns that are especially relevant for evaluating LSTs are also included. 
-These resources can be found [here](/src/main/resources/config).
+These resources can be found [here](/core/src/main/resources/config).
 
 While LST-Bench provides predefined libraries and workload definitions, users have the flexibility to incorporate additional task templates or even create an entirely new task library to model specific scenarios. 
 This flexible model allows for the easy creation of diverse SQL workloads for evaluation purposes without necessitating modifications to the LST-Bench application itself.
@@ -30,16 +30,16 @@ task_templates:
 # Execution of a few TPC-DS queries (possibly in a previous point-in-time)
 - id: single_user_simple
   files:
-  - src/main/resources/scripts/tpcds/single_user/spark/query1.sql
-  - src/main/resources/scripts/tpcds/single_user/spark/query2.sql
-  - src/main/resources/scripts/tpcds/single_user/spark/query3.sql
-  permutation_orders_path: src/main/resources/auxiliary/tpcds/single_user/permutation_orders/
+  - core/src/main/resources/scripts/tpcds/single_user/spark/query1.sql
+  - core/src/main/resources/scripts/tpcds/single_user/spark/query2.sql
+  - core/src/main/resources/scripts/tpcds/single_user/spark/query3.sql
+  permutation_orders_path: core/src/main/resources/auxiliary/tpcds/single_user/permutation_orders/
   supports_time_travel: true
 ```
 
 This template with the identifier `single_user_simple` comprises three SQL query files, each with a query. 
 Note that there are a couple of additional optional properties defined, namely `permutation_orders_path` and `supports_time_travel`. 
-Further information about these and other optional properties, including their descriptions, can be found [here](/src/main/resources/schemas/template.json).
+Further information about these and other optional properties, including their descriptions, can be found [here](/core/src/main/resources/schemas/template.json).
 
 ### Task Instance
 
@@ -54,22 +54,22 @@ A task template can also be inlined within the task instantiation if we do not w
 
 ```yaml
 - files:
-  - src/main/resources/scripts/tpcds/single_user/spark/query1.sql
-  - src/main/resources/scripts/tpcds/single_user/spark/query2.sql
-  - src/main/resources/scripts/tpcds/single_user/spark/query3.sql
-  permutation_orders_path: src/main/resources/auxiliary/tpcds/single_user/permutation_orders/
+  - core/src/main/resources/scripts/tpcds/single_user/spark/query1.sql
+  - core/src/main/resources/scripts/tpcds/single_user/spark/query2.sql
+  - core/src/main/resources/scripts/tpcds/single_user/spark/query3.sql
+  permutation_orders_path: core/src/main/resources/auxiliary/tpcds/single_user/permutation_orders/
   permute_order: true
 ```
 
 Note that tasks can also have their parameters modifying their behavior for a specific instance, e.g., `permute_order`. 
-These optional task parameters as well as an explanation about them can be found [here](/src/main/resources/schemas/instance.json).
+These optional task parameters as well as an explanation about them can be found [here](/core/src/main/resources/schemas/instance.json).
 
 ### Custom Tasks
 
 Custom tasks allow users to specify their own task execution classes to change execution order, add dependencies between tasks, or pass custom parameters that influence task execution dynamically, amongst others.
-The exact implementation is left to the user, however, they need to inherit from and abide to the API's of the `TaskExecutor` class that can be found [here](/src/main/java/com/microsoft/lst_bench/task/TaskExecutor.java). 
+The exact implementation is left to the user, however, they need to inherit from and abide to the API's of the `TaskExecutor` class that can be found [here](/core/src/main/java/com/microsoft/lst_bench/task/TaskExecutor.java). 
 The execution class as well as the task's arguments are defined in the workload configuration via the `custom_task_executor` and `task_executor_arguments` keywords respectively.
-An example is shown here, based on the implementation of the custom [DependentTaskExecutor](/src/main/java/com/microsoft/lst_bench/task/custom/DependentTaskExecutor.java) class:
+An example is shown here, based on the implementation of the custom [DependentTaskExecutor](/core/src/main/java/com/microsoft/lst_bench/task/custom/DependentTaskExecutor.java) class:
 
 ```yaml
 - template_id: data_maintenance_dependent
@@ -78,8 +78,8 @@ An example is shown here, based on the implementation of the custom [DependentTa
     dependent_task_batch_size: 100
 ```
 
-The task executor arguments are passed as a <String, Object> map, new parameters should be registered via the [TaskExecutorArgumentsParser](/src/main/java/com/microsoft/lst_bench/util/TaskExecutorArgumentsParser.java) to ensure that only valid parameters are passed into the execution.
-An example for how task-specific arguments can be incorporated into the execution class, refer to the [DependentTaskExecutorArguments](/src/main/java/com/microsoft/lst_bench/task/custom/DependentTaskExecutor.java).
+The task executor arguments are passed as a <String, Object> map, new parameters should be registered via the [TaskExecutorArgumentsParser](/core/src/main/java/com/microsoft/lst_bench/util/TaskExecutorArgumentsParser.java) to ensure that only valid parameters are passed into the execution.
+An example for how task-specific arguments can be incorporated into the execution class, refer to the [DependentTaskExecutorArguments](/core/src/main/java/com/microsoft/lst_bench/task/custom/DependentTaskExecutor.java).
 
 ### Prepared Tasks
 
@@ -118,7 +118,7 @@ Once that is done, we can reference the sequence in the workload file:
 
 ## Session
 
-A _session_ refers to a sequence of tasks representing a logical unit of work or a user session, aligning with the concept of sessions in JDBC.
+A _session_ refers to a collection of tasks representing a logical unit of work or a user session, aligning with the concept of sessions in JDBC.
 
 For instance, the following snippet illustrates a sample session executing the `single_user_simple` task template declared earlier:
 
@@ -130,7 +130,26 @@ For instance, the following snippet illustrates a sample session executing the `
 
 If no endpoint is specified, the session is associated with a default target endpoint—the first connection declared in the connections YAML config file.
 
-Moreover, a session can also be defined using tasks sequences. For instance, the following snippet demonstrates a sample session that combines two sequences: one previously defined in the library and another inlined sequence using a `tasks` block. This session will execute a total of four `single_user_simple` tasks.
+Tasks within a session can be executed either concurrently or sequentially, based on workload requirements.
+For concurrent execution, each task must specify a start time relative to the beginning of the session, and the maximum number of tasks that can run in parallel should be defined at the session level.
+Note that tasks with defined start time cannot be mixed with those without in the same session.
+The following snippet demonstrates a session executing tasks concurrently:
+
+```yaml
+  - tasks:
+    - template_id: single_user_simple
+      permute_order: true
+      start: 0
+    - template_id: single_user_simple
+      permute_order: true
+      start: 10000
+    - template_id: single_user_simple
+      permute_order: true
+      start: 20000     
+    max_concurrency: 2
+```
+
+Additionally, a session can also be defined using tasks sequences. For instance, the following snippet demonstrates a sample session that combines two sequences: one previously defined in the library and another inlined sequence using a `tasks` block. This session will execute a total of four `single_user_simple` tasks.
 
 ```yaml
   - tasks_sequences:

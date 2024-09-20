@@ -29,4 +29,38 @@ public interface SessionExec {
 
   /** Connection manager for this session (positional index). */
   int getTargetEndpoint();
+
+  /** Max concurrency level for this session. */
+  int getMaxConcurrency();
+
+  @Value.Check
+  default void check() {
+    // This check can only be done when all the entities in the workload (templates, prepared)
+    // have been resolved.
+    boolean hasStartTime = false;
+    boolean hasNoStartTime = false;
+    long lastStart = -1;
+
+    for (TaskExec task : getTasks()) {
+      Long taskStart = task.getStart();
+
+      if (taskStart != null) {
+        hasStartTime = true;
+
+        // Ensure tasks are ordered by start time
+        if (taskStart < lastStart) {
+          throw new IllegalStateException("Tasks in a session must be in order of start time");
+        }
+        lastStart = taskStart;
+      } else {
+        hasNoStartTime = true;
+      }
+
+      // If both tasks with and without start times are detected, throw an exception
+      if (hasStartTime && hasNoStartTime) {
+        throw new IllegalStateException(
+            "Either all tasks in a session must have a start time, or none should have one.");
+      }
+    }
+  }
 }
