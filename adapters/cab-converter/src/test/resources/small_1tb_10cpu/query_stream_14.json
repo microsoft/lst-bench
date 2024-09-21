@@ -1,0 +1,81 @@
+{
+  "database_id": 14,
+  "scale_factor": 43,
+  "database_byte_count": 43000000000,
+  "size_bucket": 11,
+  "pattern_id": 3,
+  "cpu_time": 29143653,
+  "cpu_time_h":"0.00809546h",
+  "query_count": 17,
+  "queries": [
+    {
+      "query_id": 13,
+      "start": 903860,
+      "arguments": ["express","deposits"]
+    },{
+      "query_id": 21,
+      "start": 941468,
+      "arguments": ["INDONESIA"]
+    },{
+      "query_id": 4,
+      "start": 999911,
+      "arguments": ["1993-06-01"]
+    },{
+      "query_id": 3,
+      "start": 1010957,
+      "arguments": ["HOUSEHOLD","1995-03-27"]
+    },{
+      "query_id": 21,
+      "start": 1067127,
+      "arguments": ["ALGERIA"]
+    },{
+      "query_id": 6,
+      "start": 1088363,
+      "arguments": ["1996-01-01",6,25]
+    },{
+      "query_id": 18,
+      "start": 1120033,
+      "arguments": [313]
+    },{
+      "query_id": 9,
+      "start": 1157374,
+      "arguments": ["linen"]
+    },{
+      "query_id": 12,
+      "start": 2720938,
+      "arguments": ["TRUCK","RAIL","1994-01-01"]
+    },{
+      "query_id": 13,
+      "start": 2741440,
+      "arguments": ["special","requests"]
+    },{
+      "query_id": 21,
+      "start": 2772034,
+      "arguments": ["VIETNAM"]
+    },{
+      "query_id": 21,
+      "start": 2842732,
+      "arguments": ["MOZAMBIQUE"]
+    },{
+      "query_id": 21,
+      "start": 2853458,
+      "arguments": ["ARGENTINA"]
+    },{
+      "query_id": 18,
+      "start": 2898097,
+      "arguments": [315]
+    },{
+      "query_id": 12,
+      "start": 2924078,
+      "arguments": ["MAIL","TRUCK","1996-01-01"]
+    },{
+      "query_id": 20,
+      "start": 2958897,
+      "arguments": ["hot","1997-01-01","JORDAN"]
+    },{
+      "query_id": 1,
+      "start": 3170224,
+      "arguments": [101]
+    }
+  ]
+}

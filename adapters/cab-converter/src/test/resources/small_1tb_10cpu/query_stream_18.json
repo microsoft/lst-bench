@@ -1,0 +1,45 @@
+{
+  "database_id": 18,
+  "scale_factor": 202,
+  "database_byte_count": 202000000000,
+  "size_bucket": 11,
+  "pattern_id": 3,
+  "cpu_time": 23165515,
+  "cpu_time_h":"0.00643487h",
+  "query_count": 8,
+  "queries": [
+    {
+      "query_id": 1,
+      "start": 759790,
+      "arguments": [79]
+    },{
+      "query_id": 9,
+      "start": 2317330,
+      "arguments": ["snow"]
+    },{
+      "query_id": 18,
+      "start": 2341887,
+      "arguments": [315]
+    },{
+      "query_id": 5,
+      "start": 2391362,
+      "arguments": ["EUROPE","1993-01-01"]
+    },{
+      "query_id": 5,
+      "start": 2428622,
+      "arguments": ["MIDDLE EAST","1996-01-01"]
+    },{
+      "query_id": 12,
+      "start": 2470169,
+      "arguments": ["FOB","REG AIR","1993-01-01"]
+    },{
+      "query_id": 19,
+      "start": 2487998,
+      "arguments": ["Brand#52","Brand#32","Brand#53",10,17,29]
+    },{
+      "query_id": 15,
+      "start": 2553837,
+      "arguments": ["1994-05-01"]
+    }
+  ]
+}

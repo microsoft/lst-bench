@@ -1,0 +1,205 @@
+{
+  "database_id": 9,
+  "scale_factor": 10,
+  "database_byte_count": 10000000000,
+  "size_bucket": 10,
+  "pattern_id": 6,
+  "cpu_time": 1324085,
+  "cpu_time_h":"0.000367801h",
+  "query_count": 48,
+  "queries": [
+    {
+      "query_id": 21,
+      "start": 34078,
+      "arguments": ["VIETNAM"]
+    },{
+      "query_id": 8,
+      "start": 64598,
+      "arguments": ["CANADA","AMERICA","STANDARD POLISHED COPPER"]
+    },{
+      "query_id": 20,
+      "start": 151677,
+      "arguments": ["pink","1996-01-01","ARGENTINA"]
+    },{
+      "query_id": 4,
+      "start": 212523,
+      "arguments": ["1997-06-01"]
+    },{
+      "query_id": 5,
+      "start": 310077,
+      "arguments": ["AFRICA","1995-01-01"]
+    },{
+      "query_id": 19,
+      "start": 341984,
+      "arguments": ["Brand#22","Brand#41","Brand#14",4,14,23]
+    },{
+      "query_id": 3,
+      "start": 443850,
+      "arguments": ["AUTOMOBILE","1995-03-02"]
+    },{
+      "query_id": 5,
+      "start": 471236,
+      "arguments": ["AMERICA","1995-01-01"]
+    },{
+      "query_id": 3,
+      "start": 604721,
+      "arguments": ["AUTOMOBILE","1995-03-04"]
+    },{
+      "query_id": 17,
+      "start": 628189,
+      "arguments": ["Brand#15","WRAP PKG"]
+    },{
+      "query_id": 19,
+      "start": 720313,
+      "arguments": ["Brand#24","Brand#54","Brand#12",9,17,28]
+    },{
+      "query_id": 15,
+      "start": 767397,
+      "arguments": ["1996-12-01"]
+    },{
+      "query_id": 8,
+      "start": 906882,
+      "arguments": ["ARGENTINA","AMERICA","PROMO BRUSHED TIN"]
+    },{
+      "query_id": 20,
+      "start": 956103,
+      "arguments": ["puff","1993-01-01","ROMANIA"]
+    },{
+      "query_id": 16,
+      "start": 1056503,
+      "arguments": ["Brand#23","PROMO BURNISHED",44,18,34,13,7,36,38,45]
+    },{
+      "query_id": 9,
+      "start": 1085686,
+      "arguments": ["rosy"]
+    },{
+      "query_id": 21,
+      "start": 1189608,
+      "arguments": ["ALGERIA"]
+    },{
+      "query_id": 15,
+      "start": 1241894,
+      "arguments": ["1995-09-01"]
+    },{
+      "query_id": 20,
+      "start": 1350245,
+      "arguments": ["metallic","1996-01-01","CANADA"]
+    },{
+      "query_id": 22,
+      "start": 1369490,
+      "arguments": [16,12,30,11,13,27,18]
+    },{
+      "query_id": 4,
+      "start": 1493754,
+      "arguments": ["1997-09-01"]
+    },{
+      "query_id": 2,
+      "start": 1546866,
+      "arguments": [33,"TIN","MIDDLE EAST"]
+    },{
+      "query_id": 5,
+      "start": 1621449,
+      "arguments": ["MIDDLE EAST","1996-01-01"]
+    },{
+      "query_id": 22,
+      "start": 1666028,
+      "arguments": [18,11,31,21,10,12,14]
+    },{
+      "query_id": 18,
+      "start": 1823497,
+      "arguments": [313]
+    },{
+      "query_id": 13,
+      "start": 1844425,
+      "arguments": ["unusual","requests"]
+    },{
+      "query_id": 3,
+      "start": 1966788,
+      "arguments": ["HOUSEHOLD","1995-03-22"]
+    },{
+      "query_id": 13,
+      "start": 1988966,
+      "arguments": ["pending","requests"]
+    },{
+      "query_id": 20,
+      "start": 2093108,
+      "arguments": ["grey","1993-01-01","CHINA"]
+    },{
+      "query_id": 14,
+      "start": 2126214,
+      "arguments": ["1993-04-01"]
+    },{
+      "query_id": 6,
+      "start": 2232261,
+      "arguments": ["1993-01-01",9,24]
+    },{
+      "query_id": 20,
+      "start": 2279911,
+      "arguments": ["grey","1994-01-01","EGYPT"]
+    },{
+      "query_id": 1,
+      "start": 2388738,
+      "arguments": [87]
+    },{
+      "query_id": 1,
+      "start": 2444094,
+      "arguments": [111]
+    },{
+      "query_id": 18,
+      "start": 2539333,
+      "arguments": [314]
+    },{
+      "query_id": 12,
+      "start": 2556568,
+      "arguments": ["AIR","REG AIR","1994-01-01"]
+    },{
+      "query_id": 19,
+      "start": 2723569,
+      "arguments": ["Brand#13","Brand#41","Brand#11",3,15,30]
+    },{
+      "query_id": 14,
+      "start": 2736199,
+      "arguments": ["1995-10-01"]
+    },{
+      "query_id": 11,
+      "start": 2868403,
+      "arguments": ["SAUDI ARABIA",10]
+    },{
+      "query_id": 7,
+      "start": 2905960,
+      "arguments": ["CANADA","GERMANY"]
+    },{
+      "query_id": 19,
+      "start": 3001176,
+      "arguments": ["Brand#12","Brand#42","Brand#11",9,16,26]
+    },{
+      "query_id": 23,
+      "start": 3025284,
+      "arguments": [59940000,60000032,0,7]
+    },{
+      "query_id": 11,
+      "start": 3143664,
+      "arguments": ["ARGENTINA",10]
+    },{
+      "query_id": 12,
+      "start": 3186747,
+      "arguments": ["AIR","SHIP","1993-01-01"]
+    },{
+      "query_id": 14,
+      "start": 3287324,
+      "arguments": ["1995-12-01"]
+    },{
+      "query_id": 22,
+      "start": 3334340,
+      "arguments": [16,18,30,33,32,14,25]
+    },{
+      "query_id": 15,
+      "start": 3423649,
+      "arguments": ["1995-04-01"]
+    },{
+      "query_id": 11,
+      "start": 3473626,
+      "arguments": ["EGYPT",10]
+    }
+  ]
+}

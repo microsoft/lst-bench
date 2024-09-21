@@ -1,0 +1,133 @@
+{
+  "database_id": 10,
+  "scale_factor": 13,
+  "database_byte_count": 13000000000,
+  "size_bucket": 10,
+  "pattern_id": 6,
+  "cpu_time": 128098103,
+  "cpu_time_h":"0.0355828h",
+  "query_count": 30,
+  "queries": [
+    {
+      "query_id": 10,
+      "start": 2328,
+      "arguments": ["1993-06-01"]
+    },{
+      "query_id": 23,
+      "start": 147816,
+      "arguments": [77922016,78000032,0,7]
+    },{
+      "query_id": 20,
+      "start": 166615,
+      "arguments": ["peru","1997-01-01","CANADA"]
+    },{
+      "query_id": 12,
+      "start": 301829,
+      "arguments": ["SHIP","RAIL","1995-01-01"]
+    },{
+      "query_id": 5,
+      "start": 451984,
+      "arguments": ["ASIA","1995-01-01"]
+    },{
+      "query_id": 8,
+      "start": 584558,
+      "arguments": ["INDONESIA","ASIA","ECONOMY BRUSHED NICKEL"]
+    },{
+      "query_id": 22,
+      "start": 595732,
+      "arguments": [24,28,20,19,12,26,32]
+    },{
+      "query_id": 15,
+      "start": 720353,
+      "arguments": ["1993-03-01"]
+    },{
+      "query_id": 11,
+      "start": 744183,
+      "arguments": ["VIETNAM",13]
+    },{
+      "query_id": 1,
+      "start": 926921,
+      "arguments": [72]
+    },{
+      "query_id": 22,
+      "start": 1060976,
+      "arguments": [21,15,34,11,31,32,26]
+    },{
+      "query_id": 3,
+      "start": 1061673,
+      "arguments": ["FURNITURE","1995-03-15"]
+    },{
+      "query_id": 20,
+      "start": 1202765,
+      "arguments": ["peach","1994-01-01","JAPAN"]
+    },{
+      "query_id": 19,
+      "start": 1221135,
+      "arguments": ["Brand#25","Brand#51","Brand#51",1,15,22]
+    },{
+      "query_id": 23,
+      "start": 1336831,
+      "arguments": [77844000,77922016,0,7]
+    },{
+      "query_id": 5,
+      "start": 1486381,
+      "arguments": ["EUROPE","1997-01-01"]
+    },{
+      "query_id": 2,
+      "start": 1650005,
+      "arguments": [27,"COPPER","EUROPE"]
+    },{
+      "query_id": 12,
+      "start": 1804789,
+      "arguments": ["FOB","TRUCK","1997-01-01"]
+    },{
+      "query_id": 9,
+      "start": 1974133,
+      "arguments": ["misty"]
+    },{
+      "query_id": 10,
+      "start": 2111778,
+      "arguments": ["1993-12-01"]
+    },{
+      "query_id": 5,
+      "start": 2235978,
+      "arguments": ["AMERICA","1993-01-01"]
+    },{
+      "query_id": 20,
+      "start": 2256757,
+      "arguments": ["bisque","1993-01-01","PERU"]
+    },{
+      "query_id": 13,
+      "start": 2386994,
+      "arguments": ["special","accounts"]
+    },{
+      "query_id": 10,
+      "start": 2527726,
+      "arguments": ["1994-12-01"]
+    },{
+      "query_id": 2,
+      "start": 2711322,
+      "arguments": [23,"COPPER","MIDDLE EAST"]
+    },{
+      "query_id": 9,
+      "start": 2861447,
+      "arguments": ["forest"]
+    },{
+      "query_id": 12,
+      "start": 2988259,
+      "arguments": ["TRUCK","REG AIR","1993-01-01"]
+    },{
+      "query_id": 18,
+      "start": 3137705,
+      "arguments": [315]
+    },{
+      "query_id": 23,
+      "start": 3284648,
+      "arguments": [77766016,77844000,0,7]
+    },{
+      "query_id": 23,
+      "start": 3424421,
+      "arguments": [77688000,77766016,0,7]
+    }
+  ]
+}
