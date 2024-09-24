@@ -1,0 +1,109 @@
+{
+  "database_id": 7,
+  "scale_factor": 5,
+  "database_byte_count": 5000000000,
+  "size_bucket": 10,
+  "pattern_id": 3,
+  "cpu_time": 2483603,
+  "cpu_time_h":"0.00068989h",
+  "query_count": 24,
+  "queries": [
+    {
+      "query_id": 12,
+      "start": 471060,
+      "arguments": ["AIR","RAIL","1995-01-01"]
+    },{
+      "query_id": 18,
+      "start": 538220,
+      "arguments": [314]
+    },{
+      "query_id": 13,
+      "start": 551575,
+      "arguments": ["express","requests"]
+    },{
+      "query_id": 20,
+      "start": 583580,
+      "arguments": ["maroon","1993-01-01","ARGENTINA"]
+    },{
+      "query_id": 17,
+      "start": 623878,
+      "arguments": ["Brand#44","MED BOX"]
+    },{
+      "query_id": 19,
+      "start": 654217,
+      "arguments": ["Brand#53","Brand#41","Brand#15",8,19,25]
+    },{
+      "query_id": 2,
+      "start": 685211,
+      "arguments": [41,"STEEL","EUROPE"]
+    },{
+      "query_id": 7,
+      "start": 1131280,
+      "arguments": ["UNITED KINGDOM","INDIA"]
+    },{
+      "query_id": 21,
+      "start": 1158320,
+      "arguments": ["SAUDI ARABIA"]
+    },{
+      "query_id": 5,
+      "start": 1202087,
+      "arguments": ["MIDDLE EAST","1993-01-01"]
+    },{
+      "query_id": 23,
+      "start": 1571427,
+      "arguments": [29970016,30000032,0,7]
+    },{
+      "query_id": 13,
+      "start": 1587171,
+      "arguments": ["express","deposits"]
+    },{
+      "query_id": 21,
+      "start": 1640292,
+      "arguments": ["KENYA"]
+    },{
+      "query_id": 9,
+      "start": 1676900,
+      "arguments": ["grey"]
+    },{
+      "query_id": 14,
+      "start": 1700057,
+      "arguments": ["1993-09-01"]
+    },{
+      "query_id": 20,
+      "start": 2994351,
+      "arguments": ["maroon","1994-01-01","SAUDI ARABIA"]
+    },{
+      "query_id": 11,
+      "start": 3042743,
+      "arguments": ["CANADA",5]
+    },{
+      "query_id": 22,
+      "start": 3082745,
+      "arguments": [29,14,24,10,28,21,13]
+    },{
+      "query_id": 5,
+      "start": 3104201,
+      "arguments": ["MIDDLE EAST","1997-01-01"]
+    },{
+      "query_id": 19,
+      "start": 3150739,
+      "arguments": ["Brand#33","Brand#52","Brand#42",9,20,20]
+    },{
+      "query_id": 21,
+      "start": 3168119,
+      "arguments": ["EGYPT"]
+    },{
+      "query_id": 22,
+      "start": 3209684,
+      "arguments": [29,34,25,30,28,26,20]
+    },{
+      "query_id": 14,
+      "start": 3271513,
+      "arguments": ["1993-02-01"]
+    },{
+      "query_id": 5,
+      "start": 3309713,
+      "arguments": ["ASIA","1996-01-01"]
+    }
+  ]
+}

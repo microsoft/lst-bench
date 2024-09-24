@@ -1,0 +1,105 @@
+{
+  "database_id": 17,
+  "scale_factor": 125,
+  "database_byte_count": 125000000000,
+  "size_bucket": 11,
+  "pattern_id": 4,
+  "cpu_time": 1380825642,
+  "cpu_time_h":"0.383563h",
+  "query_count": 23,
+  "queries": [
+    {
+      "query_id": 8,
+      "start": 829268,
+      "arguments": ["ARGENTINA","AMERICA","LARGE POLISHED COPPER"]
+    },{
+      "query_id": 11,
+      "start": 831027,
+      "arguments": ["INDIA",125]
+    },{
+      "query_id": 15,
+      "start": 831554,
+      "arguments": ["1993-03-01"]
+    },{
+      "query_id": 7,
+      "start": 831582,
+      "arguments": ["KENYA","JORDAN"]
+    },{
+      "query_id": 7,
+      "start": 842661,
+      "arguments": ["ALGERIA","UNITED STATES"]
+    },{
+      "query_id": 17,
+      "start": 844221,
+      "arguments": ["Brand#55","WRAP BAG"]
+    },{
+      "query_id": 20,
+      "start": 844562,
+      "arguments": ["linen","1997-01-01","UNITED STATES"]
+    },{
+      "query_id": 5,
+      "start": 857591,
+      "arguments": ["AMERICA","1996-01-01"]
+    },{
+      "query_id": 5,
+      "start": 857932,
+      "arguments": ["ASIA","1993-01-01"]
+    },{
+      "query_id": 6,
+      "start": 976423,
+      "arguments": ["1995-01-01",7,24]
+    },{
+      "query_id": 20,
+      "start": 984397,
+      "arguments": ["drab","1997-01-01","ALGERIA"]
+    },{
+      "query_id": 23,
+      "start": 987980,
+      "arguments": [749250016,750000032,0,7]
+    },{
+      "query_id": 7,
+      "start": 988439,
+      "arguments": ["ARGENTINA","ALGERIA"]
+    },{
+      "query_id": 15,
+      "start": 993551,
+      "arguments": ["1993-04-01"]
+    },{
+      "query_id": 13,
+      "start": 995455,
+      "arguments": ["unusual","requests"]
+    },{
+      "query_id": 22,
+      "start": 1404348,
+      "arguments": [31,18,13,16,26,12,24]
+    },{
+      "query_id": 13,
+      "start": 1404619,
+      "arguments": ["pending","packages"]
+    },{
+      "query_id": 14,
+      "start": 1411803,
+      "arguments": ["1995-09-01"]
+    },{
+      "query_id": 20,
+      "start": 1413369,
+      "arguments": ["thistle","1995-01-01","UNITED KINGDOM"]
+    },{
+      "query_id": 22,
+      "start": 1413472,
+      "arguments": [22,14,27,10,11,25,16]
+    },{
+      "query_id": 14,
+      "start": 1414930,
+      "arguments": ["1997-02-01"]
+    },{
+      "query_id": 18,
+      "start": 1415741,
+      "arguments": [315]
+    },{
+      "query_id": 2,
+      "start": 1427647,
+      "arguments": [31,"STEEL","MIDDLE EAST"]
+    }
+  ]
+}

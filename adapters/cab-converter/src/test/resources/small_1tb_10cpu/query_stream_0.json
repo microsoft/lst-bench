@@ -1,0 +1,77 @@
+{
+  "database_id": 0,
+  "scale_factor": 1,
+  "database_byte_count": 1000000000,
+  "size_bucket": 9,
+  "pattern_id": 3,
+  "cpu_time": 1510266,
+  "cpu_time_h":"0.000419518h",
+  "query_count": 16,
+  "queries": [
+    {
+      "query_id": 17,
+      "start": 1680603,
+      "arguments": ["Brand#35","LG PACK"]
+    },{
+      "query_id": 12,
+      "start": 1695332,
+      "arguments": ["FOB","SHIP","1995-01-01"]
+    },{
+      "query_id": 12,
+      "start": 1732957,
+      "arguments": ["MAIL","TRUCK","1993-01-01"]
+    },{
+      "query_id": 18,
+      "start": 1766397,
+      "arguments": [314]
+    },{
+      "query_id": 4,
+      "start": 1801294,
+      "arguments": ["1997-08-01"]
+    },{
+      "query_id": 19,
+      "start": 1840305,
+      "arguments": ["Brand#53","Brand#11","Brand#33",8,13,29]
+    },{
+      "query_id": 2,
+      "start": 1887318,
+      "arguments": [19,"STEEL","AFRICA"]
+    },{
+      "query_id": 12,
+      "start": 1924810,
+      "arguments": ["AIR","REG AIR","1994-01-01"]
+    },{
+      "query_id": 3,
+      "start": 1978718,
+      "arguments": ["HOUSEHOLD","1995-03-14"]
+    },{
+      "query_id": 10,
+      "start": 2520013,
+      "arguments": ["1994-04-01"]
+    },{
+      "query_id": 2,
+      "start": 2563755,
+      "arguments": [30,"NICKEL","EUROPE"]
+    },{
+      "query_id": 4,
+      "start": 2601134,
+      "arguments": ["1995-01-01"]
+    },{
+      "query_id": 11,
+      "start": 2617088,
+      "arguments": ["IRAN",1]
+    },{
+      "query_id": 1,
+      "start": 3205959,
+      "arguments": [68]
+    },{
+      "query_id": 22,
+      "start": 3241316,
+      "arguments": [32,26,20,17,21,22,30]
+    },{
+      "query_id": 1,
+      "start": 3295176,
+      "arguments": [95]
+    }
+  ]
+}

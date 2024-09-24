@@ -1,0 +1,93 @@
+{
+  "database_id": 1,
+  "scale_factor": 1,
+  "database_byte_count": 1000000000,
+  "size_bucket": 9,
+  "pattern_id": 4,
+  "cpu_time": 633664,
+  "cpu_time_h":"0.000176018h",
+  "query_count": 20,
+  "queries": [
+    {
+      "query_id": 10,
+      "start": 2167734,
+      "arguments": ["1994-04-01"]
+    },{
+      "query_id": 20,
+      "start": 2222364,
+      "arguments": ["moccasin","1993-01-01","ROMANIA"]
+    },{
+      "query_id": 13,
+      "start": 2235746,
+      "arguments": ["unusual","requests"]
+    },{
+      "query_id": 1,
+      "start": 2274395,
+      "arguments": [110]
+    },{
+      "query_id": 22,
+      "start": 2311104,
+      "arguments": [15,11,18,33,25,27,21]
+    },{
+      "query_id": 2,
+      "start": 2352862,
+      "arguments": [32,"TIN","EUROPE"]
+    },{
+      "query_id": 6,
+      "start": 2409424,
+      "arguments": ["1996-01-01",4,24]
+    },{
+      "query_id": 6,
+      "start": 2425900,
+      "arguments": ["1995-01-01",4,24]
+    },{
+      "query_id": 12,
+      "start": 2468373,
+      "arguments": ["RAIL","SHIP","1993-01-01"]
+    },{
+      "query_id": 14,
+      "start": 2516636,
+      "arguments": ["1993-01-01"]
+    },{
+      "query_id": 20,
+      "start": 2523086,
+      "arguments": ["lawn","1993-01-01","CHINA"]
+    },{
+      "query_id": 9,
+      "start": 2556312,
+      "arguments": ["medium"]
+    },{
+      "query_id": 14,
+      "start": 2597961,
+      "arguments": ["1993-03-01"]
+    },{
+      "query_id": 20,
+      "start": 2632791,
+      "arguments": ["puff","1995-01-01","BRAZIL"]
+    },{
+      "query_id": 2,
+      "start": 2676694,
+      "arguments": [47,"COPPER","EUROPE"]
+    },{
+      "query_id": 8,
+      "start": 2729515,
+      "arguments": ["JORDAN","MIDDLE EAST","ECONOMY BRUSHED COPPER"]
+    },{
+      "query_id": 3,
+      "start": 2742569,
+      "arguments": ["AUTOMOBILE","1995-03-17"]
+    },{
+      "query_id": 2,
+      "start": 2777134,
+      "arguments": [1,"COPPER","AMERICA"]
+    },{
+      "query_id": 8,
+      "start": 2831455,
+      "arguments": ["IRAN","MIDDLE EAST","STANDARD PLATED BRASS"]
+    },{
+      "query_id": 5,
+      "start": 2870860,
+      "arguments": ["AMERICA","1994-01-01"]
+    }
+  ]
+}

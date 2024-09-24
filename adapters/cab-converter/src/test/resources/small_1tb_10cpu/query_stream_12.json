@@ -1,0 +1,73 @@
+{
+  "database_id": 12,
+  "scale_factor": 23,
+  "database_byte_count": 23000000000,
+  "size_bucket": 10,
+  "pattern_id": 3,
+  "cpu_time": 12557495,
+  "cpu_time_h":"0.00348819h",
+  "query_count": 15,
+  "queries": [
+    {
+      "query_id": 16,
+      "start": 2825115,
+      "arguments": ["Brand#24","LARGE BRUSHED",24,2,1,16,5,26,27,45]
+    },{
+      "query_id": 13,
+      "start": 2849806,
+      "arguments": ["special","accounts"]
+    },{
+      "query_id": 2,
+      "start": 2914890,
+      "arguments": [21,"TIN","AMERICA"]
+    },{
+      "query_id": 13,
+      "start": 2918924,
+      "arguments": ["special","deposits"]
+    },{
+      "query_id": 8,
+      "start": 2972236,
+      "arguments": ["BRAZIL","AMERICA","LARGE POLISHED BRASS"]
+    },{
+      "query_id": 9,
+      "start": 3014080,
+      "arguments": ["orchid"]
+    },{
+      "query_id": 11,
+      "start": 3034276,
+      "arguments": ["UNITED KINGDOM",23]
+    },{
+      "query_id": 13,
+      "start": 3076821,
+      "arguments": ["special","packages"]
+    },{
+      "query_id": 23,
+      "start": 3102139,
+      "arguments": [137862016,138000032,0,7]
+    },{
+      "query_id": 22,
+      "start": 3197609,
+      "arguments": [34,27,10,20,13,14,28]
+    },{
+      "query_id": 21,
+      "start": 3214426,
+      "arguments": ["BRAZIL"]
+    },{
+      "query_id": 3,
+      "start": 3257206,
+      "arguments": ["HOUSEHOLD","1995-03-14"]
+    },{
+      "query_id": 17,
+      "start": 3278104,
+      "arguments": ["Brand#51","SM CASE"]
+    },{
+      "query_id": 7,
+      "start": 3314644,
+      "arguments": ["VIETNAM","IRAQ"]
+    },{
+      "query_id": 23,
+      "start": 3351091,
+      "arguments": [137724000,137862016,0,7]
+    }
+  ]
+}
