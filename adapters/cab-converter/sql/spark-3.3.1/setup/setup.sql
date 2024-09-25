@@ -17,7 +17,7 @@ CREATE
             c_mktsegment CHAR(10)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}${stream_num}customer/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/customer/" ${external_options_suffix}
         );
 
 DROP
@@ -44,7 +44,7 @@ CREATE
             l_shipdate DATE
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}${stream_num}lineitem/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/lineitem/" ${external_options_suffix}
         );
 
 DROP
@@ -64,7 +64,7 @@ CREATE
             o_orderdate DATE
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}${stream_num}orders/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/orders/" ${external_options_suffix}
         );
 
 DROP
@@ -79,7 +79,7 @@ CREATE
             n_comment VARCHAR(152)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}${stream_num}nation/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/nation/" ${external_options_suffix}
         );
 
 DROP
@@ -93,7 +93,7 @@ CREATE
             r_comment VARCHAR(152)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}${stream_num}region/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/region/" ${external_options_suffix}
         );
 
 DROP
@@ -113,7 +113,7 @@ CREATE
             p_brand CHAR(10)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}${stream_num}part/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/part/" ${external_options_suffix}
         );
 
 DROP
@@ -131,7 +131,7 @@ CREATE
             s_comment VARCHAR(101)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}${stream_num}supplier/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/supplier/" ${external_options_suffix}
         );
 
 DROP
@@ -147,5 +147,5 @@ CREATE
             ps_comment VARCHAR(199)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}${stream_num}partsupp/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/partsupp/" ${external_options_suffix}
         );
