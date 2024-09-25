@@ -2,12 +2,12 @@ select
     n_name,
     sum(l_extendedprice * (1 - l_discount)) as revenue
 from
-    ${catalog}.${database}.customer,
-    ${catalog}.${database}.orders,
-    ${catalog}.${database}.lineitem,
-    ${catalog}.${database}.supplier,
-    ${catalog}.${database}.nation,
-    ${catalog}.${database}.region
+    ${catalog}.${database}${stream_num}.customer,
+    ${catalog}.${database}${stream_num}.orders,
+    ${catalog}.${database}${stream_num}.lineitem,
+    ${catalog}.${database}${stream_num}.supplier,
+    ${catalog}.${database}${stream_num}.nation,
+    ${catalog}.${database}${stream_num}.region
 where
     c_custkey = o_custkey
     and l_orderkey = o_orderkey

@@ -1,8 +1,8 @@
 select
     sum(l_extendedprice) / 7.0 as avg_yearly
 from
-    ${catalog}.${database}.lineitem,
-    ${catalog}.${database}.part
+    ${catalog}.${database}${stream_num}.lineitem,
+    ${catalog}.${database}${stream_num}.part
 where
     p_partkey = l_partkey
     and p_brand = '${param1}'
@@ -11,7 +11,7 @@ where
       select
           0.2 * avg(l_quantity)
       from
-          ${catalog}.${database}.lineitem
+          ${catalog}.${database}${stream_num}.lineitem
       where
           l_partkey = p_partkey
     );

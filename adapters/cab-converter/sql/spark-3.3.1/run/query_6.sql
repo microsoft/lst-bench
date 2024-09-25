@@ -1,6 +1,6 @@
 select
     sum(l_extendedprice * l_discount) as revenue
-from ${catalog}.${database}.lineitem
+from ${catalog}.${database}${stream_num}.lineitem
 where
     l_shipdate >= date '${param1}'
     and l_shipdate < date '${param1}' + interval '1' year

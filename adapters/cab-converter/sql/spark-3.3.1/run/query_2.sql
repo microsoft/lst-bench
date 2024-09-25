@@ -8,11 +8,11 @@ SELECT
     s_phone,
     s_comment
 FROM
-    ${catalog}.${database}.part,
-    ${catalog}.${database}.supplier,
-    ${catalog}.${database}.partsupp,
-    ${catalog}.${database}.nation,
-    ${catalog}.${database}.region
+    ${catalog}.${database}${stream_num}.part,
+    ${catalog}.${database}${stream_num}.supplier,
+    ${catalog}.${database}${stream_num}.partsupp,
+    ${catalog}.${database}${stream_num}.nation,
+    ${catalog}.${database}${stream_num}.region
 WHERE
     p_partkey = ps_partkey
     and s_suppkey = ps_suppkey
@@ -24,8 +24,8 @@ WHERE
     and ps_supplycost = (
         SELECT min(ps_supplycost)
         FROM
-            ${catalog}.${database}.partsupp, ${catalog}.${database}.supplier,
-            ${catalog}.${database}.nation, ${catalog}.${database}.region
+            ${catalog}.${database}${stream_num}.partsupp, ${catalog}.${database}${stream_num}.supplier,
+            ${catalog}.${database}${stream_num}.nation, ${catalog}.${database}${stream_num}.region
         WHERE
             p_partkey = ps_partkey
             and s_suppkey = ps_suppkey

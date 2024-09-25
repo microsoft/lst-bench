@@ -6,15 +6,15 @@ select
     o_totalprice,
     sum(l_quantity)
 from
-    ${catalog}.${database}.customer,
-    ${catalog}.${database}.orders,
-    ${catalog}.${database}.lineitem
+    ${catalog}.${database}${stream_num}.customer,
+    ${catalog}.${database}${stream_num}.orders,
+    ${catalog}.${database}${stream_num}.lineitem
 where
     o_orderkey in (
         select
             l_orderkey
         from
-            ${catalog}.${database}.lineitem
+            ${catalog}.${database}${stream_num}.lineitem
         group by
             l_orderkey having
                 sum(l_quantity) > ${param1}

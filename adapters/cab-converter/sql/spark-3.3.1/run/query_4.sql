@@ -2,14 +2,14 @@ SELECT
     o_orderpriority,
     count(*) as order_count
 FROM
-    ${catalog}.${database}.orders
+    ${catalog}.${database}${stream_num}.orders
 WHERE
     o_orderdate >= date '${param1}'
     AND o_orderdate < date '${param1}' + interval '3' month
     AND EXISTS (
         SELECT *
         FROM
-            ${catalog}.${database}.lineitem
+            ${catalog}.${database}${stream_num}.lineitem
         WHERE
             l_orderkey = o_orderkey
             AND l_commitdate < l_receiptdate

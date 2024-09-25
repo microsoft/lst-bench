@@ -8,10 +8,10 @@ SELECT
     c_phone,
     c_comment
 FROM
-    ${catalog}.${database}.customer,
-    ${catalog}.${database}.orders,
-    ${catalog}.${database}.lineitem,
-    ${catalog}.${database}.nation
+    ${catalog}.${database}${stream_num}.customer,
+    ${catalog}.${database}${stream_num}.orders,
+    ${catalog}.${database}${stream_num}.lineitem,
+    ${catalog}.${database}${stream_num}.nation
 WHERE
     c_custkey = o_custkey
     and l_orderkey = o_orderkey

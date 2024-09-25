@@ -2,10 +2,10 @@ select
     s_name,
     count(*) as numwait
 from
-    ${catalog}.${database}.supplier,
-    ${catalog}.${database}.lineitem l1,
-    ${catalog}.${database}.orders,
-    ${catalog}.${database}.nation
+    ${catalog}.${database}${stream_num}.supplier,
+    ${catalog}.${database}${stream_num}.lineitem l1,
+    ${catalog}.${database}${stream_num}.orders,
+    ${catalog}.${database}${stream_num}.nation
 where
     s_suppkey = l1.l_suppkey
     and o_orderkey = l1.l_orderkey
@@ -15,7 +15,7 @@ where
         select
             *
         from
-            ${catalog}.${database}.lineitem l2
+            ${catalog}.${database}${stream_num}.lineitem l2
         where
             l2.l_orderkey = l1.l_orderkey
             and l2.l_suppkey <> l1.l_suppkey
@@ -24,7 +24,7 @@ where
         select
             *
         from
-            ${catalog}.${database}.lineitem l3
+            ${catalog}.${database}${stream_num}.lineitem l3
         where
             l3.l_orderkey = l1.l_orderkey
             and l3.l_suppkey <> l1.l_suppkey

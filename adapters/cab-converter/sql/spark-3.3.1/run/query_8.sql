@@ -11,14 +11,14 @@ FROM (
         l_extendedprice * (1-l_discount) as volume,
         n2.n_name as nation
     FROM
-        ${catalog}.${database}.part,
-        ${catalog}.${database}.supplier,
-        ${catalog}.${database}.lineitem,
-        ${catalog}.${database}.orders,
-        ${catalog}.${database}.customer,
-        ${catalog}.${database}.nation n1,
-        ${catalog}.${database}.nation n2,
-        ${catalog}.${database}.region
+        ${catalog}.${database}${stream_num}.part,
+        ${catalog}.${database}${stream_num}.supplier,
+        ${catalog}.${database}${stream_num}.lineitem,
+        ${catalog}.${database}${stream_num}.orders,
+        ${catalog}.${database}${stream_num}.customer,
+        ${catalog}.${database}${stream_num}.nation n1,
+        ${catalog}.${database}${stream_num}.nation n2,
+        ${catalog}.${database}${stream_num}.region
     WHERE
         p_partkey = l_partkey
         and s_suppkey = l_suppkey

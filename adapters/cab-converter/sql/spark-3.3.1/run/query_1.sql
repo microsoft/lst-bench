@@ -10,7 +10,7 @@ SELECT
     avg(l_discount) as avg_disc,
     count(*) as count_order
 FROM
-    ${catalog}.${database}.lineitem
+    ${catalog}.${database}${stream_num}.lineitem
 WHERE
     l_shipdate <= date '1998-12-01' - interval '${param1}' day
 GROUP BY
