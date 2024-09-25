@@ -18,6 +18,7 @@ package com.microsoft.lst_bench.cab_converter;
 import com.microsoft.lst_bench.input.Library;
 import com.microsoft.lst_bench.input.Phase;
 import com.microsoft.lst_bench.input.Session;
+import com.microsoft.lst_bench.input.Task;
 import com.microsoft.lst_bench.input.Workload;
 import com.microsoft.lst_bench.util.FileParser;
 import java.io.File;
@@ -239,6 +240,16 @@ public class DriverConverterTest {
     for (Session session : sessions) {
       distinctConnections.set(
           session.getTargetEndpoint() != null ? session.getTargetEndpoint() : 0);
+      Assertions.assertNotNull(session.getTasks());
+      for (Task task : session.getTasks()) {
+        Assertions.assertNotNull(task.getStart(), "Property 'start' should be set in run task");
+        Assertions.assertNotNull(
+            task.getTaskExecutorArguments(),
+            "Key 'stream_num' in run task arguments should be set");
+        Assertions.assertTrue(
+            task.getTaskExecutorArguments().containsKey("stream_num"),
+            "Key 'stream_num' in run task arguments should be set");
+      }
     }
     Assertions.assertEquals(
         expectedDistinctConnections,
