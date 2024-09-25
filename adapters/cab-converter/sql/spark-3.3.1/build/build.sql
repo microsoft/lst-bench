@@ -1,12 +1,12 @@
 CREATE
-    SCHEMA IF NOT EXISTS ${catalog}.${database};
+    SCHEMA IF NOT EXISTS ${catalog}.${database}${stream_num};
 
 DROP
     TABLE
-        IF EXISTS ${catalog}.${database}.customer;
+        IF EXISTS ${catalog}.${database}${stream_num}.customer;
 CREATE
     TABLE
-        ${catalog}.${database}.customer(
+        ${catalog}.${database}${stream_num}.customer(
             c_custkey BIGINT,
             c_name VARCHAR(25),
             c_address VARCHAR(40),
@@ -16,21 +16,19 @@ CREATE
             c_comment VARCHAR(117),
             c_mktsegment CHAR(10)
         )
-        USING ${table_format} OPTIONS(
-            PATH '${data_path}${experiment_start_time}/${repetition}/customer/'
-        ) TBLPROPERTIES(
+        TBLPROPERTIES(
             'primaryKey' = 'c_custkey' ${tblproperties_suffix}
         );
-INSERT INTO ${catalog}.${database}.customer
+INSERT INTO ${catalog}.${database}${stream_num}.customer
 SELECT *
-FROM   ${external_catalog}.${external_database}.customer;
+FROM   ${external_catalog}.${external_database}${stream_num}.customer;
 
 DROP
     TABLE
-        IF EXISTS ${catalog}.${database}.lineitem;
+        IF EXISTS ${catalog}.${database}${stream_num}.lineitem;
 CREATE
     TABLE
-        ${catalog}.${database}.lineitem(
+        ${catalog}.${database}${stream_num}.lineitem(
             l_orderkey BIGINT,
             l_partkey BIGINT,
             l_suppkey BIGINT,
@@ -48,41 +46,37 @@ CREATE
             l_comment VARCHAR(44),
             l_shipdate DATE
         )
-        USING ${table_format} OPTIONS(
-            PATH '${data_path}${experiment_start_time}/${repetition}/lineitem/'
-        ) PARTITIONED BY(l_shipdate) TBLPROPERTIES(
+        TBLPROPERTIES(
             'primaryKey' = 'l_orderkey,l_linenumber' ${tblproperties_suffix}
         );
-INSERT INTO ${catalog}.${database}.lineitem
+INSERT INTO ${catalog}.${database}${stream_num}.lineitem
 SELECT *
-FROM   ${external_catalog}.${external_database}.lineitem;
+FROM   ${external_catalog}.${external_database}${stream_num}.lineitem;
 
 DROP
     TABLE
-        IF EXISTS ${catalog}.${database}.nation;
+        IF EXISTS ${catalog}.${database}${stream_num}.nation;
 CREATE
     TABLE
-        ${catalog}.${database}.nation(
+        ${catalog}.${database}${stream_num}.nation(
             n_nationkey BIGINT,
             n_name CHAR(25),
             n_regionkey BIGINT,
             n_comment VARCHAR(152)
         )
-        USING ${table_format} OPTIONS(
-            PATH '${data_path}${experiment_start_time}/${repetition}/nation/'
-        ) TBLPROPERTIES(
+        TBLPROPERTIES(
             'primaryKey' = 'n_nationkey' ${tblproperties_suffix}
         );
-INSERT INTO ${catalog}.${database}.nation
+INSERT INTO ${catalog}.${database}${stream_num}.nation
 SELECT *
-FROM   ${external_catalog}.${external_database}.nation;
+FROM   ${external_catalog}.${external_database}${stream_num}.nation;
 
 DROP
     TABLE
-        IF EXISTS ${catalog}.${database}.orders;
+        IF EXISTS ${catalog}.${database}${stream_num}.orders;
 CREATE
     TABLE
-        ${catalog}.${database}.orders(
+        ${catalog}.${database}${stream_num}.orders(
             o_orderkey BIGINT,
             o_custkey BIGINT,
             o_orderstatus CHAR(1),
@@ -93,21 +87,19 @@ CREATE
             o_comment VARCHAR(79),
             o_orderdate DATE
         )
-        USING ${table_format} OPTIONS(
-            PATH '${data_path}${experiment_start_time}/${repetition}/orders/'
-        ) PARTITIONED BY(o_orderdate) TBLPROPERTIES(
+        TBLPROPERTIES(
             'primaryKey' = 'o_orderkey' ${tblproperties_suffix}
         );
-INSERT INTO ${catalog}.${database}.orders
+INSERT INTO ${catalog}.${database}${stream_num}.orders
 SELECT *
-FROM   ${external_catalog}.${external_database}.orders;
+FROM   ${external_catalog}.${external_database}${stream_num}.orders;
 
 DROP
     TABLE
-        IF EXISTS ${catalog}.${database}.part;
+        IF EXISTS ${catalog}.${database}${stream_num}.part;
 CREATE
     TABLE
-        ${catalog}.${database}.part(
+        ${catalog}.${database}${stream_num}.part(
             p_partkey BIGINT,
             p_name VARCHAR(55),
             p_mfgr CHAR(25),
@@ -118,61 +110,55 @@ CREATE
             p_comment VARCHAR(23),
             p_brand CHAR(10)
         )
-        USING ${table_format} OPTIONS(
-            PATH '${data_path}${experiment_start_time}/${repetition}/part/'
-        ) TBLPROPERTIES(
+        TBLPROPERTIES(
             'primaryKey' = 'p_partkey' ${tblproperties_suffix}
         );
-INSERT INTO ${catalog}.${database}.part
+INSERT INTO ${catalog}.${database}${stream_num}.part
 SELECT *
-FROM   ${external_catalog}.${external_database}.part;
+FROM   ${external_catalog}.${external_database}${stream_num}.part;
 
 DROP
     TABLE
-        IF EXISTS ${catalog}.${database}.partsupp;
+        IF EXISTS ${catalog}.${database}${stream_num}.partsupp;
 CREATE
     TABLE
-        ${catalog}.${database}.partsupp(
+        ${catalog}.${database}${stream_num}.partsupp(
             ps_partkey BIGINT,
             ps_suppkey BIGINT,
             ps_availqty INT,
             ps_supplycost DECIMAL,
             ps_comment VARCHAR(199)
         )
-        USING ${table_format} OPTIONS(
-            PATH '${data_path}${experiment_start_time}/${repetition}/partsupp/'
-        ) TBLPROPERTIES(
+        TBLPROPERTIES(
             'primaryKey' = 'ps_partkey,ps_suppkey' ${tblproperties_suffix}
         );
-INSERT INTO ${catalog}.${database}.partsupp
+INSERT INTO ${catalog}.${database}${stream_num}.partsupp
 SELECT *
-FROM   ${external_catalog}.${external_database}.partsupp;
+FROM   ${external_catalog}.${external_database}${stream_num}.partsupp;
 
 DROP
     TABLE
-        IF EXISTS ${catalog}.${database}.region;
+        IF EXISTS ${catalog}.${database}${stream_num}.region;
 CREATE
     TABLE
-        ${catalog}.${database}.region(
+        ${catalog}.${database}${stream_num}.region(
             r_regionkey BIGINT,
             r_name CHAR(25),
             r_comment VARCHAR(152)
         )
-        USING ${table_format} OPTIONS(
-            PATH '${data_path}${experiment_start_time}/${repetition}/region/'
-        ) TBLPROPERTIES(
+        TBLPROPERTIES(
             'primaryKey' = 'r_regionkey' ${tblproperties_suffix}
         );
-INSERT INTO ${catalog}.${database}.region
+INSERT INTO ${catalog}.${database}${stream_num}.region
 SELECT *
-FROM   ${external_catalog}.${external_database}.region;
+FROM   ${external_catalog}.${external_database}${stream_num}.region;
 
 DROP
     TABLE
-        IF EXISTS ${catalog}.${database}.supplier;
+        IF EXISTS ${catalog}.${database}${stream_num}.supplier;
 CREATE
     TABLE
-        ${catalog}.${database}.supplier(
+        ${catalog}.${database}${stream_num}.supplier(
             s_suppkey BIGINT,
             s_name CHAR(25),
             s_address VARCHAR(40),
@@ -181,11 +167,9 @@ CREATE
             s_acctbal DECIMAL,
             s_comment VARCHAR(101)
         )
-        USING ${table_format} OPTIONS(
-            PATH '${data_path}${experiment_start_time}/${repetition}/supplier/'
-        ) TBLPROPERTIES(
+        TBLPROPERTIES(
             'primaryKey' = 's_suppkey' ${tblproperties_suffix}
         );
-INSERT INTO ${catalog}.${database}.supplier
+INSERT INTO ${catalog}.${database}${stream_num}.supplier
 SELECT *
-FROM   ${external_catalog}.${external_database}.supplier;
+FROM   ${external_catalog}.${external_database}${stream_num}.supplier;

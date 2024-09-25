@@ -1,12 +1,12 @@
 CREATE
-    SCHEMA IF NOT EXISTS ${external_catalog}.${external_database};
+    SCHEMA IF NOT EXISTS ${external_catalog}.${external_database}${stream_num};
 
 DROP
     TABLE
-        IF EXISTS ${external_catalog}.${external_database}.customer;
+        IF EXISTS ${external_catalog}.${external_database}${stream_num}.customer;
 CREATE
     TABLE
-        ${external_catalog}.${external_database}.customer(
+        ${external_catalog}.${external_database}${stream_num}.customer(
             c_custkey BIGINT,
             c_name VARCHAR(25),
             c_address VARCHAR(40),
@@ -17,15 +17,15 @@ CREATE
             c_mktsegment CHAR(10)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}customer/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/customer/" ${external_options_suffix}
         );
 
 DROP
     TABLE
-        IF EXISTS ${external_catalog}.${external_database}.lineitem;
+        IF EXISTS ${external_catalog}.${external_database}${stream_num}.lineitem;
 CREATE
     TABLE
-        ${external_catalog}.${external_database}.lineitem(
+        ${external_catalog}.${external_database}${stream_num}.lineitem(
             l_orderkey BIGINT,
             l_partkey BIGINT,
             l_suppkey BIGINT,
@@ -44,15 +44,15 @@ CREATE
             l_shipdate DATE
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}lineitem/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/lineitem/" ${external_options_suffix}
         );
 
 DROP
     TABLE
-        IF EXISTS ${external_catalog}.${external_database}.orders;
+        IF EXISTS ${external_catalog}.${external_database}${stream_num}.orders;
 CREATE
     TABLE
-        ${external_catalog}.${external_database}.orders(
+        ${external_catalog}.${external_database}${stream_num}.orders(
             o_orderkey BIGINT,
             o_custkey BIGINT,
             o_orderstatus CHAR(1),
@@ -64,44 +64,44 @@ CREATE
             o_orderdate DATE
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}orders/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/orders/" ${external_options_suffix}
         );
 
 DROP
     TABLE
-        IF EXISTS ${external_catalog}.${external_database}.nation;
+        IF EXISTS ${external_catalog}.${external_database}${stream_num}.nation;
 CREATE
     TABLE
-        ${external_catalog}.${external_database}.nation(
+        ${external_catalog}.${external_database}${stream_num}.nation(
             n_nationkey BIGINT,
             n_name CHAR(25),
             n_regionkey BIGINT,
             n_comment VARCHAR(152)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}nation/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/nation/" ${external_options_suffix}
         );
 
 DROP
     TABLE
-        IF EXISTS ${external_catalog}.${external_database}.region;
+        IF EXISTS ${external_catalog}.${external_database}${stream_num}.region;
 CREATE
     TABLE
-        ${external_catalog}.${external_database}.region(
+        ${external_catalog}.${external_database}${stream_num}.region(
             r_regionkey BIGINT,
             r_name CHAR(25),
             r_comment VARCHAR(152)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}region/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/region/" ${external_options_suffix}
         );
 
 DROP
     TABLE
-        IF EXISTS ${external_catalog}.${external_database}.part;
+        IF EXISTS ${external_catalog}.${external_database}${stream_num}.part;
 CREATE
     TABLE
-        ${external_catalog}.${external_database}.part(
+        ${external_catalog}.${external_database}${stream_num}.part(
             p_partkey BIGINT,
             p_name VARCHAR(55),
             p_mfgr CHAR(25),
@@ -113,15 +113,15 @@ CREATE
             p_brand CHAR(10)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}part/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/part/" ${external_options_suffix}
         );
 
 DROP
     TABLE
-        IF EXISTS ${external_catalog}.${external_database}.supplier;
+        IF EXISTS ${external_catalog}.${external_database}${stream_num}.supplier;
 CREATE
     TABLE
-        ${external_catalog}.${external_database}.supplier(
+        ${external_catalog}.${external_database}${stream_num}.supplier(
             s_suppkey BIGINT,
             s_name CHAR(25),
             s_address VARCHAR(40),
@@ -131,15 +131,15 @@ CREATE
             s_comment VARCHAR(101)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}supplier/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/supplier/" ${external_options_suffix}
         );
 
 DROP
     TABLE
-        IF EXISTS ${external_catalog}.${external_database}.partsupp;
+        IF EXISTS ${external_catalog}.${external_database}${stream_num}.partsupp;
 CREATE
     TABLE
-        ${external_catalog}.${external_database}.partsupp(
+        ${external_catalog}.${external_database}${stream_num}.partsupp(
             ps_partkey BIGINT,
             ps_suppkey BIGINT,
             ps_availqty INT,
@@ -147,5 +147,5 @@ CREATE
             ps_comment VARCHAR(199)
         )
         USING ${external_table_format} OPTIONS(
-            PATH = "${external_data_path}partsupp/" ${external_options_suffix}
+            PATH = "${external_data_path}${stream_num}/partsupp/" ${external_options_suffix}
         );

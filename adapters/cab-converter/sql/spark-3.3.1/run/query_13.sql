@@ -6,7 +6,7 @@ select
             c_custkey,
             count(o_orderkey)
         from
-            ${catalog}.${database}.customer left outer join ${catalog}.${database}.orders
+            ${catalog}.${database}${stream_num}.customer left outer join ${catalog}.${database}${stream_num}.orders
                 on c_custkey = o_custkey
                 and o_comment not like '%${param1}%${param2}%'
         group by

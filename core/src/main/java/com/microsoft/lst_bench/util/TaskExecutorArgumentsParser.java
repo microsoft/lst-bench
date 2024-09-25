@@ -15,6 +15,7 @@
  */
 package com.microsoft.lst_bench.util;
 
+import java.util.List;
 import java.util.Map;
 
 public class TaskExecutorArgumentsParser {
@@ -26,41 +27,34 @@ public class TaskExecutorArgumentsParser {
   private static final int DEFAULT_BATCH_SIZE = 1;
   private static final String DEPENDENT_TASK_BATCH_SIZE = "dependent_task_batch_size";
 
-  public static String[] parseSkipExceptionStrings(Map<String, Object> arguments) {
+  public static List<String> parseSkipExceptionStrings(Map<String, Object> arguments) {
     // Check whether there are any strings that errors are allowed to contain. In that case, we skip
     // the erroneous query and log a warning.
-    String[] exceptionStrings;
-    if (arguments == null || arguments.get(SKIP_ERRONEOUS_QUERY_STRINGS_KEY) == null) {
-      exceptionStrings = new String[] {};
-    } else {
-      exceptionStrings =
-          arguments
-              .get(SKIP_ERRONEOUS_QUERY_STRINGS_KEY)
-              .toString()
-              .split(SKIP_ERRONEOUS_QUERY_DELIMITER);
-    }
-    return exceptionStrings;
+    return parseExceptionStrings(
+        arguments, SKIP_ERRONEOUS_QUERY_STRINGS_KEY, SKIP_ERRONEOUS_QUERY_DELIMITER);
   }
 
-  public static String[] parseRetryExceptionStrings(Map<String, Object> arguments) {
+  public static List<String> parseRetryExceptionStrings(Map<String, Object> arguments) {
     // Check whether there are any strings that tell us that we should continue to retry this query
     // until successful.
-    String[] exceptionStrings;
-    if (arguments == null || arguments.get(RETRY_ERRONEOUS_QUERY_STRINGS_KEY) == null) {
-      exceptionStrings = new String[] {};
+    return parseExceptionStrings(
+        arguments, RETRY_ERRONEOUS_QUERY_STRINGS_KEY, RETRY_ERRONEOUS_QUERY_DELIMITER);
+  }
+
+  private static List<String> parseExceptionStrings(
+      Map<String, Object> arguments, String key, String delimiter) {
+    List<String> exceptionStrings;
+    if (arguments == null || arguments.get(key) == null) {
+      exceptionStrings = List.of();
     } else {
-      exceptionStrings =
-          arguments
-              .get(RETRY_ERRONEOUS_QUERY_STRINGS_KEY)
-              .toString()
-              .split(RETRY_ERRONEOUS_QUERY_DELIMITER);
+      exceptionStrings = List.of(arguments.get(key).toString().split(delimiter));
     }
     return exceptionStrings;
   }
 
   public static Integer parseBatchSize(Map<String, Object> arguments) {
     // Parses the batch size, currently used for dependent task execution.
-    Integer batchSize = null;
+    Integer batchSize;
     if (arguments == null || arguments.get(DEPENDENT_TASK_BATCH_SIZE) == null) {
       batchSize = DEFAULT_BATCH_SIZE;
     } else {

@@ -314,6 +314,7 @@ public class Converter {
               + " in stream: "
               + streamIndex);
     }
+    taskBuilder.putTaskExecutorArguments("stream_num", streamIndex);
     return taskBuilder.build();
   }
 

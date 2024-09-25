@@ -16,26 +16,33 @@
 package com.microsoft.lst_bench.task.util;
 
 import com.microsoft.lst_bench.util.TaskExecutorArgumentsParser;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TaskExecutorArguments {
 
-  private String[] retryExceptionStrings;
-  private String[] skipExceptionStrings;
-  private Map<String, Object> arguments;
+  private final List<String> retryExceptionStrings;
+  private final List<String> skipExceptionStrings;
+  private final Map<String, Object> arguments;
 
   public TaskExecutorArguments(Map<String, Object> arguments) {
-    this.retryExceptionStrings = TaskExecutorArgumentsParser.parseRetryExceptionStrings(arguments);
-    this.skipExceptionStrings = TaskExecutorArgumentsParser.parseSkipExceptionStrings(arguments);
-    this.arguments = arguments;
+    this.retryExceptionStrings =
+        Collections.unmodifiableList(
+            TaskExecutorArgumentsParser.parseRetryExceptionStrings(arguments));
+    this.skipExceptionStrings =
+        Collections.unmodifiableList(
+            TaskExecutorArgumentsParser.parseSkipExceptionStrings(arguments));
+    this.arguments = arguments != null ? Collections.unmodifiableMap(arguments) : Map.of();
   }
 
-  public String[] getRetryExceptionStrings() {
+  public List<String> getRetryExceptionStrings() {
     return this.retryExceptionStrings;
   }
 
-  public String[] getSkipExceptionStrings() {
+  public List<String> getSkipExceptionStrings() {
     return this.skipExceptionStrings;
   }
 
@@ -44,27 +51,19 @@ public class TaskExecutorArguments {
   }
 
   // Added arguments are automatically appended if possible.
-  public void addArguments(Map<String, Object> arguments) {
+  public TaskExecutorArguments addArguments(Map<String, Object> arguments) {
     if (arguments == null) {
-      return;
-    } else if (this.arguments == null) {
-      this.arguments = arguments;
-    } else {
-      this.arguments.putAll(arguments);
+      return this; // If no new arguments, return the same instance
     }
-
-    this.retryExceptionStrings =
-        Stream.of(
-                this.getRetryExceptionStrings(),
-                TaskExecutorArgumentsParser.parseRetryExceptionStrings(arguments))
-            .flatMap(Stream::of)
-            .toArray(String[]::new);
-
-    this.skipExceptionStrings =
-        Stream.of(
-                this.getSkipExceptionStrings(),
-                TaskExecutorArgumentsParser.parseSkipExceptionStrings(arguments))
-            .flatMap(Stream::of)
-            .toArray(String[]::new);
+    // Create a new map with combined arguments (existing + new)
+    Map<String, Object> combinedArguments =
+        Stream.concat(this.arguments.entrySet().stream(), arguments.entrySet().stream())
+            .collect(
+                Collectors.toUnmodifiableMap(
+                    Map.Entry::getKey,
+                    Map.Entry::getValue,
+                    (existing, replacement) -> replacement));
+    // Return a new instance with the updated state
+    return new TaskExecutorArguments(combinedArguments);
   }
 }

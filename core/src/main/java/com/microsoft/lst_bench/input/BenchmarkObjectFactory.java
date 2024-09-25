@@ -290,7 +290,7 @@ public class BenchmarkObjectFactory {
     // tasks.
     TaskExecutorArguments taskExecutorArguments =
         new TaskExecutorArguments(experimentConfig.getTaskExecutorArguments());
-    taskExecutorArguments.addArguments(task.getTaskExecutorArguments());
+    taskExecutorArguments = taskExecutorArguments.addArguments(task.getTaskExecutorArguments());
 
     return ImmutableTaskExec.of(taskId, files)
         .withTimeTravelPhaseId(task.getTimeTravelPhaseId())

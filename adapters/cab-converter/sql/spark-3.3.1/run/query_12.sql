@@ -13,8 +13,8 @@ SELECT
         else 0
     end) as low_line_count
 FROM
-    ${catalog}.${database}.orders,
-    ${catalog}.${database}.lineitem
+    ${catalog}.${database}${stream_num}.orders,
+    ${catalog}.${database}${stream_num}.lineitem
 WHERE
     o_orderkey = l_orderkey
     and l_shipmode in ('${param1}', '${param2}')

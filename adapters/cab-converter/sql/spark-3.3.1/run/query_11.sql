@@ -2,7 +2,7 @@ SELECT
     ps_partkey,
     sum(ps_supplycost * ps_availqty) as value
 from
-    ${catalog}.${database}.partsupp, ${catalog}.${database}.supplier, ${catalog}.${database}.nation
+    ${catalog}.${database}${stream_num}.partsupp, ${catalog}.${database}${stream_num}.supplier, ${catalog}.${database}${stream_num}.nation
 where
     ps_suppkey = s_suppkey
     and s_nationkey = n_nationkey
@@ -14,9 +14,9 @@ having
         select
             sum(ps_supplycost * ps_availqty) *  0.0001 / ${param2}
         from
-            ${catalog}.${database}.partsupp,
-            ${catalog}.${database}.supplier,
-            ${catalog}.${database}.nation
+            ${catalog}.${database}${stream_num}.partsupp,
+            ${catalog}.${database}${stream_num}.supplier,
+            ${catalog}.${database}${stream_num}.nation
         where
             ps_suppkey = s_suppkey
             and s_nationkey = n_nationkey

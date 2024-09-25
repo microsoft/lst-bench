@@ -2,20 +2,20 @@ select
     s_name,
     s_address
 from
-    ${catalog}.${database}.supplier,
-    ${catalog}.${database}.nation
+    ${catalog}.${database}${stream_num}.supplier,
+    ${catalog}.${database}${stream_num}.nation
 where
     s_suppkey in (
         select
             ps_suppkey
         from
-            ${catalog}.${database}.partsupp
+            ${catalog}.${database}${stream_num}.partsupp
         where
             ps_partkey in (
                 select
                     p_partkey
                 from
-                    ${catalog}.${database}.part
+                    ${catalog}.${database}${stream_num}.part
                 where
                     p_name like '${param1}%'
             )
@@ -23,7 +23,7 @@ where
                 select
                     0.5 * sum(l_quantity)
                 from
-                    ${catalog}.${database}.lineitem
+                    ${catalog}.${database}${stream_num}.lineitem
                 where
                     l_partkey = ps_partkey
                     and l_suppkey = ps_suppkey

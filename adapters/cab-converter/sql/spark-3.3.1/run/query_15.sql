@@ -3,7 +3,7 @@ with revenue(supplier_no, total_revenue) as (
         l_suppkey,
         sum(l_extendedprice * (1 - l_discount))
     from
-        ${catalog}.${database}.lineitem
+        ${catalog}.${database}${stream_num}.lineitem
     where
         l_shipdate >= date '${param1}'
         and l_shipdate < date '${param1}' + interval '3' month
@@ -16,7 +16,7 @@ select
     s_phone,
     total_revenue
 from
-    ${catalog}.${database}.supplier,
+    ${catalog}.${database}${stream_num}.supplier,
     revenue
 where
     s_suppkey = supplier_no

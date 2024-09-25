@@ -4,8 +4,8 @@ SELECT
     p_size,
     count(distinct ps_suppkey) as supplier_cnt
 FROM
-    ${catalog}.${database}.partsupp,
-    ${catalog}.${database}.part
+    ${catalog}.${database}${stream_num}.partsupp,
+    ${catalog}.${database}${stream_num}.part
 WHERE
     p_partkey = ps_partkey
     and p_brand <> '${param1}'
@@ -15,7 +15,7 @@ WHERE
         SELECT
             s_suppkey
         FROM
-            ${catalog}.${database}.supplier
+            ${catalog}.${database}${stream_num}.supplier
         WHERE
             s_comment like '%Customer%Complaints%'
         )
