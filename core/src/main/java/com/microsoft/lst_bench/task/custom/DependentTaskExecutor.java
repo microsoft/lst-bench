@@ -64,6 +64,10 @@ public class DependentTaskExecutor extends TaskExecutor {
       throw new ClientException("Batch size needs to be set for dependent task execution.");
     }
 
+    Map<String, Object> taskValues = new HashMap<>(values);
+    if (arguments != null && arguments.getArguments() != null) {
+      taskValues.putAll(arguments.getArguments());
+    }
     QueryResult queryResult = null;
     for (FileExec file : task.getFiles()) {
       Instant fileStartTime = Instant.now();
@@ -78,7 +82,7 @@ public class DependentTaskExecutor extends TaskExecutor {
       try {
         if (queryResult == null) {
           // Execute first query that retrieves the iterable input for the second query.
-          queryResult = executeStatement(connection, statement, values, false);
+          queryResult = executeStatement(connection, statement, taskValues, false);
           if (queryResult == null || queryResult.containsEmptyResultColumnOnly()) {
             // Reset queryResult variable if result is (intentionally) empty.
             queryResult = null;
@@ -88,7 +92,7 @@ public class DependentTaskExecutor extends TaskExecutor {
           Integer size = queryResult.getValueListSize();
           for (int j = 0; j < size; j += batchSize) {
             int localMax = (j + batchSize) > size ? size : (j + batchSize);
-            Map<String, Object> localValues = new HashMap<>(values);
+            Map<String, Object> localValues = new HashMap<>(taskValues);
             Pair<String, Object> batch = queryResult.getStringMappings(j, localMax);
             localValues.put(batch.getKey(), batch.getValue());
             executeStatement(connection, statement, localValues, true);

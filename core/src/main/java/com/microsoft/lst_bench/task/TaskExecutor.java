@@ -29,6 +29,7 @@ import com.microsoft.lst_bench.telemetry.ImmutableEventInfo;
 import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,14 +61,18 @@ public class TaskExecutor {
 
   public void executeTask(Connection connection, TaskExec task, Map<String, Object> values)
       throws ClientException {
+    Map<String, Object> taskValues = new HashMap<>(values);
+    if (arguments != null && arguments.getArguments() != null) {
+      taskValues.putAll(arguments.getArguments());
+    }
     for (FileExec file : task.getFiles()) {
       Instant fileStartTime = Instant.now();
       try {
         for (StatementExec statement : file.getStatements()) {
-          executeStatement(connection, statement, values, true);
+          executeStatement(connection, statement, taskValues, true);
         }
       } catch (Exception e) {
-        LOGGER.error("Exception executing file: " + file.getId());
+        LOGGER.error("Exception executing file: {}", file.getId());
         writeFileEvent(fileStartTime, file.getId(), Status.FAILURE);
         throw e;
       }
@@ -115,7 +120,7 @@ public class TaskExecutor {
           continue;
         } else if (containsException(e.getMessage(), this.arguments.getSkipExceptionStrings())) {
           // If skip is specified, log a warning and stop query execution.
-          LOGGER.warn("Query failed but skip mechanism is set: " + loggedError);
+          LOGGER.warn("Query failed but skip mechanism is set: {}", loggedError);
           writeStatementEvent(
               statementStartTime, statement.getId(), Status.WARN, /* payload= */ loggedError);
           execute = false;

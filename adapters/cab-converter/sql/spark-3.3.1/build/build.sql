@@ -46,7 +46,6 @@ CREATE
             l_comment VARCHAR(44),
             l_shipdate DATE
         )
-        PARTITIONED BY(l_shipdate)
         TBLPROPERTIES(
             'primaryKey' = 'l_orderkey,l_linenumber' ${tblproperties_suffix}
         );
@@ -88,7 +87,6 @@ CREATE
             o_comment VARCHAR(79),
             o_orderdate DATE
         )
-        PARTITIONED BY(o_orderdate)
         TBLPROPERTIES(
             'primaryKey' = 'o_orderkey' ${tblproperties_suffix}
         );
