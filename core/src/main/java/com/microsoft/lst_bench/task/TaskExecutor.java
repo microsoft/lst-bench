@@ -30,6 +30,7 @@ import com.microsoft.lst_bench.telemetry.SQLTelemetryRegistry;
 import com.microsoft.lst_bench.util.StringUtils;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,7 +137,7 @@ public class TaskExecutor {
     return queryResult;
   }
 
-  private boolean containsException(String message, String[] exceptionStrings) {
+  private boolean containsException(String message, List<String> exceptionStrings) {
     for (String exception : exceptionStrings) {
       if (message.contains(exception)) {
         return true;
