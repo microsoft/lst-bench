@@ -8,13 +8,13 @@ CREATE
     TABLE
         ${catalog}.${database}${stream_num}.customer(
             c_custkey BIGINT,
-            c_name VARCHAR(25),
-            c_address VARCHAR(40),
+            c_name STRING,
+            c_address STRING,
             c_nationkey BIGINT,
-            c_phone CHAR(15),
-            c_acctbal DECIMAL,
-            c_comment VARCHAR(117),
-            c_mktsegment CHAR(10)
+            c_phone STRING,
+            c_acctbal DECIMAL(12,2),
+            c_mktsegment STRING,
+            c_comment STRING
         )
         TBLPROPERTIES(
             'primaryKey' = 'c_custkey' ${tblproperties_suffix}
@@ -32,19 +32,19 @@ CREATE
             l_orderkey BIGINT,
             l_partkey BIGINT,
             l_suppkey BIGINT,
-            l_linenumber INT,
-            l_quantity DECIMAL,
-            l_extendedprice DECIMAL,
-            l_discount DECIMAL,
-            l_tax DECIMAL,
-            l_returnflag CHAR(1),
-            l_linestatus CHAR(1),
+            l_linenumber BIGINT,
+            l_quantity DECIMAL(12,2),
+            l_extendedprice DECIMAL(12,2),
+            l_discount DECIMAL(12,2),
+            l_tax DECIMAL(12,2),
+            l_returnflag STRING,
+            l_linestatus STRING,
+            l_shipdate DATE,
             l_commitdate DATE,
             l_receiptdate DATE,
-            l_shipinstruct CHAR(25),
-            l_shipmode CHAR(10),
-            l_comment VARCHAR(44),
-            l_shipdate DATE
+            l_shipinstruct STRING,
+            l_shipmode STRING,
+            l_comment STRING
         )
         TBLPROPERTIES(
             'primaryKey' = 'l_orderkey,l_linenumber' ${tblproperties_suffix}
@@ -60,9 +60,9 @@ CREATE
     TABLE
         ${catalog}.${database}${stream_num}.nation(
             n_nationkey BIGINT,
-            n_name CHAR(25),
+            n_name STRING,
             n_regionkey BIGINT,
-            n_comment VARCHAR(152)
+            n_comment STRING
         )
         TBLPROPERTIES(
             'primaryKey' = 'n_nationkey' ${tblproperties_suffix}
@@ -79,13 +79,13 @@ CREATE
         ${catalog}.${database}${stream_num}.orders(
             o_orderkey BIGINT,
             o_custkey BIGINT,
-            o_orderstatus CHAR(1),
-            o_totalprice DECIMAL,
-            o_orderpriority CHAR(15),
-            o_clerk CHAR(15),
-            o_shippriority INT,
-            o_comment VARCHAR(79),
-            o_orderdate DATE
+            o_orderstatus STRING,
+            o_totalprice DECIMAL(12,2),
+            o_orderdate DATE,
+            o_orderpriority STRING,
+            o_clerk STRING,
+            o_shippriority BIGINT,
+            o_comment STRING
         )
         TBLPROPERTIES(
             'primaryKey' = 'o_orderkey' ${tblproperties_suffix}
@@ -101,14 +101,14 @@ CREATE
     TABLE
         ${catalog}.${database}${stream_num}.part(
             p_partkey BIGINT,
-            p_name VARCHAR(55),
-            p_mfgr CHAR(25),
-            p_type VARCHAR(25),
-            p_size INT,
-            p_container CHAR(10),
-            p_retailprice DECIMAL,
-            p_comment VARCHAR(23),
-            p_brand CHAR(10)
+            p_name STRING,
+            p_mfgr STRING,
+            p_brand STRING,
+            p_type STRING,
+            p_size BIGINT,
+            p_container STRING,
+            p_retailprice DECIMAL(12,2),
+            p_comment STRING
         )
         TBLPROPERTIES(
             'primaryKey' = 'p_partkey' ${tblproperties_suffix}
@@ -125,9 +125,9 @@ CREATE
         ${catalog}.${database}${stream_num}.partsupp(
             ps_partkey BIGINT,
             ps_suppkey BIGINT,
-            ps_availqty INT,
-            ps_supplycost DECIMAL,
-            ps_comment VARCHAR(199)
+            ps_availqty BIGINT,
+            ps_supplycost DECIMAL(12,2),
+            ps_comment STRING
         )
         TBLPROPERTIES(
             'primaryKey' = 'ps_partkey,ps_suppkey' ${tblproperties_suffix}
@@ -143,8 +143,8 @@ CREATE
     TABLE
         ${catalog}.${database}${stream_num}.region(
             r_regionkey BIGINT,
-            r_name CHAR(25),
-            r_comment VARCHAR(152)
+            r_name STRING,
+            r_comment STRING
         )
         TBLPROPERTIES(
             'primaryKey' = 'r_regionkey' ${tblproperties_suffix}
@@ -160,12 +160,12 @@ CREATE
     TABLE
         ${catalog}.${database}${stream_num}.supplier(
             s_suppkey BIGINT,
-            s_name CHAR(25),
-            s_address VARCHAR(40),
+            s_name STRING,
+            s_address STRING,
             s_nationkey BIGINT,
-            s_phone CHAR(15),
-            s_acctbal DECIMAL,
-            s_comment VARCHAR(101)
+            s_phone STRING,
+            s_acctbal DECIMAL(12,2),
+            s_comment STRING
         )
         TBLPROPERTIES(
             'primaryKey' = 's_suppkey' ${tblproperties_suffix}
