@@ -105,6 +105,8 @@ public class SessionExecutor implements Callable<Boolean> {
     List<Future<Boolean>> results = new ArrayList<>();
     try {
       for (TaskExec task : session.getTasks()) {
+        long delay = ObjectUtils.<Long>defaultIfNull(task.getStart(), 0L);
+        Instant expectedStartTime = Instant.now().plusMillis(delay);
         Future<Boolean> result =
             executor.schedule(
                 () -> {
@@ -115,13 +117,21 @@ public class SessionExecutor implements Callable<Boolean> {
                     taskExecutor.executeTask(connection, task, values);
                   } catch (Exception e) {
                     LOGGER.error("Exception executing task: {}", task.getId());
-                    writeTaskEvent(taskStartTime, task.getId(), Status.FAILURE);
+                    writeTaskEvent(
+                        taskStartTime,
+                        task.getId(),
+                        Status.FAILURE,
+                        "{expectedStartTime=" + expectedStartTime + "}");
                     throw e;
                   }
-                  writeTaskEvent(taskStartTime, task.getId(), Status.SUCCESS);
+                  writeTaskEvent(
+                      taskStartTime,
+                      task.getId(),
+                      Status.SUCCESS,
+                      "{expectedStartTime=" + expectedStartTime + "}");
                   return true;
                 },
-                ObjectUtils.<Long>defaultIfNull(task.getStart(), 0L),
+                delay,
                 TimeUnit.MILLISECONDS);
         results.add(result);
       }
@@ -192,10 +202,11 @@ public class SessionExecutor implements Callable<Boolean> {
     return eventInfo;
   }
 
-  private EventInfo writeTaskEvent(Instant startTime, String id, Status status) {
+  private EventInfo writeTaskEvent(Instant startTime, String id, Status status, String payload) {
     EventInfo eventInfo =
         ImmutableEventInfo.of(
-            experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_TASK, status);
+                experimentStartTime, startTime, Instant.now(), id, EventType.EXEC_TASK, status)
+            .withPayload(payload);
     telemetryRegistry.writeEvent(eventInfo);
     return eventInfo;
   }
