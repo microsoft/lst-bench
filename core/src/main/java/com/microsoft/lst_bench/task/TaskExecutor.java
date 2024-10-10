@@ -89,8 +89,7 @@ public class TaskExecutor {
       throws ClientException {
     boolean execute = true;
     QueryResult queryResult = null;
-    String statementText =
-      StringUtils.replaceParameters(statement, values).getStatement();
+    String statementText = StringUtils.replaceParameters(statement, values).getStatement();
     Instant statementStartTime = Instant.now();
 
     while (execute) {
