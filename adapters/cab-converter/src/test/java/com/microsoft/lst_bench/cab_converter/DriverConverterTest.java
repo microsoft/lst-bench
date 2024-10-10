@@ -209,7 +209,7 @@ public class DriverConverterTest {
   private void validateCABLibrary(Library library) {
     Assertions.assertNotNull(library);
     Assertions.assertEquals(
-        25, library.getTaskTemplates().size(), "Library task templates size mismatch");
+        26, library.getTaskTemplates().size(), "Library task templates size mismatch");
     Assertions.assertTrue(
         ObjectUtils.isEmpty(library.getPreparedTasks()), "No prepared tasks expected");
     Assertions.assertTrue(
