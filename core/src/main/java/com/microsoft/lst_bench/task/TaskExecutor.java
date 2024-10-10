@@ -89,16 +89,16 @@ public class TaskExecutor {
       throws ClientException {
     boolean execute = true;
     QueryResult queryResult = null;
+    String statementText =
+      StringUtils.replaceParameters(statement, values).getStatement();
     Instant statementStartTime = Instant.now();
 
     while (execute) {
       try {
         if (ignoreResults) {
-          connection.execute(StringUtils.replaceParameters(statement, values).getStatement());
+          connection.execute(statementText);
         } else {
-          queryResult =
-              connection.executeQuery(
-                  StringUtils.replaceParameters(statement, values).getStatement());
+          queryResult = connection.executeQuery(statementText);
         }
         execute = false;
         writeStatementEvent(
@@ -109,7 +109,7 @@ public class TaskExecutor {
             "Exception executing statement: "
                 + statement.getId()
                 + ", statement text: "
-                + statement.getStatement()
+                + statementText
                 + "; error message: "
                 + e.getMessage();
 
