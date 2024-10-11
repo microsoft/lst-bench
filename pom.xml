@@ -50,7 +50,7 @@
         <msal4j.version>1.17.1</msal4j.version>
         <hive-jdbc.version>3.1.3</hive-jdbc.version>
         <snowflake-jdbc.version>3.18.0</snowflake-jdbc.version>
-        <trino-jdbc.version>448</trino-jdbc.version>
+        <trino-jdbc.version>461</trino-jdbc.version>
     </properties>
 
     <dependencyManagement>
