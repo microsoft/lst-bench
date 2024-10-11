@@ -15,12 +15,15 @@
  */
 package com.microsoft.lst_bench.client;
 
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,14 +33,22 @@ public class JDBCConnection implements Connection {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JDBCConnection.class);
 
-  private final java.sql.Connection connection;
+  private final String url;
   private final int maxNumRetries;
   private final boolean showWarnings;
+  @Nullable private final String username;
+  @Nullable private final String password;
 
-  public JDBCConnection(java.sql.Connection connection, int maxNumRetries, boolean showWarnings) {
-    this.connection = connection;
+  @Nullable private java.sql.Connection connection;
+
+  public JDBCConnection(
+      String url, int maxNumRetries, boolean showWarnings, String username, String password) {
+    this.url = url;
+    this.username = username;
+    this.password = password;
     this.maxNumRetries = maxNumRetries;
     this.showWarnings = showWarnings;
+    this.connection = null;
   }
 
   @Override
@@ -51,6 +62,8 @@ public class JDBCConnection implements Connection {
   }
 
   private QueryResult execute(String sqlText, boolean ignoreResults) throws ClientException {
+    refreshConnection();
+
     QueryResult queryResult = null;
     int errorCount = 0;
 
@@ -129,7 +142,23 @@ public class JDBCConnection implements Connection {
   @Override
   public void close() throws ClientException {
     try {
-      connection.close();
+      if (connection != null && !connection.isClosed()) {
+        connection.close();
+      }
+    } catch (SQLException e) {
+      throw new ClientException(e);
+    }
+  }
+
+  private synchronized void refreshConnection() throws ClientException {
+    try {
+      if (connection == null || connection.isClosed()) {
+        if (StringUtils.isEmpty(username)) {
+          connection = DriverManager.getConnection(url);
+        } else {
+          connection = DriverManager.getConnection(url, username, password);
+        }
+      }
     } catch (SQLException e) {
       throw new ClientException(e);
     }
