@@ -15,10 +15,7 @@
  */
 package com.microsoft.lst_bench.client;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import javax.annotation.Nullable;
-import org.apache.commons.lang3.StringUtils;
 
 /** Simple JDBC connection manager. */
 public class JDBCConnectionManager implements ConnectionManager {
@@ -41,19 +38,8 @@ public class JDBCConnectionManager implements ConnectionManager {
   }
 
   @Override
-  public Connection createConnection() throws ClientException {
-    try {
-      if (StringUtils.isEmpty(username)) {
-        return new JDBCConnection(
-            DriverManager.getConnection(url), this.maxNumRetries, this.showWarnings);
-      } else {
-        return new JDBCConnection(
-            DriverManager.getConnection(url, username, password),
-            this.maxNumRetries,
-            this.showWarnings);
-      }
-    } catch (SQLException e) {
-      throw new ClientException(e);
-    }
+  public Connection createConnection() {
+    return new JDBCConnection(
+        this.url, this.maxNumRetries, this.showWarnings, this.username, this.password);
   }
 }
