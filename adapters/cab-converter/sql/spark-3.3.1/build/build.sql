@@ -51,7 +51,8 @@ CREATE
         );
 INSERT INTO ${catalog}.${database}${stream_num}.lineitem
 SELECT *
-FROM   ${external_catalog}.${external_database}${stream_num}.lineitem;
+FROM   ${external_catalog}.${external_database}${stream_num}.lineitem
+SORT BY l_shipdate;
 
 DROP
     TABLE

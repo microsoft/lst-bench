@@ -45,7 +45,9 @@ INSERT
         FROM
             ${catalog}.${database}${stream_num}.lineitem
         WHERE
-            ${param1} <= l_orderkey and l_orderkey < ${param2});
+            ${param1} <= l_orderkey and l_orderkey < ${param2}
+        SORT BY
+            l_shipdate);
 
 DELETE
 FROM
