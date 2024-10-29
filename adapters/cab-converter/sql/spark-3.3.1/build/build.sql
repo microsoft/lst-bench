@@ -46,12 +46,13 @@ CREATE
             l_shipmode STRING,
             l_comment STRING
         )
-        TBLPROPERTIES(
+        PARTITIONED BY(months(l_shipdate)) TBLPROPERTIES(
             'primaryKey' = 'l_orderkey,l_linenumber' ${tblproperties_suffix}
         );
 INSERT INTO ${catalog}.${database}${stream_num}.lineitem
 SELECT *
-FROM   ${external_catalog}.${external_database}${stream_num}.lineitem;
+FROM   ${external_catalog}.${external_database}${stream_num}.lineitem
+SORT BY l_shipdate;
 
 DROP
     TABLE
