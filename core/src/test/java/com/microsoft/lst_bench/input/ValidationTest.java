@@ -26,6 +26,7 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
+import com.networknt.schema.serialization.JsonNodeReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +55,7 @@ public class ValidationTest {
     // Validate YAML file contents
     JsonSchemaFactory factory =
         JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
-            .objectMapper(YAML_MAPPER)
+            .jsonNodeReader(JsonNodeReader.builder().yamlMapper(YAML_MAPPER).build())
             .build();
     return factory.getSchema(schemaInputStream);
   }
