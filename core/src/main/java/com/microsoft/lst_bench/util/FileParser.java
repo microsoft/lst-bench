@@ -27,6 +27,7 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
+import com.networknt.schema.serialization.JsonNodeReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -194,7 +195,7 @@ public class FileParser {
     // Validate YAML file contents
     JsonSchemaFactory factory =
         JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012))
-            .objectMapper(YAML_MAPPER)
+            .jsonNodeReader(JsonNodeReader.builder().yamlMapper(YAML_MAPPER).build())
             .build();
     JsonSchema schema = factory.getSchema(schemaInputStream);
     JsonNode jsonNodeDirect = YAML_MAPPER.readTree(resolvedYAMLContent);
