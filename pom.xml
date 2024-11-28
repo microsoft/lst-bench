@@ -27,7 +27,7 @@
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
         <!-- Versions - Dependencies -->
         <commons-text.version>1.12.0</commons-text.version>
-        <commons-lang3.version>3.16.0</commons-lang3.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
         <commons-cli.version>1.9.0</commons-cli.version>
         <commons-io.version>2.16.1</commons-io.version>
         <duckdb_jdbc.version>0.9.2</duckdb_jdbc.version>
