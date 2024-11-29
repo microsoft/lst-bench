@@ -38,7 +38,7 @@
         <junit-jupiter.version>5.11.3</junit-jupiter.version>
         <junit-pioneer.version>2.3.0</junit-pioneer.version>
         <log4j.version>2.24.2</log4j.version>
-        <mockito-core.version>5.13.0</mockito-core.version>
+        <mockito-core.version>5.14.2</mockito-core.version>
         <spark-sql.version>3.3.2</spark-sql.version>
         <!-- Versions - LSTs (tests) -->
         <delta-core.version>2.2.0</delta-core.version>
