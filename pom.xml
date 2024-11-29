@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Versions - Plugins -->
-        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
         <maven-compile-plugin.version>3.10.1</maven-compile-plugin.version>
         <maven-dependency-plugin.version>3.8.0</maven-dependency-plugin.version>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
