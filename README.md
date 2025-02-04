@@ -18,7 +18,7 @@ limitations under the License.
 
 # LST-Bench
 
-[![CI Status](https://github.com/microsoft/lst-bench/workflows/Java%20CI/badge.svg?branch=main)](https://github.com/microsoft/lst-bench/actions?query=branch%3Amain)
+[![CI Status](https://github.com/microsoft/lst-bench/actions/workflows/maven.yaml/badge.svg?branch=main)](https://github.com/microsoft/lst-bench/actions/workflows/maven.yaml?query=branch%3Amain)
 
 LST-Bench is a framework that allows users to run benchmarks specifically designed for evaluating the performance, efficiency, and stability of Log-Structured Tables (LSTs), also commonly referred to as table formats, such as [Delta Lake](https://delta.io/), [Apache Hudi](http://hudi.apache.org), and [Apache Iceberg](http://iceberg.apache.org).
 
