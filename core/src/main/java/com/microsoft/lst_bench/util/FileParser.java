@@ -46,7 +46,8 @@ import java.util.StringTokenizer;
 public class FileParser {
 
   private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
-  private static final String SCHEMAS_PATH = "schemas" + File.separator;
+  private static final String SCHEMAS_PATH =
+      "schemas/"; // Always use forward slashes for classpath resources
 
   private FileParser() {
     // Defeat instantiation
