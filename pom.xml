@@ -33,7 +33,7 @@
         <duckdb_jdbc.version>0.9.2</duckdb_jdbc.version>
         <immutables.value.version>2.10.1</immutables.value.version>
         <jackson.version>2.18.2</jackson.version>
-        <json-schema-validator.version>1.5.4</json-schema-validator.version>
+        <json-schema-validator.version>1.5.6</json-schema-validator.version>
         <jsr305.version>3.0.2</jsr305.version>
         <junit-jupiter.version>5.11.3</junit-jupiter.version>
         <junit-pioneer.version>2.3.0</junit-pioneer.version>
