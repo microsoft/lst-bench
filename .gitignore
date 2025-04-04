@@ -68,3 +68,7 @@ local.properties
 /adapters/**/target
 /buildSrc/build
 /buildSrc/subprojects/*/build
+
+# Ignore python build files, e.g. egg-info, pycache, etc. 
+*.egg-info/
+__pycache__/
