@@ -1,0 +1,30 @@
+INSERT INTO web_returns
+    SELECT
+        ,
+        WR_RETURN_DATE_SK,,
+        WR_RETURN_TIME_SK,,
+        WR_ITEM_SK,,
+        WR_REFUNDED_CUSTOMER_SK,,
+        WR_REFUNDED_CDEMO_SK,,
+        WR_REFUNDED_HDEMO_SK,,
+        WR_REFUNDED_ADDR_SK,,
+        WR_RETURNING_CUSTOMER_SK,,
+        WR_RETURNING_CDEMO_SK,,
+        WR_RETURNING_HDEMO_SK,,
+        WR_RETURNING_ADDR_SK,,
+        WR_WEB_PAGE_SK,,
+        WR_REASON_SK,,
+        WR_ORDER_NUMBER,,
+        WR_RETURN_QUANTITY,,
+        WR_RETURN_AMT,,
+        WR_RETURN_TAX,,
+        WR_RETURN_AMT_INC_TAX,,
+        WR_FEE,,
+        WR_RETURN_SHIP_COST,,
+        WR_REFUNDED_CASH,,
+        WR_REVERSED_CHARGE,,
+        WR_ACCOUNT_CREDIT,,
+        WR_NET_LOSS
+    FROM
+        wrv_${stream_num}
+    WHERE row_number IN (${row_number});
