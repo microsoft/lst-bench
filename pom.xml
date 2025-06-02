@@ -35,7 +35,7 @@
         <jackson.version>2.18.3</jackson.version>
         <json-schema-validator.version>1.5.6</json-schema-validator.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <junit-jupiter.version>5.11.3</junit-jupiter.version>
+        <junit-jupiter.version>5.13.0</junit-jupiter.version>
         <junit-pioneer.version>2.3.0</junit-pioneer.version>
         <log4j.version>2.24.3</log4j.version>
         <mockito-core.version>5.15.2</mockito-core.version>
