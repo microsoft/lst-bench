@@ -24,8 +24,6 @@ updates:
     directory: "/.github/workflows"
     schedule:
       interval: "daily"
-    assignees:
-      - "jcamachor"
     groups:
       log4j:
         patterns:
