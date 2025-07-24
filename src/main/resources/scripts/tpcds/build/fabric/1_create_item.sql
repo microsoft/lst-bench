@@ -1,0 +1,25 @@
+CREATE TABLE item
+(
+    I_ITEM_SK                       int,
+    I_ITEM_ID                       char(16),
+    I_REC_START_DATE                date,
+    I_REC_END_DATE                  date,
+    I_ITEM_DESC                     varchar(200),
+    I_CURRENT_PRICE                 decimal(7,2),
+    I_WHOLESALE_COST                decimal(7,2),
+    I_BRAND_ID                      int,
+    I_BRAND                         char(50),
+    I_CLASS_ID                      int,
+    I_CLASS                         char(50),
+    I_CATEGORY_ID                   int,
+    I_CATEGORY                      char(50),
+    I_MANUFACT_ID                   int,
+    I_MANUFACT                      char(50),
+    I_SIZE                          char(20),
+    I_FORMULATION                   char(20),
+    I_COLOR                         char(20),
+    I_UNITS                         char(10),
+    I_CONTAINER                     char(10),
+    I_MANAGER_ID                    int,
+    I_PRODUCT_NAME                  char(50)
+);

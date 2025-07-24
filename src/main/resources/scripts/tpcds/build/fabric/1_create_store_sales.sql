@@ -1,0 +1,26 @@
+CREATE TABLE store_sales
+(
+    SS_SOLD_DATE_SK                   int,
+    SS_SOLD_TIME_SK                   int,
+    SS_ITEM_SK                        int,
+    SS_CUSTOMER_SK                    int,
+    SS_CDEMO_SK                       int,
+    SS_HDEMO_SK                       int,
+    SS_ADDR_SK                        int,
+    SS_STORE_SK                       int,
+    SS_PROMO_SK                       int,
+    SS_TICKET_NUMBER                  int,
+    SS_QUANTITY                       int,
+    SS_WHOLESALE_COST                 decimal(7, 2),
+    SS_LIST_PRICE                     decimal(7, 2),
+    SS_SALES_PRICE                    decimal(7, 2),
+    SS_EXT_DISCOUNT_AMT               decimal(7, 2),
+    SS_EXT_SALES_PRICE                decimal(7, 2),
+    SS_EXT_WHOLESALE_COST             decimal(7, 2),
+    SS_EXT_LIST_PRICE                 decimal(7, 2),
+    SS_EXT_TAX                        decimal(7, 2),
+    SS_COUPON_AMT                     decimal(7, 2),
+    SS_NET_PAID                       decimal(7, 2),
+    SS_NET_PAID_INC_TAX               decimal(7, 2),
+    SS_NET_PROFIT                     decimal(7, 2)
+);
