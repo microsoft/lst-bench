@@ -179,6 +179,58 @@ class LSTBenchmarkExecutorTest {
     benchmark.run();
   }
 
+  /**
+   * This test checks whether the minimal duration of a phase is correctly set and respected during
+   * execution. It uses a mock connection manager that does not execute any SQL. The test verifies
+   * that the phase runs for at least the specified minimal duration.
+   */
+  @Test
+  void testExperimentMinimalDuration() throws Exception {
+    Connection mockConnection = Mockito.mock(Connection.class);
+    ConnectionManager mockConnectionManager = Mockito.mock(ConnectionManager.class);
+    Mockito.when(mockConnectionManager.createConnection()).thenReturn(mockConnection);
+
+    // Current workload relies on 2 connection managers
+    var connectionManagers = new ArrayList<ConnectionManager>();
+    connectionManagers.add(mockConnectionManager);
+    connectionManagers.add(mockConnectionManager);
+
+    ExperimentConfig experimentConfig =
+        ImmutableExperimentConfig.builder().id("telemetryTest").version(1).repetitions(1).build();
+
+    URL libFile = getClass().getClassLoader().getResource("./config/samples/library_0.yaml");
+    Assertions.assertNotNull(libFile);
+    Library library = FileParser.loadLibrary(libFile.getFile());
+
+    URL workloadFile =
+        getClass().getClassLoader().getResource("./config/spark/w_all_tpcds-delta-time.yaml");
+    Assertions.assertNotNull(workloadFile);
+    Workload workload = FileParser.loadWorkload(workloadFile.getFile());
+
+    var config = BenchmarkObjectFactory.benchmarkConfig(experimentConfig, library, workload);
+
+    SQLTelemetryRegistry telemetryRegistry = getTelemetryRegistry();
+
+    LSTBenchmarkExecutor benchmark =
+        new LSTBenchmarkExecutor(connectionManagers, config, telemetryRegistry);
+    benchmark.run();
+
+    try (var validationConnection =
+        DriverManager.getConnection("jdbc:duckdb:./" + telemetryDbFileName)) {
+      ResultSet resultset =
+          validationConnection
+              .createStatement()
+              .executeQuery(
+                  "SELECT CAST(EXTRACT(EPOCH FROM CAST(event_end_time AS TIMESTAMP) - CAST(event_start_time AS TIMESTAMP)) AS INTEGER) AS seconds_diff FROM experiment_telemetry WHERE event_type = 'EXEC_PHASE' AND event_id = 'single_user'");
+      int seconds = 0;
+      while (resultset.next()) {
+        seconds = resultset.getInt("seconds_diff");
+      }
+      Assertions.assertTrue(
+          seconds >= 5, "Phase did not run for at least 5 seconds, actual: " + seconds);
+    }
+  }
+
   private SQLTelemetryRegistry getTelemetryRegistry() throws ClientException, IOException {
     URL telemetryConfigFile =
         getClass().getClassLoader().getResource("./config/spark/telemetry_config.yaml");
