@@ -16,6 +16,7 @@
 package com.microsoft.lst_bench.exec;
 
 import java.util.List;
+import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 /** Represents a phase in a workload. */
@@ -24,6 +25,8 @@ import org.immutables.value.Value;
 public interface PhaseExec {
 
   String getId();
+  
+  @Nullable Integer getMinimalDurationSeconds();
 
   List<SessionExec> getSessions();
 }

@@ -16,9 +16,11 @@
 package com.microsoft.lst_bench.input;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 /**
@@ -32,6 +34,9 @@ import org.immutables.value.Value;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface PhaseTemplate {
   String getId();
+  
+  @JsonProperty("minimal_duration_seconds")
+  @Nullable Integer getMinimalDurationSeconds();
 
   List<Session> getSessions();
 }

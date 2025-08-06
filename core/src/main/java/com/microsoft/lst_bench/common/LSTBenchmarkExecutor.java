@@ -64,7 +64,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
     this.telemetryRegistry = telemetryRegistry;
   }
 
-  /** This method runs the experiment. */
+    /** This method runs the experiment. */
   public void execute() throws Exception {
     this.experimentStartTime = DateTimeFormatter.U_FORMATTER.format(Instant.now());
     LOGGER.info("Running experiment: {}, start-time: {}", config.getId(), experimentStartTime);
@@ -96,33 +96,34 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
         for (PhaseExec phase : workload.getPhases()) {
           LOGGER.info("Running " + phase.getId() + " phase...");
           final Instant phaseStartTime = Instant.now();
+
           EventInfo eventInfo;
           try {
-            final List<SessionExecutor> threads = new ArrayList<>();
-            for (SessionExec session : phase.getSessions()) {
-              threads.add(
-                  new SessionExecutor(
-                      connectionManagers.get(session.getTargetEndpoint()),
-                      this.telemetryRegistry,
-                      session,
-                      runtimeParameterValues,
-                      phaseIdToEndTime,
-                      this.experimentStartTime));
+            if (phase.getMinimalDurationSeconds() != null
+                && phase.getMinimalDurationSeconds() > 0) {
+              // Time-based execution with minimum duration.
+              long phaseEndTime =
+                  phaseStartTime.toEpochMilli() + phase.getMinimalDurationSeconds() * 1000L;
+              while (System.currentTimeMillis() < phaseEndTime) {
+                executePhase(
+                    phase, runtimeParameterValues, phaseIdToEndTime, executor, phaseStartTime);
+              }
+            } else {
+              // Single execution.
+              executePhase(
+                  phase, runtimeParameterValues, phaseIdToEndTime, executor, phaseStartTime);
             }
-            checkResults(executor.invokeAll(threads));
             eventInfo = writePhaseEvent(phaseStartTime, phase.getId(), Status.SUCCESS);
+
+            LOGGER.info(
+                "Phase {} finished in {} seconds.",
+                phase.getId(),
+                ChronoUnit.SECONDS.between(phaseStartTime, eventInfo.getEndTime()));
+            phaseIdToEndTime.put(phase.getId(), eventInfo.getEndTime());
           } catch (Exception e) {
-            LOGGER.error("Exception executing phase: " + phase.getId());
-            writePhaseEvent(phaseStartTime, phase.getId(), Status.FAILURE);
+            LOGGER.error("Exception executing phase: " + phase.getId(), e);
             throw e;
-          } finally {
-            telemetryRegistry.flush();
           }
-          LOGGER.info(
-              "Phase {} finished in {} seconds.",
-              phase.getId(),
-              ChronoUnit.SECONDS.between(phaseStartTime, eventInfo.getEndTime()));
-          phaseIdToEndTime.put(phase.getId(), eventInfo.getEndTime());
         }
 
         // Log end-to-end execution of experiment.
@@ -149,6 +150,35 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
       LOGGER.info("Finished repetition {}", i);
     }
     LOGGER.info("Finished experiment: {}", config.getId());
+  }
+
+  private void executePhase(
+      PhaseExec phase,
+      Map<String, Object> runtimeParameterValues,
+      Map<String, Instant> phaseIdToEndTime,
+      ExecutorService executor,
+      Instant phaseStartTime)
+      throws Exception {
+    try {
+      final List<SessionExecutor> threads = new ArrayList<>();
+      for (SessionExec session : phase.getSessions()) {
+        threads.add(
+            new SessionExecutor(
+                connectionManagers.get(session.getTargetEndpoint()),
+                this.telemetryRegistry,
+                session,
+                runtimeParameterValues,
+                phaseIdToEndTime,
+                this.experimentStartTime));
+      }
+      checkResults(executor.invokeAll(threads));
+    } catch (Exception e) {
+      LOGGER.error("Exception executing phase: " + phase.getId());
+      writePhaseEvent(phaseStartTime, phase.getId(), Status.FAILURE);
+      throw e;
+    } finally {
+      telemetryRegistry.flush();
+    }
   }
 
   private void checkResults(List<Future<Boolean>> results) {

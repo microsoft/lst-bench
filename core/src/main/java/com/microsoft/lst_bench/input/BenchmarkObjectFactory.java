@@ -169,7 +169,7 @@ public class BenchmarkObjectFactory {
               taskTemplateIdToParameterValuesCounter);
       sessionExecList.add(sessionExec);
     }
-    return ImmutablePhaseExec.of(phase.getId(), sessionExecList);
+    return ImmutablePhaseExec.of(phase.getId(), phase.getMinimalDurationSeconds(), sessionExecList);
   }
 
   private static SessionExec createSessionExec(

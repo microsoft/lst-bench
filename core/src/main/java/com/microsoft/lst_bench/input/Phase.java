@@ -31,6 +31,9 @@ import org.immutables.value.Value;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface Phase {
   String getId();
+  
+  @JsonProperty("minimal_duration_seconds")
+  @Nullable Integer getMinimalDurationSeconds();
 
   @JsonProperty("template_id")
   @Nullable String getTemplateId();
