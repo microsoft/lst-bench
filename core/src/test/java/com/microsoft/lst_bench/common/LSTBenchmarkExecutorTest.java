@@ -179,7 +179,7 @@ class LSTBenchmarkExecutorTest {
     benchmark.run();
   }
 
-    /**
+  /**
    * This test checks whether the minimal duration of a phase is correctly set and respected during
    * execution. It uses a mock connection manager that does not execute any SQL. The test verifies
    * that the phase runs for at least the specified minimal duration.

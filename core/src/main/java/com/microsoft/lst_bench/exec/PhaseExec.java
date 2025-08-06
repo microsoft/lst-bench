@@ -25,7 +25,7 @@ import org.immutables.value.Value;
 public interface PhaseExec {
 
   String getId();
-  
+
   @Nullable Integer getMinimalDurationSeconds();
 
   List<SessionExec> getSessions();

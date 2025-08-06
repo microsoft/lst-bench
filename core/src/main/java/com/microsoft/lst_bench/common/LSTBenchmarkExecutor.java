@@ -64,7 +64,7 @@ public class LSTBenchmarkExecutor extends BenchmarkRunnable {
     this.telemetryRegistry = telemetryRegistry;
   }
 
-    /** This method runs the experiment. */
+  /** This method runs the experiment. */
   public void execute() throws Exception {
     this.experimentStartTime = DateTimeFormatter.U_FORMATTER.format(Instant.now());
     LOGGER.info("Running experiment: {}, start-time: {}", config.getId(), experimentStartTime);
