@@ -37,9 +37,9 @@
         <jsr305.version>3.0.2</jsr305.version>
         <junit-jupiter.version>5.11.3</junit-jupiter.version>
         <junit-pioneer.version>2.3.0</junit-pioneer.version>
-        <log4j.version>2.24.3</log4j.version>
+        <log4j.version>2.20.0</log4j.version>
         <mockito-core.version>5.15.2</mockito-core.version>
-        <spark-sql.version>3.3.2</spark-sql.version>
+        <spark-sql.version>3.5.2</spark-sql.version>
         <!-- Versions - LSTs (tests) -->
         <delta-core.version>2.2.0</delta-core.version>
         <hudi-spark3.3-bundle.version>0.12.2</hudi-spark3.3-bundle.version>
@@ -108,7 +108,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
+                <artifactId>log4j-slf4j2-impl</artifactId>
                 <version>${log4j.version}</version>
             </dependency>
             <dependency>
