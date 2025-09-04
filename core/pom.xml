@@ -87,7 +87,7 @@
         </dependency>
         <dependency>
             <groupId>io.delta</groupId>
-            <artifactId>delta-core_2.12</artifactId>
+            <artifactId>delta-spark_2.12</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -97,12 +97,12 @@
         </dependency>
         <dependency>
             <groupId>org.apache.hudi</groupId>
-            <artifactId>hudi-spark3.3-bundle_2.12</artifactId>
+            <artifactId>hudi-spark3.5-bundle_2.12</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.iceberg</groupId>
-            <artifactId>iceberg-spark-runtime-3.3_2.12</artifactId>
+            <artifactId>iceberg-spark-runtime-3.5_2.12</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

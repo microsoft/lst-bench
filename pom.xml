@@ -41,9 +41,9 @@
         <mockito-core.version>5.15.2</mockito-core.version>
         <spark-sql.version>3.5.2</spark-sql.version>
         <!-- Versions - LSTs (tests) -->
-        <delta-core.version>2.2.0</delta-core.version>
-        <hudi-spark3.3-bundle.version>0.12.2</hudi-spark3.3-bundle.version>
-        <iceberg-spark-runtime.version>1.1.0</iceberg-spark-runtime.version>
+        <delta-spark.version>3.1.0</delta-spark.version>
+        <hudi-spark3.5-bundle.version>1.0.1</hudi-spark3.5-bundle.version>
+        <iceberg-spark-runtime.version>1.9.1</iceberg-spark-runtime.version>
         <!-- Versions - JDBC drivers and related -->
         <databricks-jdbc.version>2.7.1</databricks-jdbc.version>
         <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
@@ -151,22 +151,22 @@
             </dependency>
             <dependency>
                 <groupId>io.delta</groupId>
-                <artifactId>delta-core_2.12</artifactId>
-                <version>${delta-core.version}</version>
+                <artifactId>delta-spark_2.12</artifactId>
+                <version>${delta-spark.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.delta</groupId>
                 <artifactId>delta-storage</artifactId>
-                <version>${delta-core.version}</version>
+                <version>${delta-spark.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hudi</groupId>
-                <artifactId>hudi-spark3.3-bundle_2.12</artifactId>
-                <version>${hudi-spark3.3-bundle.version}</version>
+                <artifactId>hudi-spark3.5-bundle_2.12</artifactId>
+                <version>${hudi-spark3.5-bundle.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.iceberg</groupId>
-                <artifactId>iceberg-spark-runtime-3.3_2.12</artifactId>
+                <artifactId>iceberg-spark-runtime-3.5_2.12</artifactId>
                 <version>${iceberg-spark-runtime.version}</version>
             </dependency>
 
