@@ -77,6 +77,41 @@ usage: ./launcher.sh -c <arg> -e <arg> -l <arg> -t <arg> -w <arg>
                                  the workload definition
 ```
 
+### Run with Docker
+
+Build the image:
+
+```bash
+docker build -t lst-bench:latest .
+```
+
+If you are connecting to a Spark Thrift Server via JDBC, build with the Spark JDBC profile so the Hive driver is included:
+
+```bash
+docker build -t lst-bench:latest --build-arg MAVEN_PROFILES=spark-jdbc .
+```
+
+Prepare your configuration files (YAML) in a local directory, for example `./config`:
+
+```bash
+mkdir -p config
+```
+
+Place connections.yaml, experiment.yaml, library.yaml, telemetry.yaml, workload.yaml there
+
+Run the container and mount the config directory:
+
+```bash
+docker run --rm \
+  -v "$PWD/config":/work/config:ro \
+  lst-bench:latest:latest \
+  -c /work/config/connections.yaml \
+  -e /work/config/experiment.yaml \
+  -l /work/config/library.yaml \
+  -t /work/config/telemetry.yaml \
+  -w /work/config/workload.yaml
+```
+
 ## Configuration Files
 The configuration files used in LST-Bench are YAML files. 
 
