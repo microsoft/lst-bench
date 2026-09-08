@@ -26,3 +26,5 @@ updates:
       log4j:
         patterns:
           - "org.apache.logging.log4j*"
+    cooldown:
+      default-days: 7
