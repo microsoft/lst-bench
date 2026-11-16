@@ -5,13 +5,17 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-PARAMS=""
+# Spark 4 enables ANSI mode by default. These workloads were written for Spark 3,
+# where overflow and divide-by-zero return NULL instead of failing the query.
+PARAMS="--conf spark.sql.ansi.enabled=false"
 if [[ $1 == "delta" ]]; then
-  PARAMS="--conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog --conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension"
+  PARAMS="$PARAMS --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog --conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension"
 elif [[ $1 == "hudi" ]]; then
-  PARAMS="--conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.hudi.catalog.HoodieCatalog --conf spark.sql.extensions=org.apache.spark.sql.hudi.HoodieSparkSessionExtension"
+  PARAMS="$PARAMS --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.hudi.catalog.HoodieCatalog --conf spark.sql.extensions=org.apache.spark.sql.hudi.HoodieSparkSessionExtension"
 elif [[ $1 == "iceberg" ]]; then
-  PARAMS="--conf spark.sql.catalog.spark_catalog=org.apache.iceberg.spark.SparkSessionCatalog --conf spark.sql.catalog.spark_catalog.type=hadoop --conf spark.sql.catalog.spark_catalog.warehouse=/warehouse --conf spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions"
+  # Keep spark_catalog as the session catalog so CREATE VIEW still works. Hadoop
+  # Iceberg catalogs do not implement Spark view support.
+  PARAMS="$PARAMS --conf spark.sql.catalog.iceberg=org.apache.iceberg.spark.SparkCatalog --conf spark.sql.catalog.iceberg.type=hadoop --conf spark.sql.catalog.iceberg.warehouse=/warehouse --conf spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions"
 else
   echo "Unknown LST: $1"
   exit 1

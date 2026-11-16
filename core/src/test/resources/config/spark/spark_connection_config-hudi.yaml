@@ -8,3 +8,4 @@ connections:
   config:
     spark.sql.catalog.spark_catalog: org.apache.spark.sql.hudi.catalog.HoodieCatalog
     spark.sql.extensions: org.apache.spark.sql.hudi.HoodieSparkSessionExtension
+    spark.sql.ansi.enabled: "false"

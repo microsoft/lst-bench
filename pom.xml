@@ -16,15 +16,15 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Versions - Plugins -->
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
-        <maven-compile-plugin.version>3.10.1</maven-compile-plugin.version>
+        <maven-compile-plugin.version>3.14.0</maven-compile-plugin.version>
         <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
-        <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
+        <spotless-maven-plugin.version>3.11.0</spotless-maven-plugin.version>
         <!-- Versions - Dependencies -->
         <commons-text.version>1.13.0</commons-text.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
@@ -38,19 +38,20 @@
         <junit-jupiter.version>5.11.3</junit-jupiter.version>
         <junit-pioneer.version>2.3.0</junit-pioneer.version>
         <log4j.version>2.24.3</log4j.version>
-        <mockito-core.version>5.15.2</mockito-core.version>
-        <spark-sql.version>3.3.2</spark-sql.version>
-        <!-- Versions - LSTs (tests) -->
-        <delta-core.version>2.2.0</delta-core.version>
-        <hudi-spark3.3-bundle.version>0.12.2</hudi-spark3.3-bundle.version>
-        <iceberg-spark-runtime.version>1.1.0</iceberg-spark-runtime.version>
+        <mockito-core.version>5.24.0</mockito-core.version>
+        <byte-buddy.version>1.17.7</byte-buddy.version>
+        <spark-sql.version>4.1.4</spark-sql.version>
+        <!-- Versions - LSTs (tests). Spark 4.1 is the newest line all three formats publish. -->
+        <delta.version>4.3.1</delta.version>
+        <hudi-spark-bundle.version>1.2.1</hudi-spark-bundle.version>
+        <iceberg-spark-runtime.version>1.12.0</iceberg-spark-runtime.version>
         <!-- Versions - JDBC drivers and related -->
         <databricks-jdbc.version>2.7.1</databricks-jdbc.version>
         <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
         <msal4j.version>1.17.3</msal4j.version>
         <hive-jdbc.version>3.1.3</hive-jdbc.version>
         <snowflake-jdbc.version>3.23.1</snowflake-jdbc.version>
-        <trino-jdbc.version>466</trino-jdbc.version>
+        <trino-jdbc.version>484</trino-jdbc.version>
     </properties>
 
     <dependencyManagement>
@@ -88,7 +89,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.spark</groupId>
-                <artifactId>spark-sql_2.12</artifactId>
+                <artifactId>spark-sql_2.13</artifactId>
                 <version>${spark-sql.version}</version>
             </dependency>
             <dependency>
@@ -108,7 +109,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
+                <artifactId>log4j-slf4j2-impl</artifactId>
                 <version>${log4j.version}</version>
             </dependency>
             <dependency>
@@ -150,23 +151,33 @@
                 <version>${mockito-core.version}</version>
             </dependency>
             <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>${byte-buddy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy-agent</artifactId>
+                <version>${byte-buddy.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.delta</groupId>
-                <artifactId>delta-core_2.12</artifactId>
-                <version>${delta-core.version}</version>
+                <artifactId>delta-spark_4.1_2.13</artifactId>
+                <version>${delta.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.delta</groupId>
                 <artifactId>delta-storage</artifactId>
-                <version>${delta-core.version}</version>
+                <version>${delta.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hudi</groupId>
-                <artifactId>hudi-spark3.3-bundle_2.12</artifactId>
-                <version>${hudi-spark3.3-bundle.version}</version>
+                <artifactId>hudi-spark4.1-bundle_2.13</artifactId>
+                <version>${hudi-spark-bundle.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.iceberg</groupId>
-                <artifactId>iceberg-spark-runtime-3.3_2.12</artifactId>
+                <artifactId>iceberg-spark-runtime-4.1_2.13</artifactId>
                 <version>${iceberg-spark-runtime.version}</version>
             </dependency>
 
@@ -228,6 +239,20 @@
 
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compile-plugin.version}</version>
+                    <configuration>
+                        <release>17</release>
+                        <!-- JDK 23+ does not run annotation processors from the classpath unless this is set. -->
+                        <proc>full</proc>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
@@ -241,7 +266,9 @@
                             <include>adapters/cab-converter/src/main/java/**/*.java</include>
                             <include>adapters/cab-converter/src/test/java/**/*.java</include>
                         </includes>
-                        <googleJavaFormat />
+                        <googleJavaFormat>
+                            <version>1.36.1</version>
+                        </googleJavaFormat>
                         <replaceRegex>
                             <name>Invalid wildcard imports</name>
                             <searchRegex>import\s+(?:static\s+)?[^*\s]+\*;(\r\n|\r|\n)</searchRegex>

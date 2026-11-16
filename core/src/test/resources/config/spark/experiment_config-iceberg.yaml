@@ -20,7 +20,7 @@ parameter_values:
   external_data_path: '/sf_001/'
   external_options_suffix: ',header="true"'
   external_tblproperties_suffix: ''
-  catalog: spark_catalog
+  catalog: iceberg
   database: w_all_iceberg_sf_001
   table_format: iceberg
   data_path: '/iceberg/sf_001/'

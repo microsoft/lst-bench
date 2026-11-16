@@ -1,13 +1,16 @@
 MERGE INTO
     ${catalog}.${database}.store_returns
         USING(
-        SELECT
-            ss_ticket_number
+        SELECT DISTINCT
+            ss_ticket_number,
+            returns.sr_returned_date_sk
         FROM
             ${catalog}.${database}.store_sales,
-            ${catalog}.${database}.date_dim
+            ${catalog}.${database}.date_dim,
+            ${catalog}.${database}.store_returns returns
         WHERE
             ss_sold_date_sk = d_date_sk
+            AND returns.sr_ticket_number = ss_ticket_number
             AND d_date BETWEEN '${param1}' AND '${param2}'
     ) SOURCE ON
     sr_ticket_number = ss_ticket_number
@@ -37,13 +40,16 @@ MERGE INTO
 MERGE INTO
     ${catalog}.${database}.store_returns
         USING(
-        SELECT
-            ss_ticket_number
+        SELECT DISTINCT
+            ss_ticket_number,
+            returns.sr_returned_date_sk
         FROM
             ${catalog}.${database}.store_sales,
-            ${catalog}.${database}.date_dim
+            ${catalog}.${database}.date_dim,
+            ${catalog}.${database}.store_returns returns
         WHERE
             ss_sold_date_sk = d_date_sk
+            AND returns.sr_ticket_number = ss_ticket_number
             AND d_date BETWEEN '${param3}' AND '${param4}'
     ) SOURCE ON
     sr_ticket_number = ss_ticket_number
@@ -73,13 +79,16 @@ MERGE INTO
 MERGE INTO
     ${catalog}.${database}.store_returns
         USING(
-        SELECT
-            ss_ticket_number
+        SELECT DISTINCT
+            ss_ticket_number,
+            returns.sr_returned_date_sk
         FROM
             ${catalog}.${database}.store_sales,
-            ${catalog}.${database}.date_dim
+            ${catalog}.${database}.date_dim,
+            ${catalog}.${database}.store_returns returns
         WHERE
             ss_sold_date_sk = d_date_sk
+            AND returns.sr_ticket_number = ss_ticket_number
             AND d_date BETWEEN '${param5}' AND '${param6}'
     ) SOURCE ON
     sr_ticket_number = ss_ticket_number

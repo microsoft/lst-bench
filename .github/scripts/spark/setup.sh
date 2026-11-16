@@ -6,19 +6,19 @@ docker exec -i -u root $SPARK_CONTAINER_ID /bin/bash -c '/bin/bash -s' <<EOF
   /etc/init.d/ssh start
   ssh-keygen -t rsa -f /root/.ssh/id_rsa -q -N ""
   cat /root/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
-  echo "export JAVA_HOME=/usr/local/openjdk-11/" >> /opt/spark/sbin/spark-config.sh
+  echo "export JAVA_HOME=/opt/java/openjdk" >> /opt/spark/sbin/spark-config.sh
   mkdir /opt/spark/conf
   echo "spark.serializer org.apache.spark.serializer.KryoSerializer" >> /opt/spark/conf/spark-defaults.conf
   mkdir /opt/spark/logs
   mkdir /warehouse
   apt-get -y install wget
   # Install Delta Lake
-  wget -q https://repo1.maven.org/maven2/io/delta/delta-core_2.12/2.2.0/delta-core_2.12-2.2.0.jar -P /opt/spark/jars/
-  wget -q https://repo1.maven.org/maven2/io/delta/delta-storage/2.2.0/delta-storage-2.2.0.jar -P /opt/spark/jars/
+  wget -q https://repo1.maven.org/maven2/io/delta/delta-spark_4.1_2.13/4.3.1/delta-spark_4.1_2.13-4.3.1.jar -P /opt/spark/jars/
+  wget -q https://repo1.maven.org/maven2/io/delta/delta-storage/4.3.1/delta-storage-4.3.1.jar -P /opt/spark/jars/
   # Install Apache Hudi
-  wget -q https://repo1.maven.org/maven2/org/apache/hudi/hudi-spark3.3-bundle_2.12/0.12.2/hudi-spark3.3-bundle_2.12-0.12.2.jar -P /opt/spark/jars/
+  wget -q https://repo1.maven.org/maven2/org/apache/hudi/hudi-spark4.1-bundle_2.13/1.2.1/hudi-spark4.1-bundle_2.13-1.2.1.jar -P /opt/spark/jars/
   # Install Apache Iceberg
-  wget -q https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-3.3_2.12/1.1.0/iceberg-spark-runtime-3.3_2.12-1.1.0.jar -P /opt/spark/jars/
+  wget -q https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-4.1_2.13/1.12.0/iceberg-spark-runtime-4.1_2.13-1.12.0.jar -P /opt/spark/jars/
   # TPC-H (TODO: generate data)
   mkdir -p ${external_data_path}customer
   mkdir -p ${external_data_path}lineitem

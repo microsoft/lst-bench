@@ -8,4 +8,5 @@ connections:
   config:
     spark.sql.catalog.spark_catalog: org.apache.spark.sql.delta.catalog.DeltaCatalog
     spark.sql.extensions: io.delta.sql.DeltaSparkSessionExtension
+    spark.sql.ansi.enabled: "false"
 

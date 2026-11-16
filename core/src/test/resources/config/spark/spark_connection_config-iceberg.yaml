@@ -6,5 +6,8 @@ connections:
   type: spark
   url: local[*]
   config:
-    spark.sql.catalog.spark_catalog: org.apache.iceberg.spark.SparkSessionCatalog
+    spark.sql.catalog.iceberg: org.apache.iceberg.spark.SparkCatalog
+    spark.sql.catalog.iceberg.type: hadoop
+    spark.sql.catalog.iceberg.warehouse: /tmp/iceberg-warehouse
     spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
+    spark.sql.ansi.enabled: "false"

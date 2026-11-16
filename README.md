@@ -82,7 +82,7 @@ The configuration files used in LST-Bench are YAML files.
 
 You can find their schema, which describes the expected structure and properties, [here](core/src/main/resources/schemas).
 
-NOTE: The spark schemas are configured for Spark 3.3 or earlier. In case you plan to use Spark 3.4, the setup and setup_data_maintenance tasks need to be
+NOTE: CSV setup SQL still uses `VARCHAR`/`CHAR`. On Spark 3.4 and later, including the Spark 4.1 client this project builds against, the setup and setup_data_maintenance tasks need to be
 modified to handle [SPARK-44025](https://issues.apache.org/jira/browse/SPARK-44025). Columns in CSV tables need to defined as `STRING` instead of `VARCHAR` or `CHAR`.
 Append the following regex replacement to the setup and setup_data_maintenance phases in the workload file:
 ```bash
