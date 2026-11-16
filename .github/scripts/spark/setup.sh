@@ -6,7 +6,7 @@ docker exec -i -u root $SPARK_CONTAINER_ID /bin/bash -c '/bin/bash -s' <<EOF
   /etc/init.d/ssh start
   ssh-keygen -t rsa -f /root/.ssh/id_rsa -q -N ""
   cat /root/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
-  echo "export JAVA_HOME=/usr/local/openjdk-17/" >> /opt/spark/sbin/spark-config.sh
+  echo "export JAVA_HOME=/opt/java/openjdk" >> /opt/spark/sbin/spark-config.sh
   mkdir /opt/spark/conf
   echo "spark.serializer org.apache.spark.serializer.KryoSerializer" >> /opt/spark/conf/spark-defaults.conf
   mkdir /opt/spark/logs

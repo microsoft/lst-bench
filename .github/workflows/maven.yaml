@@ -84,7 +84,7 @@ jobs:
           cache: maven
       - name: Start Spark container
         run: |
-          CONTAINER_ID=$(docker run -d -p 10000:10000 -p 15002:15002 apache/spark:v3.3.2 tail -f /dev/null)
+          CONTAINER_ID=$(docker run -d --entrypoint tail -p 10000:10000 -p 15002:15002 spark:4.1.4 -f /dev/null)
           echo "SPARK_CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
       - name: Read properties for setup
         id: yaml-data
