@@ -15,6 +15,7 @@
  */
 package com.microsoft.lst_bench.client;
 
+import java.io.IOException;
 import java.util.List;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -42,7 +43,11 @@ public class SparkConnection implements Connection {
   }
 
   @Override
-  public void close() {
-    session.close();
+  public void close() throws ClientException {
+    try {
+      session.close();
+    } catch (IOException e) {
+      throw new ClientException(e);
+    }
   }
 }
