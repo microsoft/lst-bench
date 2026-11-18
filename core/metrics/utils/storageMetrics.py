@@ -12,13 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from azure.azure_utils import *
 from constant import *
 
 import pandas as pd
 
-from azure.identity import DefaultAzureCredential
-from azure.monitor.query import LogsQueryClient
+try:
+    from azure.azure_utils import *
+    from azure.identity import DefaultAzureCredential
+    from azure.monitor.query import LogsQueryClient
+    _AZURE_IMPORT_ERROR = None
+except ImportError as exc:
+    DefaultAzureCredential = None
+    LogsQueryClient = None
+    _AZURE_IMPORT_ERROR = exc
+
+
+def _require_azure():
+    if _AZURE_IMPORT_ERROR is not None:
+        raise RuntimeError(
+            "Azure Monitor libraries are not installed. "
+            "Install core/metrics/notebooks/requirements.txt to use STORAGE_TYPE = 'AZURE'."
+        ) from _AZURE_IMPORT_ERROR
 
 # Superclass for any type of storage telemetry extraction. `fetch_metrics`
 # should be overwritten by child class. Any child class needs to add columns
@@ -58,6 +72,7 @@ class AzureStorageMetrics(StorageMetrics):
 
     # Overwrites the parent method. Fetches Azure storage metrics.
     def fetch_metrics(self):
+        _require_azure()
         default_credential = DefaultAzureCredential(exclude_shared_token_cache_credential=True)
         logs_client = LogsQueryClient(default_credential)
 
@@ -100,3 +115,24 @@ class AzureStorageMetrics(StorageMetrics):
 
     def calculate_api_calls_in_m(self):
         self.df["api_calls"] = self.df["api_call_count"]/1000000
+
+
+class PrometheusStorageMetrics(StorageMetrics):
+    """Ceph totals from the same Prometheus read used for the other engines."""
+
+    def fetch_metrics(self):
+        from prometheus_utils import collect_prometheus_frame
+        standard = collect_prometheus_frame(self.df, components=["ceph"])
+        if standard.empty:
+            self.df = self.df.copy()
+            self.df["io_gb"] = float("nan")
+            self.df["api_calls"] = float("nan")
+            return
+        totals = standard.pivot_table(
+            index=["event_id", "exp_name"], columns="metric", values="value", aggfunc="last"
+        ).reset_index()
+        for column in ("io_gb", "api_calls"):
+            if column not in totals.columns:
+                totals[column] = float("nan")
+        keys = ["event_id", "exp_name"] if "exp_name" in self.df.columns else ["event_id"]
+        self.df = totals.merge(self.df, on=keys, how="left")

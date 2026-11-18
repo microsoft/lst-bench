@@ -15,6 +15,7 @@
 from datetime import datetime
 from clusterMetrics import *
 from constant import *
+from prometheus_utils import collect_prometheus_frame
 from storageMetrics import *
 
 
@@ -47,14 +48,26 @@ def filterByEventIds(df, ids):
 def get_storage_metrics(type, df, storage_path):
     if type=="AZURE":
         return AzureStorageMetrics(df, storage_path)
+    elif type=="PROMETHEUS":
+        return PrometheusStorageMetrics(df, storage_path)
     else:
         return StorageMetrics(df, storage_path)
     
 def get_cluster_metrics(type, df, cluster_name):
     if type=="AZURE":
         return AzureClusterMetrics(df, cluster_name)
+    elif type=="PROMETHEUS":
+        return PrometheusClusterMetrics(df, cluster_name)
     else:
         return ClusterMetrics(df, cluster_name)
+
+
+def collect_prometheus_metrics(df, components=None):
+    """One table for Spark, Trino, Ceph, and Polaris.
+
+    Columns are event_id, exp_name, component, metric, time, value, and unit.
+    """
+    return collect_prometheus_frame(df, components)
 
 
 # -------- DATE MANIPULATIONS -------- #

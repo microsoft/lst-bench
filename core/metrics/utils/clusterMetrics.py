@@ -12,13 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from azure.azure_utils import *
 from constant import *
 
 import pandas as pd
 
-from azure.identity import DefaultAzureCredential
-from azure.monitor.query import LogsQueryClient
+try:
+    from azure.azure_utils import *
+    from azure.identity import DefaultAzureCredential
+    from azure.monitor.query import LogsQueryClient
+    _AZURE_IMPORT_ERROR = None
+except ImportError as exc:
+    DefaultAzureCredential = None
+    LogsQueryClient = None
+    _AZURE_IMPORT_ERROR = exc
+
+
+def _require_azure():
+    if _AZURE_IMPORT_ERROR is not None:
+        raise RuntimeError(
+            "Azure Monitor libraries are not installed. "
+            "Install core/metrics/notebooks/requirements.txt to use CLUSTER_TYPE = 'AZURE'."
+        ) from _AZURE_IMPORT_ERROR
 
 # Superclass for any type of cluster telemetry extraction. `fetch_metrics`
 # should be overwritten by child class. Any child class needs to add columns
@@ -73,6 +87,7 @@ class AzureClusterMetrics(ClusterMetrics):
 
     # Overwrites the parent method. Fetches Azure storage metrics.
     def fetch_metrics(self):
+        _require_azure()
         default_credential = DefaultAzureCredential(exclude_shared_token_cache_credential=True)
         logs_client = LogsQueryClient(default_credential)
 
@@ -134,3 +149,42 @@ class AzureClusterMetrics(ClusterMetrics):
 
     def convert_bytes_written_to_gb(self):
         self.df["gb_written"] = self.df["bytes_written_per_sec"]/1000000000
+
+
+class PrometheusClusterMetrics(ClusterMetrics):
+    """Plot adapter. Query text lives in constant.py. HTTP lives in prometheus_utils.py."""
+
+    def fetch_metrics(self):
+        from prometheus_utils import collect_prometheus_frame
+        if self.cluster_name not in ("spark", "trino", "polaris"):
+            raise ValueError(
+                "CLUSTER_NAME for PROMETHEUS must be spark, trino, or polaris. "
+                "That chooses which component the cluster plot shows. "
+                "collect_prometheus_metrics() returns Spark, Trino, Ceph, and Polaris together."
+            )
+        self.standard_df = collect_prometheus_frame(self.df)
+        part = self.standard_df[self.standard_df["component"] == self.cluster_name]
+        wide = None
+        for metric in ("cpu", "gb_read", "gb_written"):
+            metric_rows = part[part["metric"] == metric][["event_id", "time", "value"]].rename(
+                columns={"time": "TimeGenerated", "value": metric}
+            )
+            if metric_rows.empty:
+                continue
+            wide = metric_rows if wide is None else wide.merge(
+                metric_rows, on=["event_id", "TimeGenerated"], how="outer"
+            )
+        if wide is None:
+            self.df = self.df.copy()
+            self.df["TimeGenerated"] = pd.NaT
+            self.df["cpu"] = float("nan")
+            self.df["gb_read"] = float("nan")
+            self.df["gb_written"] = float("nan")
+            return
+        for metric in ("cpu", "gb_read", "gb_written"):
+            if metric not in wide.columns:
+                wide[metric] = float("nan")
+        self.df = wide.merge(self.df, on="event_id", how="left")
+
+    def get_standard_df(self):
+        return self.standard_df

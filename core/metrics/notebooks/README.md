@@ -35,7 +35,19 @@ EXPERIMENT_START_TIME = ["2023-04-30T12:12:12.000000000Z", "2023-04-30T14:14:14.
 EVENT_IDS = ["single_user_1", "single_user_2", "single_user_3"]
 ```
 
-Currently, we only support Azure as the telemetry capture mechanism for storage and cluster metrics. To extract these, the user first needs to ensure that the Azure storage account and/or cluster are linked to an [Azure Log Analytics Workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/private-storage#link-storage-accounts-to-your-log-analytics-workspace) before running the experiments. The workspace identifier needs to be stored in the variable `AZ_LAW_WORKSPACE` as part of the constants to be used for visualization (``utils/constants.py``). When executing the notebooks, the user will then need to specify the `METRIC` to be visualized as well as the path of the table formats folder for the experiment (`STORAGE_PATH`) resp. the cluster name (`CLUSTER_NAME`) in the corresponding notebook.
+`CLUSTER_TYPE` and `STORAGE_TYPE` accept `AZURE` or `PROMETHEUS`.
+
+For Azure, link the storage account and cluster to an [Azure Log Analytics Workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/private-storage#link-storage-accounts-to-your-log-analytics-workspace) and set `AZ_LAW_WORKSPACE` in ``utils/constant.py``. `CLUSTER_NAME` is matched against the Azure resource id, and `STORAGE_PATH` is matched against the blob URI.
+
+For Prometheus, set `PROMETHEUS_URL`, `PROMETHEUS_SELECTORS`, and the PromQL in `PROMETHEUS_METRICS` in ``utils/constant.py``. `PROMETHEUS_REQUEST_MODE` controls the calls: `batch` sends one range query for every metric, `per_metric` sends one range query per metric, and `per_event` sends one request per metric per benchmark event. ``utils/prometheus_utils.py`` sends those queries. `PrometheusClusterMetrics` in ``utils/clusterMetrics.py`` reads Spark, Trino, Ceph, and Polaris on each `fetch_metrics` call. `CLUSTER_NAME` must be `spark`, `trino`, or `polaris` and selects which of those the cluster plot shows. `PrometheusStorageMetrics` in ``utils/storageMetrics.py`` fills Ceph `io_gb` and `api_calls` for the storage plot. Both classes are selected from ``utils/functions.py`` when the type is `PROMETHEUS`.
+
+To take all four components in one table:
+
+```python
+standard = collect_prometheus_metrics(EXP_DATA)
+```
+
+The columns are `event_id`, `exp_name`, `component`, `metric`, `time`, `value`, and `unit`.
 
 
 # Adding drivers for storage telemetry extraction
