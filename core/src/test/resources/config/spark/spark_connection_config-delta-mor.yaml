@@ -1,0 +1,14 @@
+# Description: Connections Configuration
+---
+version: 1
+connections:
+- id: spark_0
+  type: spark
+  url: local[*]
+  config:
+    spark.sql.catalog.spark_catalog: org.apache.spark.sql.delta.catalog.DeltaCatalog
+    spark.sql.extensions: io.delta.sql.DeltaSparkSessionExtension
+    spark.sql.ansi.enabled: "false"
+    spark.databricks.delta.delete.deletionVectors.persistent: "true"
+    spark.databricks.delta.update.deletionVectors.persistent: "true"
+    spark.databricks.delta.merge.deletionVectors.persistent: "true"

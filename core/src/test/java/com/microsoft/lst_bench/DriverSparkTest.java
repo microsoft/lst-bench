@@ -40,6 +40,18 @@ public class DriverSparkTest {
   @Test
   @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "delta")
   @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
+  public void testJDBCTPCDSAllTasksDeltaMoR() throws Exception {
+    runDriver(
+        "src/test/resources/config/spark/jdbc_connection_config.yaml",
+        "src/test/resources/config/spark/experiment_config-delta-mor.yaml",
+        "src/test/resources/config/spark/telemetry_config.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
+        "src/test/resources/config/spark/w_all_tpcds-delta-mor.yaml");
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "delta")
+  @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
   public void testJDBCTPCDSAllTasksDelta() throws Exception {
     runDriver(
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
@@ -148,6 +160,18 @@ public class DriverSparkTest {
   @Test
   @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "delta")
   @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
+  public void testJDBCSessionDeltaMoR() throws Exception {
+    runDriver(
+        "src/test/resources/config/spark/jdbc_connection_config.yaml",
+        "src/test/resources/config/spark/experiment_config-delta-mor.yaml",
+        "src/test/resources/config/spark/telemetry_config.yaml",
+        "run/spark-3.3.1/config/tpcds/library.yaml",
+        "src/test/resources/config/spark/w_all_tpcds_single_session_jdbc-delta-mor.yaml");
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "delta")
+  @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "jdbc")
   public void testJDBCSessionDelta() throws Exception {
     runDriver(
         "src/test/resources/config/spark/jdbc_connection_config.yaml",
@@ -232,6 +256,19 @@ public class DriverSparkTest {
   private void runDriver(String arg0, String arg1, String arg2, String arg3, String arg4)
       throws Exception {
     Driver.main(new String[] {"-c", arg0, "-e", arg1, "-t", arg2, "-l", arg3, "-w", arg4});
+  }
+
+  @Test
+  @EnabledIfSystemProperty(named = "lst-bench.test.lst", matches = "delta")
+  @EnabledIfSystemProperty(named = "lst-bench.test.connection", matches = "spark")
+  public void testSparkSessionDeltaMoR(@TempDir Path tempDir) throws Exception {
+    testSparkSession(
+        "run/spark-3.3.1/config/tpcds/library.yaml",
+        "src/test/resources/config/spark/w_all_tpcds_single_session-delta-mor.yaml",
+        "src/test/resources/config/spark/spark_connection_config-delta-mor.yaml",
+        "src/test/resources/config/spark/experiment_config-delta-mor.yaml",
+        "src/test/resources/config/spark/telemetry_config.yaml",
+        tempDir);
   }
 
   @Test

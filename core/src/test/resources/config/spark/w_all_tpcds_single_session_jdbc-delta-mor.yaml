@@ -1,0 +1,23 @@
+# Description: Workload for test: All task types, TPC-DS, Delta
+---
+version: 1
+id: w_all_tpcds_single_session_jdbc
+phases:
+- id: all
+  sessions:
+  - tasks:
+    - template_id: setup
+    - template_id: setup_data_maintenance
+    - template_id: init
+    - template_id: build
+    - template_id: single_user
+    - template_id: data_maintenance_delta
+    - template_id: data_maintenance_dependent
+      task_executor_arguments:
+        # TODO: Remove this once #182 is fixed
+        skip_erroneous_query_strings: "[DELTA_FAILED_RECOGNIZE_PREDICATE]"
+    - template_id: optimize_delta_purge
+    - template_id: optimize_split_delta_purge
+      task_executor_arguments:
+        # TODO: Remove this once #182 is fixed
+        skip_erroneous_query_strings: "[DELTA_FAILED_RECOGNIZE_PREDICATE]"
