@@ -1,0 +1,1 @@
+REORG TABLE ${database}.catalog_page APPLY (PURGE);

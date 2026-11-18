@@ -1,0 +1,1 @@
+REORG TABLE ${database}.customer APPLY (PURGE);

@@ -1,0 +1,1 @@
+REORG TABLE ${database}.income_band APPLY (PURGE);

@@ -1,0 +1,1 @@
+REORG TABLE ${database}.customer_address APPLY (PURGE);

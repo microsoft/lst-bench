@@ -1,0 +1,1 @@
+REORG TABLE ${database}.store_returns APPLY (PURGE);

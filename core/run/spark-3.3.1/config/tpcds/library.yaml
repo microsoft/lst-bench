@@ -269,6 +269,34 @@ task_templates:
   - run/spark-3.3.1/scripts/tpcds/optimize/o_web_returns-delta.sql
   - run/spark-3.3.1/scripts/tpcds/optimize/o_web_sales-delta.sql
   - run/spark-3.3.1/scripts/tpcds/optimize/o_web_site-delta.sql
+
+- id: optimize_delta_purge
+  files:
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_call_center-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_catalog_page-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_catalog_returns-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_catalog_sales-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_customer-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_customer_address-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_customer_demographics-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_date_dim-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_household_demographics-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_income_band-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_inventory-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_item-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_promotion-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_reason-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_ship_mode-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_store-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_store_returns-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_store_sales-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_time_dim-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_warehouse-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_web_page-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_web_returns-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_web_sales-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_web_site-delta-purge.sql
+
 # Execution of optimize on all benchmark tables but splitting optimization
 # of partitioned tables into batches by relying on dependent task executor (Delta)
 - id: optimize_split_delta
@@ -312,6 +340,49 @@ task_templates:
   - run/spark-3.3.1/scripts/tpcds/optimize_split/o_web_sales_IN-delta.sql
   - run/spark-3.3.1/scripts/tpcds/optimize_split/o_web_sales_NULL-delta.sql
   - run/spark-3.3.1/scripts/tpcds/optimize/o_web_site-delta.sql
+
+- id: optimize_split_delta_purge
+  custom_task_executor: com.microsoft.lst_bench.task.custom.DependentTaskExecutor
+  files:
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_call_center-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_catalog_page-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_returns_SELECT.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_returns_IN-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_returns_NULL-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_sales_SELECT.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_sales_IN-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_catalog_sales_NULL-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_customer-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_customer_address-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_customer_demographics-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_date_dim-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_household_demographics-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_income_band-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_inventory_SELECT.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_inventory_IN-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_inventory_NULL-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_item-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_promotion-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_reason-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_ship_mode-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_store-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_store_returns_SELECT.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_store_returns_IN-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_store_returns_NULL-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_store_sales_SELECT.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_store_sales_IN-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_store_sales_NULL-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_time_dim-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_warehouse-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_web_page-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_web_returns_SELECT.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_web_returns_IN-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_web_returns_NULL-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_web_sales_SELECT.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_web_sales_IN-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize_split/o_web_sales_NULL-delta-purge.sql
+  - run/spark-3.3.1/scripts/tpcds/optimize/o_web_site-delta-purge.sql
+  
 # Execution of optimize on all benchmark tables (Iceberg)
 - id: optimize_iceberg
   files:

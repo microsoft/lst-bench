@@ -1,0 +1,1 @@
+REORG TABLE ${database}.household_demographics APPLY (PURGE);

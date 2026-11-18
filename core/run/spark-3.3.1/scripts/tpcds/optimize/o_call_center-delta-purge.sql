@@ -1,0 +1,1 @@
+REORG TABLE ${database}.call_center APPLY (PURGE);

@@ -1,0 +1,1 @@
+REORG TABLE ${database}.customer_demographics APPLY (PURGE);

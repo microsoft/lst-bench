@@ -1,0 +1,1 @@
+REORG TABLE ${database}.warehouse APPLY (PURGE);

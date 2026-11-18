@@ -1,0 +1,1 @@
+REORG TABLE ${database}.time_dim APPLY (PURGE);

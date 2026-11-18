@@ -1,0 +1,1 @@
+REORG TABLE ${database}.web_returns APPLY (PURGE);

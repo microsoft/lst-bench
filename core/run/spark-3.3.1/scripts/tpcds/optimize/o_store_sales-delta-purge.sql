@@ -1,0 +1,1 @@
+REORG TABLE ${database}.store_sales APPLY (PURGE);

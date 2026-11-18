@@ -1,0 +1,1 @@
+REORG TABLE ${database}.inventory APPLY (PURGE);
